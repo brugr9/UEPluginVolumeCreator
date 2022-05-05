@@ -39,7 +39,7 @@ The following definitions shall have the same meaning regardless of whether they
 
 For the purposes of this Disclaimer:
 
-* __Author__ (referred to as either "the Author", "We", "Us" or "Our" in this Disclaimer) refers to *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*.
+* __Author__ (referred to as either "the Author", "We", "Us" or "Our" in this Disclaimer) refers to the author of *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*.
 * __Service__ refers to the Documentation.
 * __You__ means the individual accessing the Service, or the Author, or other legal entity on behalf of which such individual is accessing or using the Service, as applicable.
 * __Documentation__ refers to *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*, accessible from [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator)
