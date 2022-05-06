@@ -22,58 +22,51 @@ This plugin enables image-based volume rendering from the Blueprint visual scrip
 
 <div style='page-break-after: always'></div>
 
-# Readme
-
 ## Table of Contents
 
 <!-- Start Document Outline -->
 
 * [1. Setup](#1-setup)
-* [1.1. Installation](#11-installation)
-	* [1.2. Project Configuration](#12-project-configuration)
-		* [1.2.1. Allow VolumeTexture-Asset Creation](#121-allow-volumetexture-asset-creation)
+  * [1.1. Installation](#11-installation)
+  * [1.2. Project Configuration](#12-project-configuration)
 * [2. Usage](#2-usage)
-	* [2.1. Concept](#21-concept)
-	* [2.2. Volumes](#22-volumes)
-		* [2.2.1. Default Volume](#221-default-volume)
-		* [2.2.2. Import dcm](#222-import-dcm)
-		* [2.2.3. Import mhd](#223-import-mhd)
-	* [2.3. Transfer Functions](#23-transfer-functions)
-		* [2.3.1. TF LUTs](#231-tf-luts)
-		* [2.3.2. TF Gradients](#232-tf-gradients)
-	* [2.4. Direct Volume Rendering](#24-direct-volume-rendering)
-		* [2.4.1 Raymarching Materials](#241-raymarching-materials)
+  * [2.1. Concept](#21-concept)
+  * [2.2. Volumes](#22-volumes)
+    * [2.2.1. Default Volume](#221-default-volume)
+    * [2.2.2. Import dcm](#222-import-dcm)
+    * [2.2.3. Import mhd](#223-import-mhd)
+  * [2.3. Transfer Functions](#23-transfer-functions)
+    * [2.3.1. TF LUTs](#231-tf-luts)
+    * [2.3.2. TF Gradients](#232-tf-gradients)
+  * [2.4. Direct Volume Rendering](#24-direct-volume-rendering)
+    * [2.4.1 Raymarching Materials](#241-raymarching-materials)
 * [3. Showcase](#3-showcase)
-	* [3.1. Desktop](#31-desktop)
-	* [3.2. HMD VR](#32-hmd-vr)
-		* [1.2.2. Configure Input Bindings](#122-configure-input-bindings)
+  * [3.1. Desktop](#31-desktop)
+  * [3.2. HMD VR](#32-hmd-vr)
+    * [3.2.1. Configure Input Bindings](#321-configure-input-bindings)
 * [A. Attribution](#a-attribution)
 * [B. References](#b-references)
 * [C. Acknowledgments](#c-acknowledgments)
-	* [Software](#software)
-	* [Documentation](#documentation)
+  * [Software](#software)
+  * [Documentation](#documentation)
 * [D. Disclaimer](#d-disclaimer)
 
 <!-- End Document Outline -->
 
+<div style='page-break-after: always'></div>
+
 ## 1. Setup
 
-## 1.1. Installation
+### 1.1. Installation
 
-In the Unreal Editor access the Plugin Editor from the menu 'Edit > Plugins'. In the Plugin Editor, under category 'Rendering' find and enable the plugin.
+In the Unreal Editor access the Plugin Editor from the menu 'Edit > Plugins'. In the Plugin Editor, under category 'Rendering' find and enable the plugin. Finally restart the Unreal Editor.
 
-Screenshot of Plugin Editor with plugin Volume Creator:
-
-![Screenshot of Plugin Editor with plugin 'Volume Creator'](Docs/ScreenshotPlugin.jpg "Screenshot of Plugin Editor with plugin 'Volume Creator'")
-<br>*Fig. 1.1.: Screenshot of Plugin Editor with plugin "Volume Creator"*
-
-Finally restart the Unreal Editor.
+![Screenshot of Plugin Editor with Plugin 'Volume Creator' enabled](Docs/ScreenshotPlugin.jpg "Screenshot of Plugin Editor with Plugin 'Volume Creator' enabled")
+<br>*Fig. 1.1.: Screenshot of Plugin Editor with Plugin "Volume Creator" enabled*
 
 ### 1.2. Project Configuration
 
-#### 1.2.1. Allow VolumeTexture-Asset Creation
-
-To allow VolumeTexture-Asset creation follow these steps as from Unreal Engine Documentation, [*Creating Volume Textures*](https://docs.unrealengine.com/4.26/en-US/RenderingAndGraphics/Textures/VolumeTextures/CreatingVolumeTextures/):
+To allow Volume Texture asset creation follow these steps as from Unreal Engine Documentation article [*Creating Volume Textures*](https://docs.unrealengine.com/4.26/en-US/RenderingAndGraphics/Textures/VolumeTextures/CreatingVolumeTextures/):
 
 > Before you can use Volume Textures in your Unreal Engine 4 (UE4) project, you will need to enable them. In the following How-To, we will take a look at setting up your UE4 project to use Volume Textures.
 >
@@ -98,6 +91,8 @@ The following workflow is discussed as a basic concept. We use an actor with an 
 
 Depending on which parameters have been selected, additional parameters can be displayed.
 
+<div style='page-break-after: always'></div>
+
 ### 2.2. Volumes
 
 * Volumes from Image-Stack as Texture2D and TextureVolume
@@ -106,10 +101,10 @@ Depending on which parameters have been selected, additional parameters can be d
 
 #### 2.2.1. Default Volume
 
-Default Volume, size of image based volume:
+Default Volume, size of image-stack based volume:
 
-* A Stack of 256 images with 256 x 256 pixel per image = 256<sup>3</sup> voxel
-* 4 channels per voxel (RGBA)
+* A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
+* Pixel depth: 4 channels (RGBA)
 * With using 8 bit unsigned integer (`G8`, Range: From 0 to 255) this is 8 bit per channel
 <!-- * The range per voxel is 4 x 2<sup>8</sup> = 1024 -->
 
@@ -127,7 +122,13 @@ The volume has to be loaded to RAM and has to be processed every frame of, e.g.,
 
 #### 2.2.2. Import dcm
 
+DICOM dcm
+
 #### 2.2.3. Import mhd
+
+MetaImage mhd
+
+<div style='page-break-after: always'></div>
 
 ### 2.3. Transfer Functions
 
@@ -140,6 +141,8 @@ Texture2D named `T_TF-LUT-[*]`
 #### 2.3.2. TF Gradients
 
 CurveLinearColor named `Curve_TF-[*]_Color`
+
+<div style='page-break-after: always'></div>
 
 ### 2.4. Direct Volume Rendering
 
@@ -167,7 +170,7 @@ With the level Map_Demo-DVR openned, from the Level Editor, click the Play butto
 
 ### 3.2. HMD VR
 
-#### 1.2.2. Configure Input Bindings
+#### 3.2.1. Configure Input Bindings
 
 Under `Project Settings > Engine > Input` push button `Import` and select file `VolumeCreator/Config/Input.ini`.
 
@@ -182,17 +185,20 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 ![Screenshot of BP_VRPawn, Per Platform Controllers](Docs/Showcase-VR-BP_VRPawn.jpg "Screenshot of BP_VRPawn, Per Platform Controllers")
 <br>*Fig. 3.2.: Screenshot of BP_VRPawn, Per Platform Controllers*
 
+<div style='page-break-after: always'></div>
+
 ## A. Attribution
 
 * The word mark *Unreal&reg;* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, URL: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
 * The word mark *DICOM&reg; &mdash;"Digital Imaging and Communication in Medicine"* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
 * The word mark *DICOMParser&trade;* is a trademark or registered trademark of Brad King and/or Matt Turek
-* The word marks *MetaImage&reg;* and *mhd&trade;* and its logo are trademarks or registered trademarks by VIACOM International, Inc.
+* The word mark *MetaImage&trade;* and its logo are trademarks or registered trademarks of TODO: ???
 
 ## B. References
 
 * Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data*. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
 * Medical imaging data set: van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+* Larobina, M., & Murino, L. (2014). Medical image file formats. *Journal of digital imaging*, 27(2), 200–206. [https://doi.org/10.1007/s10278-013-9657-9](https://doi.org/10.1007/s10278-013-9657-9). In: *The National Center for Biotechnology Information NCBI*, accessed 2022/05/06. URL: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3948928/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3948928/)
 
 ## C. Acknowledgments
 
@@ -200,13 +206,13 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data"* software in an academic paper, please cite
 
-> Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data* (Version [#.#.#], UE [4.## or 5.#]). Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
+> Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data*, Version [#.#.#], UE [4.## or 5.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
 
 ### Documentation
 
-To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"* (be it , e.g., the Readme or the ChangeLog) in an academic paper, please cite
+To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"* (be it , e.g., the Readme or the Changelog) in an academic paper, please cite
 
-> Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation*. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+> Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
 
 ## D. Disclaimer
 
