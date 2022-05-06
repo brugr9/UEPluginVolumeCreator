@@ -11,11 +11,11 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Rend
 
 ![FeaturedImage](Docs/FeaturedImage894x488.jpg "FeaturedImage")
 
-Provides support for importing image stacks, for creating image-based texture volumes and for Direct Volume Rendering DVR in Real-time
+Efficient Real-time Rendering of Scalar Volumes
 
 ## Description
 
-This plugin enables image-based volume rendering from the Blueprint visual scripting system. The delivered assets provide rendering of CT and MRI data using shader software with transfer-functions from look-up tables or gradients. To speed up rendering, optimization techniques such as empty space skipping or early ray termination are used. The delivered assets also enable importing image stacks from the Blueprint visual scripting system.
+This plugin enables efficient image-based volume rendering from the Blueprint visual scripting system. The delivered assets provide rendering of CT and MRI data using shader software with transfer-functions from look-up tables or gradients. To speed up rendering, optimization techniques such as empty space skipping or early ray termination are used. The delivered assets also enable importing image stacks and creating texture volumes from the Blueprint visual scripting system.
 
 <!-- UE Marketplace : End 1/2 -->
 ---
@@ -85,9 +85,9 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 The following workflow is discussed as a basic concept. We use an actor with an actor component Static Mesh 'Cube'. The cube is assiged a volume rendering material with parameters as follows:
 
-* **Volume**: TextureVolume from Image-Stack
-* **Transfer Function**: Look-Up Table LUT (Texture2D) or Gradient (CurveLinearColor)
-* **Shader**: Direct Volume Rendering DVR by Raycasting (unlit) or Raymarching (static lighting)
+* **Volume**: Scalar Volume represented by Voxels from Image-Stack (Asset type `TextureVolume`)
+* **Transfer Function**:  Look-Up Table LUT (Asset type `Texture2D`) or Gradient (Asset type `CurveLinearColor`)
+* **Shader**: Direct Volume Rendering DVR by Raycasting (unlit) or Raymarching (unlit or static lighting) (Asset type `Material`)
 
 Depending on which parameters have been selected, additional parameters can be displayed.
 
@@ -197,7 +197,9 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 ## B. References
 
 * Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data*. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
-* Medical imaging data set: van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+* Medical Imaging Data Sets:
+  * van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+  * TODO: Slicer ScalarVolume_9
 * Larobina, M., & Murino, L. (2014). Medical image file formats. *Journal of digital imaging*, 27(2), 200–206. [https://doi.org/10.1007/s10278-013-9657-9](https://doi.org/10.1007/s10278-013-9657-9). In: *The National Center for Biotechnology Information NCBI*, accessed 2022/05/06. URL: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3948928/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3948928/)
 
 ## C. Acknowledgments
