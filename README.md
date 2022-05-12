@@ -15,7 +15,7 @@ Efficient Real-time Rendering of Scalar Volumes
 
 ## Description
 
-This plugin enables efficient image-based volume rendering from the Blueprint visual scripting system. The delivered assets provide rendering of CT and MRI data using shader software with transfer-functions from look-up tables or gradients. To speed up rendering, optimization techniques such as empty space skipping or early ray termination are used. The delivered assets also enable importing image stacks and creating texture volumes from the Blueprint visual scripting system.
+This plugin enables efficient image-based volume rendering from the Blueprint visual scripting system. The delivered assets provide rendering of CT and MRI data using shader software with transfer-functions from color curve gradients. <!-- To speed up rendering, optimization techniques such as empty space skipping or early ray termination are used. --> The delivered assets also enable importing image stacks and creating texture volumes from the Blueprint visual scripting system.
 
 <!-- UE Marketplace : End 1/2 -->
 ---
@@ -36,11 +36,9 @@ This plugin enables efficient image-based volume rendering from the Blueprint vi
     * [2.2.2. Import](#222-import)
   * [2.3. Transfer Functions](#23-transfer-functions)
   * [2.4. Direct Volume Rendering](#24-direct-volume-rendering)
-    * [2.4.1. Raycasting](#241-raycasting)
-    * [2.4.2. Raymarching](#242-raymarching)
 * [3. Showcase](#3-showcase)
   * [3.1. Desktop](#31-desktop)
-  * [3.2. HMD VR](#32-hmd-vr)
+  * [3.2. VR](#32-vr)
     * [3.2.1. Configure Input Bindings](#321-configure-input-bindings)
 * [Appendix](#appendix)
   * [Acronyms](#acronyms)
@@ -166,14 +164,6 @@ MetaImage&trade; *.mhd
 
 ### 2.3. Transfer Functions
 
-<!--
-#### 2.3.1. Look-Up Tables
-
-Texture2D named `T_TF-LUT-[*]`
-
-#### 2.3.2. Gradients
--->
-
 Transfer Functions based on Gradients from Curve Linear Color assets, bundled in a Curve Atlas asset as Look-Up Table LUT
 
 * Curve Linear Color assets named `Curve_TF-[*]_Color`
@@ -183,15 +173,7 @@ Transfer Functions based on Gradients from Curve Linear Color assets, bundled in
 
 ### 2.4. Direct Volume Rendering
 
-Direct Volume Rendering DVR with Materials from Raycasting or Raymarching Shaders, unlit or with (precomputed) static lighting.
-
-#### 2.4.1. Raycasting
-
-Raycasting Material
-
-#### 2.4.2. Raymarching
-
-Raymarching Material
+Direct Volume Rendering DVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
 
 <div style='page-break-after: always'></div>
 
@@ -209,7 +191,9 @@ With the level Map_Demo-DVR openned, from the Level Editor, click the Play butto
 
 ![Screenshot of Demo Map PIE](Docs/DemoMapPIE.gif "Screenshot of Demo Map PIE")
 
-### 3.2. HMD VR
+### 3.2. VR
+
+HMD VR
 
 #### 3.2.1. Configure Input Bindings
 
@@ -266,8 +250,7 @@ Handedness:
 ### B. References
 
 * Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data*. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
-* van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
-* TODO: 3D Slicer Scalar Volume 9 "MRIHead"
+* Medical Image Dataset: van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 
 ### C. Acknowledgments
 
