@@ -84,22 +84,34 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 The following workflow is discussed as a basic concept. We use an actor with an actor component Static Mesh 'Cube'. The cube is assiged a volume rendering material with parameters as follows:
 
-* **Volume**: Scalar Volume (Voxels) from Image-Stack represented as Texture Volume asset
-* **Transfer Function**: Tranfer Function Gradient represented as Curve Linear Color asset
-* **Rendering**: Direct Volume Rendering DVR by Raycasting (unlit) or Raymarching (unlit or static lighting) represented by Raycasting or Raymarching DVR Material assets
-* **Actor**: Mesh Cube Actor Component with DVR Material
+* **Volume**: Scalar Volume (Voxels) from Image-Stack represented as `Volume Texture` asset
+* **Transfer Function**: Color Gradient represented as `Curve Linear Color` asset
+* **Actor Component**: Actor Component `Raymarcher` which is a Mesh Cube with Material `Raymarching`
+* **Rendering**: Direct Volume Rendering DVR by Raymarching (unlit or static lighting) represented by Raymarching `Material` assets
 
 <div style='page-break-after: always'></div>
 
 ### 2.2. Volumes
 
-An image-stack based volume&mdash;commonly known as scalar volumes&mdash;is kept as Volume Texture asset in Unreal&reg; Engine.
+An image-stack based volume&mdash;commonly known as scalar volume&mdash;is kept as Volume Texture asset in Unreal&reg; Engine.
 
 Plugin features:
 
-* Limitations: Saving is limited to `G8` or `G16`. The plugin does not support persistent 32bit grayscale textures to be saved.
-* Creates Volume Texture VT and Volume Asset VA (meta data) from imported scalar data
+* Creates Volume Texture and Data Asset (meta data) from imported scalar data
 * Window center and window width support
+* Saving is limited to `G8` or `G16`. The plugin does not support persistent 32bit grayscale textures to be saved.
+
+Naming convention:
+
+* Texture Prefix: `T_`
+* Underlines in file names (`_`) are replaced by minus in asset names (`-`)
+* Volume Texture Suffix: `_Volume`
+* Data Asset Suffix: `_Data`
+
+Example:
+
+* Volume Texture: `T_LUNA16-subset0-5112_Volume`
+* Data Asset: `T_LUNA16-subset0-5112_Data`
 
 #### 2.2.1. Data Background
 
@@ -149,8 +161,6 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 -->
 
 #### 2.2.2. Import
-
-* Existing underlines in file names (`_`) are replaced by minus in asset names (`-`)
 
 ##### 2.2.2.1. Import DICOM
 
@@ -256,13 +266,13 @@ Handedness:
 
 #### Software
 
-To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data"* software in an academic paper, please cite
+To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data"* software, please cite
 
 > Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data*, Version [#.#.#], UE [4.## or 5.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
 
 #### Documentation
 
-To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"* (be it , e.g., the Readme or the Changelog) in an academic paper, please cite
+To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"* (be it , e.g., the Readme or the Changelog), please cite
 
 > Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
 
