@@ -1,4 +1,4 @@
-# Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &ndash; Readme
+# Unreal&reg; Engine Plugin: Volume Creator &ndash; Readme
 
 This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*
 
