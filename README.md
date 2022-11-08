@@ -285,7 +285,7 @@ To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation
 
 *This documentation has **not been reviewed or approved** by the Food and Drug Administration FDA or by any other agency. It is the users responsibility to ensure compliance with applicable rules and regulations&mdash;be it in the US or elsewhere.*
 
-Read also *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation Disclaimer"* (file DocumentationDISCLAIMER.md), URL: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md).
+Read also *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation Disclaimer"* (file DocumentationDISCLAIMER.md), URL: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md).
 
 ---
 <!-- Footer -->
