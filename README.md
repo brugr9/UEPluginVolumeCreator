@@ -1,6 +1,6 @@
 # Unreal&reg; Engine Plugin: Volume Creator &ndash; Readme
 
-This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*
+This document is part of *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"*
 
 * Author: Copyright 2022 Roland Bruggmann aka brugr9
 * Profile on UE Marketplace: [https://www.unrealengine.com/marketplace/profile/brugr9](https://www.unrealengine.com/marketplace/profile/brugr9)
@@ -292,4 +292,4 @@ Read also *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medica
 
 [![Creative Commons Attribution-ShareAlike 4.0 International License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-*"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2022 by [Roland Bruggmann](https://about.me/rbruggmann), licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+*"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2022 by [Roland Bruggmann](https://about.me/rbruggmann), licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
