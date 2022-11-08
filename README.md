@@ -271,15 +271,15 @@ Handedness:
 
 #### Software
 
-To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data"* software, please cite
+To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator"* software, please cite
 
-> Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data*, Version [#.#.#], UE [4.## or 5.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
+> Bruggmann, Roland (2022). *Unreal&reg; Engine Plugin: Volume Creator*, Version [#.#.#], UE [4.## or 5.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
 
 #### Documentation
 
-To acknowledge *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"* (be it , e.g., the Readme or the Changelog), please cite
+To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"* (be it , e.g., the Readme or the Changelog), please cite
 
-> Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+> Bruggmann, Roland (2022). *Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
 
 ### D. Disclaimer
 
