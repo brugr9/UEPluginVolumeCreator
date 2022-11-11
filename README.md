@@ -50,7 +50,7 @@ This plugin enables efficient image-based volume rendering from the Blueprint vi
   * [Glossary](#glossary)
   * [A. Attribution](#a-attribution)
   * [B. References](#b-references)
-  * [C. Acknowledgments](#c-acknowledgments)
+  * [C. Citation](#c-citation)
     * [Software](#software)
     * [Documentation](#documentation)
   * [D. Disclaimer](#d-disclaimer)
@@ -267,7 +267,7 @@ Handedness:
 * Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data*. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
 * Medical Image Dataset: van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 
-### C. Acknowledgments
+### C. Citation
 
 #### Software
 
