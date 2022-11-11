@@ -91,7 +91,7 @@ The following workflow is discussed as a basic concept. We use an actor with an 
 
 * **Volume**: Scalar Volume (Voxels) from Image-Stack represented as `Volume Texture` asset
 * **Transfer Function**: Color Gradient represented as `Curve Linear Color` asset
-* **Actor Component**: Actor Component `Raymarcher` which is a Mesh Cube with Material `Raymarching`
+* **Actor Component**: Actor Component `ScalarVolume` which is a Mesh Cube with Material `Raymarching` by default
 * **Rendering**: Direct Volume Rendering DVR by Raymarching (unlit or static lighting) represented by Raymarching `Material` assets
 
 <div style='page-break-after: always'></div>
