@@ -8,10 +8,6 @@ This document is part of *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Doc
 
 ---
 
-# !!! Preprint -- Work in progress !!!
-
----
-
 <!-- UE Marketplace : Begin 1/2 -->
 
 ![FeaturedImage](Docs/FeaturedImage894x488.jpg "FeaturedImage")
@@ -20,7 +16,7 @@ Efficient Real-time Rendering of Scalar Volumes
 
 ## Description
 
-This plugin enables efficient image-based volume rendering from the Blueprint visual scripting system. The delivered assets provide rendering of CT and MRI data using shader software with transfer-functions from color curve gradients. <!-- To speed up rendering, optimization techniques such as empty space skipping or early ray termination are used. --> The delivered assets also enable importing image stacks and creating texture volumes from the Blueprint visual scripting system.
+This plugin enables efficient image-based volume rendering from the Blueprint visual scripting system. The delivered assets provide rendering of CT and MRI data using shader software with transfer-functions from color curve gradients. To speed up rendering, optimization techniques such as empty space skipping or early ray termination are used. The delivered assets also enable importing image stacks and creating texture volumes from the Blueprint visual scripting system.
 
 <!-- UE Marketplace : End 1/2 -->
 ---
@@ -40,16 +36,19 @@ This plugin enables efficient image-based volume rendering from the Blueprint vi
     * [2.2.1. Data Background](#221-data-background)
     * [2.2.2. Import](#222-import)
   * [2.3. Transfer Functions](#23-transfer-functions)
-  * [2.4. Direct Volume Rendering](#24-direct-volume-rendering)
-* [3. Showcase](#3-showcase)
+  * [2.4. Volume Rendering](#24-volume-rendering)
+    * [2.4.1. Direct Volume Rendering](#241-direct-volume-rendering)
+    * [2.4.2. Indirect Volume Rendering](#242-indirect-volume-rendering)
+* [3. Demo](#3-demo)
   * [3.1. Desktop](#31-desktop)
   * [3.2. VR](#32-vr)
     * [3.2.1. Configure Input Bindings](#321-configure-input-bindings)
+* [4. Unsupported](#4-unsupported)
 * [Appendix](#appendix)
   * [Acronyms](#acronyms)
   * [Glossary](#glossary)
   * [A. Attribution](#a-attribution)
-  * [B. References](#b-references)
+  * [B. Acknowledgements](#b-acknowledgements)
   * [C. Citation](#c-citation)
     * [Software](#software)
     * [Documentation](#documentation)
@@ -90,7 +89,7 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 The following workflow is discussed as a basic concept. We use an actor with an actor component Static Mesh 'Cube'. The cube is assiged a volume rendering material with parameters as follows:
 
 * **Volume**: Scalar Volume (Voxels) from Image-Stack represented as `Volume Texture` asset
-* **Transfer Function**: Color Gradient represented as `Curve Linear Color` asset
+* **Transfer Function**: Color Gradients represented as `Curve Linear Color` assets packed in a `Curve Atlas`
 * **Actor Component**: Actor Component `ScalarVolume` which is a Mesh Cube with Material `Raymarching` by default
 * **Rendering**: Direct Volume Rendering DVR by Raymarching (unlit or static lighting) represented by Raymarching `Material` assets
 
@@ -130,19 +129,19 @@ Size of scalar volumes:
 <!-- * The range per voxel is 4 x 2<sup>8</sup> = 1024 -->
 
 ```math
-V_1 = 256^3 \times 4 \times 8 bit = 536’870’912 bit = 0.537 Gigabit = 67 MB
+V_1 = 256^3 \times 4 \times 8\ {}bit = 536’870’912\ {}bit = 0.537\ {}Gigabit = 67\ {}MB
 ```
 
 If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size increases to 0.5 GB:
 
 ```math
-V_2 = 512^3 \times 4 \times 8 bit = 4’294’967’296 bit = 4.295 Gigabit = 537 MB
+V_2 = 512^3 \times 4 \times 8\ {}bit = 4’294’967’296\ {}bit = 4.295\ {}Gigabit = 537\ {}MB
 ```
 
 If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size increases to 4 GB:
 
 ```math
-V_3 = 1024^3 \times 4 \times 8 bit = 34’359’738’368 bit = 34.359 Gigabit = 4295 MB
+V_3 = 1024^3 \times 4 \times 8\ {}bit = 34’359’738’368\ {}bit = 34.359\ {}Gigabit = 4295\ {}MB
 ```
 
 ##### 2.2.1.2. Processing
@@ -150,15 +149,15 @@ V_3 = 1024^3 \times 4 \times 8 bit = 34’359’738’368 bit = 34.359 Gigabit =
 With processing of, e.g., 30 fps:
 
 ```math
-ProcessedData_1 = \frac{0.537 Gigabit}{frame} \times \frac{30 frames}{s} = \frac{16.1 Gigabit}{s}
+Processed\ {}Data_1 = \frac{0.537\ {}Gigabit}{frame} \times \frac{30\ {}frames}{s} = 16.1\ {} Gigabit\ {}per\ {}second
 ```
 
 ```math
-ProcessedData_2 = \frac{4.295 Gigabit}{frame} \times \frac{30 frames}{s} = \frac{128.8 Gigabit}{s}
+Processed\ {}Data_2 = \frac{4.295\ {}Gigabit}{frame} \times \frac{30\ {}frames}{s} = 128.8\ {} Gigabit\ {}per\ {}second
 ```
 
 ```math
-ProcessedData_3 = \frac{34.359 Gigabit}{frame} \times \frac{30 frames}{s} = \frac{1030.8 Gigabit}{s}
+Processed\ {}Data_3 = \frac{34.359\ {}Gigabit}{frame} \times \frac{30\ {}frames}{s} = 1030.8\ {} Gigabit\ {}per\ {}second
 ```
 
 <!-- 
@@ -179,22 +178,30 @@ MetaImage&trade; *.mhd
 
 ### 2.3. Transfer Functions
 
-Transfer Functions based on Gradients from Curve Linear Color assets, bundled in a Curve Atlas asset as Look-Up Table LUT
+The Transfer Functions are based on Gradients from `Curve Linear Color` assets, bundled in a Curve Atlas asset as Look-Up Table LUT
 
 * Curve Linear Color assets named `Curve_TF-[*]_Color`
 * Curve Atlas asset named `T_TF_CurveAtlas`
 
+The gradients show values as found in 3D Slicer, Module "Volume Rendering" [Presets on GitHub](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml).
+
 <div style='page-break-after: always'></div>
 
-### 2.4. Direct Volume Rendering
+### 2.4. Volume Rendering
+
+#### 2.4.1. Direct Volume Rendering
 
 Direct Volume Rendering DVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
 
+#### 2.4.2. Indirect Volume Rendering
+
+Indirect Volume Rendering IVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
+
 <div style='page-break-after: always'></div>
 
-## 3. Showcase
+## 3. Demo
 
-The plugin folder 'Showcase' provides with two Blueprints ... `BP_Demo-DVR-TF-Gradient` as well as with two maps `Map_Demo-VolumeCreator`.
+The plugin folder 'Demo' provides with two Blueprints ... `BP_Demo-DVR-TF-Gradient` as well as with two maps `Map_Demo-VolumeCreator`.
 
 Screenshot of Content Browser with VolumeCreator Content, Folder 'Demo':
 
@@ -227,6 +234,12 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 <div style='page-break-after: always'></div>
 
+## 4. Unsupported
+
+* **Labelmap Volume** &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.
+* **Vector Volume** &ndash; where the voxels store multiple scalar values, e.g., three coordinates RAS as components of a displacement field.
+* **Tensor Volume** &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI.
+
 ## Appendix
 
 ### Acronyms
@@ -234,6 +247,8 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 * CT &mdash; Computed Tomography (X-ray)
 * CTA &mdash; Computed Tomography Angiography
 * DVR &mdash; Direct Volume Rendering
+* FOV &mdash; Field of View
+* IVR &mdash; Indirect Volume Rendering
 * LhS &mdash; Left-handed System
 * LUT &mdash; Look-Up Table
 * MIP &mdash; Maximum Intensity Projection
@@ -242,6 +257,8 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 * MRT &mdash; Magnetic Resonance Tomography
 * PET &mdash; Positron Emission Tomography
 * RhS &mdash; Right-handed System
+* ROI &mdash; Region of Interest
+* SNR &mdash; Signal-to-Noise Ratio
 * TF &mdash; Transfer Function
 
 ### Glossary
@@ -261,11 +278,14 @@ Handedness:
 * The word mark *Unreal&reg;* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, URL: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
 * The word mark *DICOM&reg; &mdash;"Digital Imaging and Communication in Medicine"* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
 * The word mark *MetaImage&trade;* is a trademark or registered trademark of Kitware, Inc.
+* The word mark *3D Slicer* and the logo are trademarks of Brigham and Women’s Hospital (BWH) and may not be used without permission.
 
-### B. References
+### B. Acknowledgements
 
-* Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data*. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
-* Medical Image Dataset: van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+* Bruggmann, Roland (2022). *Volume Creator*. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
+* van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
+* Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R. [3D Slicer as an Image Computing Platform for the Quantitative Imaging Network](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.
+* 3D Slicer Module "Volume Rendering": Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH). License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Some of the transfer functions were contributed by Kitware Inc. (VolView)
 
 ### C. Citation
 
