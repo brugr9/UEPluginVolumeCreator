@@ -171,41 +171,60 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 
 DICOM&reg; *.dcm
 
+The results are stored in a Volume Render Texture named `RT_Scalar_Volume`, R-channel.
+
 ##### 2.2.2.2. Import MetaImage
 
 MetaImage&trade; *.mhd
 
 #### 2.2.3. DICOM Window
 
-A DICOM Window is defined by the following variables in Hounsfield Units $HU$:
-
-* Window Center $W_c$
-* Window Width $W_w$
+A DICOM Window is defined by the variables Window Center $W_c$ and Window Width $W_w$, which are both given in Hounsfield Units HU.
 
 ##### 2.2.3.1. Apply DICOM Window
 
-The DICOM Window center and width define the window right $W_r$ and left border $W_l$:
+The DICOM window center $W_c$ and width $W_w$ define the window right border $W_r$ and its left border $W_l$:
 
 * $W_r = W_c + \frac{W_w}{2}$
 * $W_l = W_c - \frac{W_w}{2}$
+* $W_l <= W_r$
 
-The DICOM Window is applied to the volume's Hounsfiled data as a linear mapping into the range of $[0,255]$:
+The DICOM Window $w$ is applied to the volume's Hounsfiled data $v$ as a linear mapping $w(v)$ into the range of $[0,255]$:
 
-* Constant if $v > W_r: f(v) = 255$
-* Constant if $v < W_l: f(v) = 0$
-* Linear Interpolation (lerp) else $: f(v) = 0 + \frac{(v-w_l)(255-0)}{w_r-w_l} = \frac{(v-w_l) \times 255}{w_r-w_l}$
+* Constantly $255$ if $v$ is greater than the window right border $W_r$
+* Constantly $0$ if $v$ is lesser than the window left border $W_l$
+* Linear Interpolated (lerp) in the range of $[0,255]$ else $: w(v) = 0 + \frac{(v-w_l)(255-0)}{w_r-w_l} = \frac{(v-w_l) \times 255}{w_r-w_l}$
 
-Stored in a Volume Render Texture named `RT_DicomWindowed_Volume`
+$
+w(v) := \begin{cases}
+255 & \text{if } v > W_r\\
+0 & \text{if } v < W_l\\
+\frac{(v-w_l) \times 255}{w_r-w_l} & \text{else}
+\end{cases}
+$
+
+![Graph Dicom Windowed](Docs/GraphDicomWindowed.png "Graph Dicom Windowed")<br>*Fig. 2.1.: Graph of linear mapping for an example DICOM Window $W_c = 200$ and $W_w = 600$*
+
+The results are stored in a Volume Render Texture named `RT_DicomWindowed_Volume`, or in `RT_Scalar_Volume` B-channel.
 
 ##### 2.2.3.2. Render Lerped Values Only
 
-To allow to render the lerped values only we cut off or mask resp. values greater than $W_r$ and lesser than $W_l$ by applying the following mapping:
+To allow to render the lerped values only we cut off or mask $m$ values $v$ greater than the window right border $W_r$ and values $v$ lesser than the window left border $W_l$ by applying the following mapping $m(v)$:
 
-* False if $v > W_r: f(v) = 0$
-* False if $v < W_l: f(v) = 0$
-* True else $: f(v) = 1$
+* False or $0$ if $v$ is greater than the right window border $W_r$
+* False or $0$ if $v$ is lesser than the left window border $W_l$
+* True or $1$ else
 
-Stored in a Volume Render Texture named `RT_DicomWindowMask_Volume`
+$
+m(v) := \begin{cases}
+0 & \text{if } v > W_r \text{ or } v < W_l\\
+1 & \text{else}
+\end{cases}
+$
+
+![Graph Dicom Window Mask](Docs/GraphDicomWindowMask.png "Graph Dicom Window Mask")<br>*Fig. 2.1.: Graph of mask for an example DICOM Window $W_c = 200$ and $W_w = 600$*
+
+The results are stored in a Volume Render Texture named `RT_DicomWindowMask_Volume`, or in `RT_Scalar_Volume` G-channel.
 
 #### 2.2.5. Empty Space Skipping
 
