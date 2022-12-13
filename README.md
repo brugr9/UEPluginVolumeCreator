@@ -35,10 +35,13 @@ This plugin enables efficient image-based volume rendering from the Blueprint vi
   * [2.2. Volumes](#22-volumes)
     * [2.2.1. Data Background](#221-data-background)
     * [2.2.2. Import](#222-import)
+    * [2.2.3. DICOM Window](#223-dicom-window)
+    * [2.2.5. Empty Space Skipping](#225-empty-space-skipping)
   * [2.3. Transfer Functions](#23-transfer-functions)
   * [2.4. Volume Rendering](#24-volume-rendering)
     * [2.4.1. Direct Volume Rendering](#241-direct-volume-rendering)
     * [2.4.2. Indirect Volume Rendering](#242-indirect-volume-rendering)
+  * [2.5. Shading](#25-shading)
 * [3. Demo](#3-demo)
   * [3.1. Desktop](#31-desktop)
   * [3.2. VR](#32-vr)
@@ -50,8 +53,6 @@ This plugin enables efficient image-based volume rendering from the Blueprint vi
   * [A. Attribution](#a-attribution)
   * [B. Acknowledgements](#b-acknowledgements)
   * [C. Citation](#c-citation)
-    * [Software](#software)
-    * [Documentation](#documentation)
   * [D. Disclaimer](#d-disclaimer)
 
 <!-- End Document Outline -->
@@ -174,6 +175,43 @@ DICOM&reg; *.dcm
 
 MetaImage&trade; *.mhd
 
+#### 2.2.3. DICOM Window
+
+A DICOM Window is defined by the following variables in Hounsfield Units $HU$:
+
+* Window Center $W_c$
+* Window Width $W_w$
+
+##### 2.2.3.1. Apply DICOM Window
+
+The DICOM Window center and width define the window right $W_r$ and left border $W_l$:
+
+* $W_r = W_c + \frac{W_w}{2}$
+* $W_l = W_c - \frac{W_w}{2}$
+
+The DICOM Window is applied to the volume's Hounsfiled data as a linear mapping into the range of $[0,255]$:
+
+* Constant if $v > W_r: f(v) = 255$
+* Constant if $v < W_l: f(v) = 0$
+* Linear Interpolation (lerp) else $: f(v) = 0 + \frac{(v-w_l)(255-0)}{w_r-w_l} = \frac{(v-w_l) \times 255}{w_r-w_l}$
+
+Stored in a Volume Render Texture named `RT_DicomWindowed_Volume`
+
+##### 2.2.3.2. Render Lerped Values Only
+
+To allow to render the lerped values only we cut off or mask resp. values greater than $W_r$ and lesser than $W_l$ by applying the following mapping:
+
+* False if $v > W_r: f(v) = 0$
+* False if $v < W_l: f(v) = 0$
+* True else $: f(v) = 1$
+
+Stored in a Volume Render Texture named `RT_DicomWindowMask_Volume`
+
+#### 2.2.5. Empty Space Skipping
+
+SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering
+https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering
+
 <div style='page-break-after: always'></div>
 
 ### 2.3. Transfer Functions
@@ -196,6 +234,8 @@ Direct Volume Rendering DVR with Materials from Raymarching Shaders, unlit or wi
 #### 2.4.2. Indirect Volume Rendering
 
 Indirect Volume Rendering IVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
+
+### 2.5. Shading
 
 <div style='page-break-after: always'></div>
 
@@ -289,13 +329,13 @@ Handedness:
 
 ### C. Citation
 
-#### Software
+**Software**
 
 To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator"* software, please cite
 
 > Bruggmann, Roland (2022). *Unreal&reg; Engine Plugin: Volume Creator*, Version [#.#.#], UE [4.## or 5.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
 
-#### Documentation
+**Documentation**
 
 To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"* (be it , e.g., the Readme or the Changelog), please cite
 
