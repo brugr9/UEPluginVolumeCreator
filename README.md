@@ -36,8 +36,7 @@ This plugin enables efficient image-based volume rendering from the Blueprint vi
     * [2.2.1. Data Background](#221-data-background)
     * [2.2.2. Import](#222-import)
     * [2.2.3. DICOM Window](#223-dicom-window)
-    * [2.2.5. Empty Space Skipping](#225-empty-space-skipping)
-  * [2.3. Transfer Functions](#23-transfer-functions)
+  * [2.3. Transfer Function](#23-transfer-function)
   * [2.4. Volume Rendering](#24-volume-rendering)
     * [2.4.1. Direct Volume Rendering](#241-direct-volume-rendering)
     * [2.4.2. Indirect Volume Rendering](#242-indirect-volume-rendering)
@@ -98,7 +97,7 @@ The following workflow is discussed as a basic concept. We use an actor with an 
 
 ### 2.2. Volumes
 
-An image-stack based volume&mdash;commonly known as scalar volume&mdash;is kept as Volume Texture asset in Unreal&reg; Engine.
+An image-stack based volume&mdash;commonly known as scalar volume&mdash;is kept as Volume Texture asset in Unreal Engine.
 
 Plugin features:
 
@@ -122,7 +121,7 @@ Example:
 
 ##### 2.2.1.1. Memory
 
-Size of scalar volumes:
+Size of scalar volume:
 
 * A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
 * Pixel depth: 4 channels (RGBA)
@@ -169,6 +168,8 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 
 ##### 2.2.2.1. Import DICOM
 
+DICOM CT image data comes in Hounsfield Units $HU$ as values in a range of $[-1024,3071]$ which are $4096$ gray levels for different materials. These $4096$ gray levels can be represented with a twelve-digit binary number ($2^{12} = 4096$).
+
 DICOM&reg; *.dcm
 
 The results are stored in a Volume Render Texture named `RT_Scalar_Volume`, R-channel.
@@ -179,7 +180,12 @@ MetaImage&trade; *.mhd
 
 #### 2.2.3. DICOM Window
 
-A DICOM Window is defined by the variables Window Center $W_c$ and Window Width $W_w$, which are both given in Hounsfield Units HU.
+DICOM CT image data comes in Hounsfield Units $HU$ in a range of $[-1024,3071]$ representing $4096$ gray levels for different materials where air is defined as $-1000 HU$ and water as $0 HU$. But computer screens only can visualize $256$ gray levels, represented by a value range of $[0, 255]$. Therefore the $4096$ Hounsfield Units have to be mapped to the $256$ screen gray scale levels. This is done by linear interpolation (Lerp).
+
+If all of the $4096 HU$ are mapped to $256$ gray levels, the contrast becomes quite bad. Therefore, the so called DICOM Window was introduced to downsize the range of $HU$ to map. A DICOM Window is defined in $HU$ by its center $W_c$&mdash;aka level, and width $W_w$&mdash;aka contrast.
+
+* E.g., with a DICOM Window center $W_c = 1023 HU$ and width $W_w = 4096 HU$ the whole range of $[-1024,3071] HU$ is mapped.
+* E.g., with a DICOM Window center $W_c = 0 HU$ and width $W_w = 1000 HU$ only the range of $[-500,500] HU$ is mapped.
 
 ##### 2.2.3.1. Apply DICOM Window
 
@@ -189,31 +195,35 @@ The DICOM window center $W_c$ and width $W_w$ define the window right border $W_
 * $W_l = W_c - \frac{W_w}{2}$
 * $W_l <= W_r$
 
-The DICOM Window $w$ is applied to the volume's Hounsfiled data $v$ as a linear mapping $w(v)$ into the range of $[0,255]$:
-
-* Constantly $255$ if $v$ is greater than the window right border $W_r$
-* Constantly $0$ if $v$ is lesser than the window left border $W_l$
-* Linear Interpolated (lerp) in the range of $[0,255]$ else $: w(v) = 0 + \frac{(v-w_l)(255-0)}{w_r-w_l} = \frac{(v-w_l) \times 255}{w_r-w_l}$
+The DICOM Window $w$ is applied to the volume's Hounsfiled data $v$ as a linear mapping $w(v)$ into the range of $[0,255]$ as follows:
 
 $
 w(v) := \begin{cases}
 255 & \text{if } v > W_r\\
 0 & \text{if } v < W_l\\
-\frac{(v-w_l) \times 255}{w_r-w_l} & \text{else}
+0 + \frac{(v-w_l)(255-0)}{w_r-w_l} =
+\frac{(v-w_l) \times 255}{w_r-w_l}
+& \text{else}
 \end{cases}
 $
 
-![Graph Dicom Windowed](Docs/GraphDicomWindowed.png "Graph Dicom Windowed")<br>*Fig. 2.1.: Graph of linear mapping for an example DICOM Window $W_c = 200$ and $W_w = 600$*
+by means of the gray level becomes:
 
-The results are stored in a Volume Render Texture named `RT_DicomWindowed_Volume`, or in `RT_Scalar_Volume` B-channel.
+* $255$ if $v$ is greater than the window right border $W_r$
+* $0$ if $v$ is lesser than the window left border $W_l$
+* linear Interpolated (lerp) in the range of $[0,255]$ else
 
-##### 2.2.3.2. Render Lerped Values Only
+![Example 1 Dicom Window Graph](Docs/GraphDicomWindow1.png "First example graph of applied DICOM Window")<br>*Fig. 2.1.: First example graph of applied DICOM Window with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
 
-To allow to render the lerped values only we cut off or mask $m$ values $v$ greater than the window right border $W_r$ and values $v$ lesser than the window left border $W_l$ by applying the following mapping $m(v)$:
+![Example 2 Dicom Window Graph](Docs/GraphDicomWindow2.png "Second example graph of applied DICOM Window")<br>*Fig. 2.2.: Second example graph of applied DICOM Window with $W_c = 50$ and $W_w = 800$ ($W_r = 450$ and $W_l = -350$)*
 
-* False or $0$ if $v$ is greater than the right window border $W_r$
-* False or $0$ if $v$ is lesser than the left window border $W_l$
-* True or $1$ else
+`BP_ScalarVolume` Detail Panel, DICOM Window (see fig. 2.3.). The result is stored in a Volume-Render-Texture named `RT_Scalar_Volume` (R-channel).
+
+![BP_ScalarVolume Detail Panel, DICOM Window](Docs/BPScalarVolume-DetailPanel-DICOMWindow.png "BP_ScalarVolume Detail Panel, DICOM Window")<br>*Fig. 2.3.: BP_ScalarVolume Detail Panel, DICOM Window*
+
+##### 2.2.3.2. Mask DICOM Window
+
+To allow to render the lerped values only we mask $m$ the values $v$ greater than the window right border $W_r$ and lesser than the window left border $W_l$ by applying the following mapping $m(v)$ as follows:
 
 $
 m(v) := \begin{cases}
@@ -222,18 +232,31 @@ m(v) := \begin{cases}
 \end{cases}
 $
 
-![Graph Dicom Window Mask](Docs/GraphDicomWindowMask.png "Graph Dicom Window Mask")<br>*Fig. 2.1.: Graph of mask for an example DICOM Window $W_c = 200$ and $W_w = 600$*
+by means of the mask value becomes:
 
-The results are stored in a Volume Render Texture named `RT_DicomWindowMask_Volume`, or in `RT_Scalar_Volume` G-channel.
+* False or $0$ if $v$ is greater than the right window border $W_r$
+* False or $0$ if $v$ is lesser than the left window border $W_l$
+* True or $1$ else
 
+![Example 1 Dicom Window Mask Graph](Docs/GraphDicomWindowMask1.png "First example graph of applied DICOM Window")<br>*Fig. 2.4.: First example graph of mask for DICOM Window with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
+
+![Example 2 Dicom Window Mask Graph](Docs/GraphDicomWindowMask2.png "Second example graph of applied DICOM Window")<br>*Fig. 2.5.: Second example graph of mask for DICOM Window with $W_c = 50$ and $W_w = 800$ ($W_r = 450$ and $W_l = -350$)*
+
+`BP_ScalarVolume` Detail Panel, DICOM Window (see fig. 2.6.). The result is stored in the Volume-Render-Texture `RT_Scalar_Volume` G-channel.
+
+![BP_ScalarVolume Detail Panel, DICOM Window, Mask](Docs/BPScalarVolumeDetailPanel_DICOMWindowMask.png "BP_ScalarVolume Detail Panel, DICOM Window, Mask")<br>*Fig. 2.6.: BP_ScalarVolume Detail Panel, DICOM Window, Mask*
+
+<!-->
 #### 2.2.5. Empty Space Skipping
 
 SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering
 https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering
 
+<!-->
+
 <div style='page-break-after: always'></div>
 
-### 2.3. Transfer Functions
+### 2.3. Transfer Function
 
 The Transfer Functions are based on Gradients from `Curve Linear Color` assets, bundled in a Curve Atlas asset as Look-Up Table LUT
 
@@ -303,10 +326,13 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 ### Acronyms
 
+* BMD &mdash; Bone Mineral Density
 * CT &mdash; Computed Tomography (X-ray)
 * CTA &mdash; Computed Tomography Angiography
 * DVR &mdash; Direct Volume Rendering
+* DXA &mdash; Dual-energy X-ray Absorptiometry
 * FOV &mdash; Field of View
+* HU &mdash; Hounsfield Unit
 * IVR &mdash; Indirect Volume Rendering
 * LhS &mdash; Left-handed System
 * LUT &mdash; Look-Up Table
@@ -315,6 +341,7 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
 * PET &mdash; Positron Emission Tomography
+* QCT &mdash; Quantitative Computed Tomography
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
 * SNR &mdash; Signal-to-Noise Ratio
@@ -322,15 +349,12 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 ### Glossary
 
-Anatomical planes and terms of location:
-
-* Saggital: Longitudinal (median) plane, divides in Left and Right (R); positive R-Axis from Left to Right, color code red
-* Coronal: Frontal plane, divides in Posterior and Anterior (A); positive A-Axis from Posterior to Anterior, color code blue
-* Axial: Horizontal plane, divides in Inferior and Superior (S); positive S-Axis from Inferior to Superior, color code green
-
-Handedness:
-
-* Unreal&reg; Engine uses a left-handed world Cartesian coordinate system (LhS): positive X-Axis to Front, positive Y-Axis to Right, positive Z-Axis to Up
+* Anatomical Planes and Terms of Location:
+  * *Saggital*: Longitudinal (median) plane, divides in Left and Right (R); <br>positive R-Axis from Left to Right, color code red
+  * *Coronal*: Frontal plane, divides in Posterior and Anterior (A); <br>positive A-Axis from Posterior to Anterior, color code blue
+  * *Axial*: Horizontal plane, divides in Inferior and Superior (S); <br>positive S-Axis from Inferior to Superior, color code green
+* Handedness:
+  * Unreal Engine uses a left-handed world Cartesian coordinate system (LhS): positive X-Axis to Front, positive Y-Axis to Right, positive Z-Axis to Up
 
 ### A. Attribution
 
