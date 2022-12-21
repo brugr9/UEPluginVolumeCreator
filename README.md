@@ -32,15 +32,18 @@ This plugin enables efficient image-based volume rendering from the Blueprint vi
   * [1.2. Project Configuration](#12-project-configuration)
 * [2. Usage](#2-usage)
   * [2.1. Concept](#21-concept)
-  * [2.2. Volumes](#22-volumes)
-    * [2.2.1. Data Background](#221-data-background)
-    * [2.2.2. Import](#222-import)
-    * [2.2.3. DICOM Window](#223-dicom-window)
-  * [2.3. Transfer Function](#23-transfer-function)
-  * [2.4. Volume Rendering](#24-volume-rendering)
-    * [2.4.1. Direct Volume Rendering](#241-direct-volume-rendering)
-    * [2.4.2. Indirect Volume Rendering](#242-indirect-volume-rendering)
-  * [2.5. Shading](#25-shading)
+  * [2.2. Scalar Volumes](#22-scalar-volumes)
+    * [2.2.1. Import](#221-import)
+    * [2.2.2. Data Background](#222-data-background)
+  * [2.3. DICOM Window](#23-dicom-window)
+    * [2.3.1. DICOM Window Function](#231-dicom-window-function)
+    * [2.3.2. DICOM Window Example](#232-dicom-window-example)
+    * [2.3.3. DICOM Window Mask](#233-dicom-window-mask)
+  * [2.4. Transfer Function](#24-transfer-function)
+  * [2.5. Volume Rendering](#25-volume-rendering)
+    * [2.5.1. Direct Volume Rendering](#251-direct-volume-rendering)
+    * [2.5.2. Indirect Volume Rendering](#252-indirect-volume-rendering)
+  * [2.6. Shading](#26-shading)
 * [3. Demo](#3-demo)
   * [3.1. Desktop](#31-desktop)
   * [3.2. VR](#32-vr)
@@ -51,8 +54,12 @@ This plugin enables efficient image-based volume rendering from the Blueprint vi
   * [Glossary](#glossary)
   * [A. Attribution](#a-attribution)
   * [B. Acknowledgements](#b-acknowledgements)
-  * [C. Citation](#c-citation)
-  * [D. Disclaimer](#d-disclaimer)
+  * [C. Bibliography](#c-bibliography)
+    * [Terms of Location](#terms-of-location)
+    * [Textures](#textures)
+    * [Volume Rendering](#volume-rendering)
+  * [D. Citation](#d-citation)
+  * [E. Disclaimer](#e-disclaimer)
 
 <!-- End Document Outline -->
 
@@ -88,14 +95,19 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 The following workflow is discussed as a basic concept. We use an actor with an actor component Static Mesh 'Cube'. The cube is assiged a volume rendering material with parameters as follows:
 
-* **Volume**: Scalar Volume (Voxels) from Image-Stack represented as `Volume Texture` asset
+* **Scalar Volume**: Voxels from Image-Stack represented as `Volume Texture` asset
+* **DICOM Window**: Hounsfield Scale filter
 * **Transfer Function**: Color Gradients represented as `Curve Linear Color` assets packed in a `Curve Atlas`
+* **Volume Rendering**: Direct Volume Rendering DVR by Raymarching represented by Raymarching `Material` assets
+* **Shading**: unlit or with static lighting
+
+TODO:
+
 * **Actor Component**: Actor Component `ScalarVolume` which is a Mesh Cube with Material `Raymarching` by default
-* **Rendering**: Direct Volume Rendering DVR by Raymarching (unlit or static lighting) represented by Raymarching `Material` assets
 
 <div style='page-break-after: always'></div>
 
-### 2.2. Volumes
+### 2.2. Scalar Volumes
 
 An image-stack based volume&mdash;commonly known as scalar volume&mdash;is kept as Volume Texture asset in Unreal Engine.
 
@@ -117,16 +129,29 @@ Example:
 * Volume Texture: `T_LUNA16-subset0-5112_Volume`
 * Data Asset: `T_LUNA16-subset0-5112_Data`
 
-#### 2.2.1. Data Background
+#### 2.2.1. Import
 
-##### 2.2.1.1. Memory
+CT image data is expected to come in Hounsfield Units $HU$ as values in a range of $[-1024,3071]$ which are $4096$ gray levels for different materials. These $4096$ gray levels can be optimally represented with a twelve-digit binary number ($2^{12} = 4096$).
+
+##### 2.2.1.1. Import DICOM
+
+DICOM&reg; *.dcm
+
+The results are stored in a Volume Render Texture named `RT_Scalar_Volume`, R-channel.
+
+##### 2.2.1.2. Import MetaImage
+
+MetaImage&trade; *.mhd
+
+#### 2.2.2. Data Background
+
+##### 2.2.2.1. Memory
 
 Size of scalar volume:
 
 * A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
-* Pixel depth: 4 channels (RGBA)
-* With using 8 bit unsigned integer (`G8`, Range: From 0 to 255) this is 8 bit per channel
-<!-- * The range per voxel is 4 x 2<sup>8</sup> = 1024 -->
+* 4 channels RGBA
+* With 8 bit per channel ($2^{8} = 256$, range from 0 to 255)
 
 ```math
 V_1 = 256^3 \times 4 \times 8\ {}bit = 536’870’912\ {}bit = 0.537\ {}Gigabit = 67\ {}MB
@@ -144,7 +169,7 @@ If the images are double the size (stack of 1024 images with 1024 x 1024 pixel p
 V_3 = 1024^3 \times 4 \times 8\ {}bit = 34’359’738’368\ {}bit = 34.359\ {}Gigabit = 4295\ {}MB
 ```
 
-##### 2.2.1.2. Processing
+##### 2.2.2.2. Processing
 
 With processing of, e.g., 30 fps:
 
@@ -164,38 +189,21 @@ Processed\ {}Data_3 = \frac{34.359\ {}Gigabit}{frame} \times \frac{30\ {}frames}
 https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate
 -->
 
-#### 2.2.2. Import
+### 2.3. DICOM Window
 
-##### 2.2.2.1. Import DICOM
+CT image data is expected to come in Hounsfield Units $HU$ in a range of $[-1024,3071]$ representing $4096$ gray levels for different materials where air is defined as $-1000 HU$ and water as $0 HU$. But computer screens only can visualize $256$ gray levels, represented by a value range of $[0, 255]$. Therefore the $4096$ Hounsfield Units have to be mapped to the $256$ screen gray scale levels. This is done by linear interpolation (Lerp).
 
-DICOM CT image data comes in Hounsfield Units $HU$ as values in a range of $[-1024,3071]$ which are $4096$ gray levels for different materials. These $4096$ gray levels can be represented with a twelve-digit binary number ($2^{12} = 4096$).
+If the whole range of $4096$ Hounsfield data is mapped to $256$ gray levels, the contrast becomes quite bad. Therefore, the so called DICOM Window was introduced to downsize the range of Hounsfield data to map.
 
-DICOM&reg; *.dcm
+#### 2.3.1. DICOM Window Function
 
-The results are stored in a Volume Render Texture named `RT_Scalar_Volume`, R-channel.
-
-##### 2.2.2.2. Import MetaImage
-
-MetaImage&trade; *.mhd
-
-#### 2.2.3. DICOM Window
-
-DICOM CT image data comes in Hounsfield Units $HU$ in a range of $[-1024,3071]$ representing $4096$ gray levels for different materials where air is defined as $-1000 HU$ and water as $0 HU$. But computer screens only can visualize $256$ gray levels, represented by a value range of $[0, 255]$. Therefore the $4096$ Hounsfield Units have to be mapped to the $256$ screen gray scale levels. This is done by linear interpolation (Lerp).
-
-If all of the $4096 HU$ are mapped to $256$ gray levels, the contrast becomes quite bad. Therefore, the so called DICOM Window was introduced to downsize the range of $HU$ to map. A DICOM Window is defined in $HU$ by its center $W_c$&mdash;aka level, and width $W_w$&mdash;aka contrast.
-
-* E.g., with a DICOM Window center $W_c = 1023 HU$ and width $W_w = 4096 HU$ the whole range of $[-1024,3071] HU$ is mapped.
-* E.g., with a DICOM Window center $W_c = 0 HU$ and width $W_w = 1000 HU$ only the range of $[-500,500] HU$ is mapped.
-
-##### 2.2.3.1. Apply DICOM Window
-
-The DICOM window center $W_c$ and width $W_w$ define the window right border $W_r$ and its left border $W_l$:
+A DICOM Window is defined in $HU$ by its center $W_c$&mdash;aka level, and width $W_w$&mdash;aka contrast. The DICOM window center $W_c$ and width $W_w$ define the window right border $W_r$ and left border $W_l$:
 
 * $W_r = W_c + \frac{W_w}{2}$
 * $W_l = W_c - \frac{W_w}{2}$
 * $W_l <= W_r$
 
-The DICOM Window $w$ is applied to the volume's Hounsfiled data $v$ as a linear mapping $w(v)$ into the range of $[0,255]$ as follows:
+The DICOM Window function $w$ is applied to the volume's Hounsfiled data $v$ as a linear mapping $w(v)$ into the range of $[0,255]$ as follows:
 
 $
 w(v) := \begin{cases}
@@ -207,23 +215,28 @@ w(v) := \begin{cases}
 \end{cases}
 $
 
-by means of the gray level becomes:
+by means of a gray level becomes:
 
 * $255$ if $v$ is greater than the window right border $W_r$
 * $0$ if $v$ is lesser than the window left border $W_l$
 * linear Interpolated (lerp) in the range of $[0,255]$ else
 
-![Example 1 Dicom Window Graph](Docs/GraphDicomWindow1.png "First example graph of applied DICOM Window")<br>*Fig. 2.1.: First example graph of applied DICOM Window with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
+#### 2.3.2. DICOM Window Example
 
-![Example 2 Dicom Window Graph](Docs/GraphDicomWindow2.png "Second example graph of applied DICOM Window")<br>*Fig. 2.2.: Second example graph of applied DICOM Window with $W_c = 50$ and $W_w = 800$ ($W_r = 450$ and $W_l = -350$)*
+E.g., with a DICOM Window center $W_c = 1023 HU$ and width $W_w = 4096 HU$ the whole range of $[-1024,3071] HU$ is taken to account for mapping. With a DICOM Window center $W_c = 200 HU$ and width $W_w = 600 HU$ only the range of $[-100,500] HU$ is mapped (see fig. 2.1. and see fig. 2.3.).
 
-`BP_ScalarVolume` Detail Panel, DICOM Window (see fig. 2.3.). The result is stored in a Volume-Render-Texture named `RT_Scalar_Volume` (R-channel).
+![Graph of DICOM Window function](Docs/GraphDicomWindow.png "Graph of DICOM Window function")<br>*Fig. 2.1.: Graph of DICOM Window function with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
 
-![BP_ScalarVolume Detail Panel, DICOM Window](Docs/BPScalarVolume-DetailPanel-DICOMWindow.png "BP_ScalarVolume Detail Panel, DICOM Window")<br>*Fig. 2.3.: BP_ScalarVolume Detail Panel, DICOM Window*
+For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, see fig. 2.2. The result is stored in a Volume-Render-Texture instance named `RT_Scalar_Volume` (8-bit R-channel).
 
-##### 2.2.3.2. Mask DICOM Window
+![BP_ScalarVolume Detail Panel, DICOM Window](Docs/BPScalarVolume-DetailPanel-DICOMWindow.png "BP_ScalarVolume Detail Panel, DICOM Window")<br>*Fig. 2.2.: BP_ScalarVolume Detail Panel, DICOM Window*
 
-To allow to render the lerped values only we mask $m$ the values $v$ greater than the window right border $W_r$ and lesser than the window left border $W_l$ by applying the following mapping $m(v)$ as follows:
+![Demo BP_ScalarVolume DICOM Window 1](Docs/Demo-BPScalarVolume-DICOMWindow-01.png "Demo BP_ScalarVolume DICOM Window 1")
+![Demo BP_ScalarVolume DICOM Window 2](Docs/Demo-BPScalarVolume-DICOMWindow-02.png "Demo BP_ScalarVolume DICOM Window 2")<br>*Fig. 2.3.: DICOM Window Rendering Result Comparison*
+
+#### 2.3.3. DICOM Window Mask
+
+To allow to render the lerped values only, a mask $m$ is applied to the volume's Hounsfiled data $v$. Values $v$ greater than the window right border $W_r$ and lesser than the window left border $W_l$ are mapped as follows:
 
 $
 m(v) := \begin{cases}
@@ -232,33 +245,26 @@ m(v) := \begin{cases}
 \end{cases}
 $
 
-by means of the mask value becomes:
+by means of the mask becomes:
 
-* False or $0$ if $v$ is greater than the right window border $W_r$
-* False or $0$ if $v$ is lesser than the left window border $W_l$
-* True or $1$ else
+* $false$ or $0$ if $v$ is greater than the right window border $W_r$
+* $false$ or $0$ if $v$ is lesser than the left window border $W_l$
+* $true$ or $1$ else
 
-![Example 1 Dicom Window Mask Graph](Docs/GraphDicomWindowMask1.png "First example graph of applied DICOM Window")<br>*Fig. 2.4.: First example graph of mask for DICOM Window with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
+![Graph of mask for DICOM Window](Docs/GraphDicomWindowMask.png "Graph of mask for DICOM Window")<br>*Fig. 2.4.: Graph of mask for DICOM Window with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
 
-![Example 2 Dicom Window Mask Graph](Docs/GraphDicomWindowMask2.png "Second example graph of applied DICOM Window")<br>*Fig. 2.5.: Second example graph of mask for DICOM Window with $W_c = 50$ and $W_w = 800$ ($W_r = 450$ and $W_l = -350$)*
+For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, Checkbox Mask see fig. 2.5. The result is stored in the Volume-Render-Texture instance `RT_Scalar_Volume` (8-bit G-channel).
 
-`BP_ScalarVolume` Detail Panel, DICOM Window (see fig. 2.6.). The result is stored in the Volume-Render-Texture `RT_Scalar_Volume` G-channel.
+![BP_ScalarVolume Detail Panel, DICOM Window, Mask](Docs/BPScalarVolumeDetailPanel_DICOMWindowMask.png "BP_ScalarVolume Detail Panel, DICOM Window, Mask")<br>*Fig. 2.5.: BP_ScalarVolume Detail Panel, DICOM Window, Checkbox Mask*
 
-![BP_ScalarVolume Detail Panel, DICOM Window, Mask](Docs/BPScalarVolumeDetailPanel_DICOMWindowMask.png "BP_ScalarVolume Detail Panel, DICOM Window, Mask")<br>*Fig. 2.6.: BP_ScalarVolume Detail Panel, DICOM Window, Mask*
-
-<!-->
-#### 2.2.5. Empty Space Skipping
-
-SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering
-https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering
-
-<!-->
+![Demo BP_ScalarVolume DICOM Window Mask 1](Docs/Demo-BPScalarVolume-DICOMWindow-Mask-01.png "Demo BP_ScalarVolume DICOM Window Mask 1")
+![Demo BP_ScalarVolume DICOM Window Mask 2](Docs/Demo-BPScalarVolume-DICOMWindow-Mask-02.png "Demo BP_ScalarVolume DICOM Window Mask 2")<br>*Fig. 2.3.: DICOM Window Mask Rendering Result Comparison*
 
 <div style='page-break-after: always'></div>
 
-### 2.3. Transfer Function
+### 2.4. Transfer Function
 
-The Transfer Functions are based on Gradients from `Curve Linear Color` assets, bundled in a Curve Atlas asset as Look-Up Table LUT
+The Transfer Functions are based on Gradients from `Curve Linear Color` assets, bundled in a `Curve Atlas` asset as Look-Up Table:
 
 * Curve Linear Color assets named `Curve_TF-[*]_Color`
 * Curve Atlas asset named `T_TF_CurveAtlas`
@@ -267,17 +273,17 @@ The gradients show values as found in 3D Slicer, Module "Volume Rendering" [Pres
 
 <div style='page-break-after: always'></div>
 
-### 2.4. Volume Rendering
+### 2.5. Volume Rendering
 
-#### 2.4.1. Direct Volume Rendering
+#### 2.5.1. Direct Volume Rendering
 
 Direct Volume Rendering DVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
 
-#### 2.4.2. Indirect Volume Rendering
+#### 2.5.2. Indirect Volume Rendering
 
 Indirect Volume Rendering IVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
 
-### 2.5. Shading
+### 2.6. Shading
 
 <div style='page-break-after: always'></div>
 
@@ -354,7 +360,7 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
   * *Coronal*: Frontal plane, divides in Posterior and Anterior (A); <br>positive A-Axis from Posterior to Anterior, color code blue
   * *Axial*: Horizontal plane, divides in Inferior and Superior (S); <br>positive S-Axis from Inferior to Superior, color code green
 * Handedness:
-  * Unreal Engine uses a left-handed world Cartesian coordinate system (LhS): positive X-Axis to Front, positive Y-Axis to Right, positive Z-Axis to Up
+  * Unreal Engine uses a left-handed world Cartesian coordinate system (LhS): X-Front, Y-Right, Z-Up
 
 ### A. Attribution
 
@@ -368,23 +374,36 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 * Bruggmann, Roland (2022). *Volume Creator*. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
 * van Ginneken, Bram, & Jacobs, Colin. (2019). LUNA16 Part 1/2 subset0. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
 * Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R. [3D Slicer as an Image Computing Platform for the Quantitative Imaging Network](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.
-* 3D Slicer Module "Volume Rendering": Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH). License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Some of the transfer functions were contributed by Kitware Inc. (VolView)
+* 3D Slicer Module "Volume Rendering": Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH). License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149.
 
-### C. Citation
+### C. Bibliography
 
-**Software**
+#### Terms of Location
 
-To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator"* software, please cite
+* Coordinate System: https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/
+* Anatomical Planes: 
+
+#### Textures
+
+* https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/
+* https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/
+* https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81
+
+#### Volume Rendering
+
+* Empty Space Skipping: *SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering* https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering
+
+### D. Citation
+
+**Software**: To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator"* software, please cite
 
 > Bruggmann, Roland (2022). *Unreal&reg; Engine Plugin: Volume Creator*, Version [#.#.#], UE [4.## or 5.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2022 Roland Bruggmann aka brugr9. All Rights Reserved.
 
-**Documentation**
-
-To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"* (be it , e.g., the Readme or the Changelog), please cite
+**Documentation**: To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"* (be it , e.g., the Readme or the Changelog), please cite
 
 > Bruggmann, Roland (2022). *Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
 
-### D. Disclaimer
+### E. Disclaimer
 
 *This documentation has **not been reviewed or approved** by the Food and Drug Administration FDA or by any other agency. It is the users responsibility to ensure compliance with applicable rules and regulations&mdash;be it in the US or elsewhere.*
 
