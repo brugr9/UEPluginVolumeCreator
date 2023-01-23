@@ -1,6 +1,6 @@
-# Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &ndash; Documentation Disclaimer
+# Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &ndash; Documentation Disclaimer
 
-This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*
+This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*
 
 * Author: Copyright 2022 Roland Bruggmann aka brugr9
 * Profile on UE Marketplace: [https://www.unrealengine.com/marketplace/profile/brugr9](https://www.unrealengine.com/marketplace/profile/brugr9)
@@ -39,10 +39,10 @@ The following definitions shall have the same meaning regardless of whether they
 
 For the purposes of this Disclaimer:
 
-* __Author__ (referred to as either "the Author", "We", "Us" or "Our" in this Disclaimer) refers to the author of *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*.
+* __Author__ (referred to as either "the Author", "We", "Us" or "Our" in this Disclaimer) refers to the author of *"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*.
 * __Service__ refers to the Documentation.
 * __You__ means the individual accessing the Service, or the Author, or other legal entity on behalf of which such individual is accessing or using the Service, as applicable.
-* __Documentation__ refers to *"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"*, accessible from [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator)
+* __Documentation__ refers to *"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*, accessible from [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator)
 
 ## Disclaimer
 
@@ -103,4 +103,4 @@ If you have any questions about this Disclaimer, You can contact Us:
 
 [![Creative Commons Attribution-ShareAlike 4.0 International License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-*"Volume Creator: An Unreal&reg; Engine Plugin for Rendering of Medical Data &mdash; Documentation"* &copy; 2022 by [Roland Bruggmann](https://about.me/rbruggmann) is licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+*"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"* &copy; 2022 by [Roland Bruggmann](https://about.me/rbruggmann) is licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)

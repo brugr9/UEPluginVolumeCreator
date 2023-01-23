@@ -39,13 +39,12 @@ The delivered assets provide rendering of CT or MRI data using shader software w
     * [2.2.2. Data Background](#222-data-background)
   * [2.3. DICOM Window](#23-dicom-window)
     * [2.3.1. DICOM Window Function](#231-dicom-window-function)
-    * [2.3.2. DICOM Window Example](#232-dicom-window-example)
-    * [2.3.3. DICOM Window Mask](#233-dicom-window-mask)
-  * [2.4. Transfer Function](#24-transfer-function)
-  * [2.5. Volume Rendering](#25-volume-rendering)
-    * [2.5.1. Direct Volume Rendering](#251-direct-volume-rendering)
-    * [2.5.2. Indirect Volume Rendering](#252-indirect-volume-rendering)
-  * [2.6. Shading](#26-shading)
+    * [2.3.2. DICOM Window Mask](#232-dicom-window-mask)
+  * [2.3. Transfer Function](#23-transfer-function)
+  * [2.4. Volume Rendering](#24-volume-rendering)
+    * [2.4.1. Direct Volume Rendering](#241-direct-volume-rendering)
+    * [2.4.2. Indirect Volume Rendering](#242-indirect-volume-rendering)
+  * [2.5. Shading](#25-shading)
 * [3. Demo](#3-demo)
   * [3.1. Desktop](#31-desktop)
   * [3.2. VR](#32-vr)
@@ -54,13 +53,14 @@ The delivered assets provide rendering of CT or MRI data using shader software w
 * [Appendix](#appendix)
   * [Acronyms](#acronyms)
   * [Glossary](#glossary)
-  * [A. Attribution](#a-attribution)
-  * [B. Acknowledgements](#b-acknowledgements)
-  * [C. Bibliography](#c-bibliography)
-    * [C.1. Unreal Engine](#c1-unreal-engine)
-    * [C.2. Medical Image Processing](#c2-medical-image-processing)
-  * [D. Citation](#d-citation)
+  * [A. Bibliography](#a-bibliography)
+    * [A.1. Unreal Engine](#a1-unreal-engine)
+    * [A.2. Medical Image Processing](#a2-medical-image-processing)
+  * [B. Readings](#b-readings)
+  * [C. Acknowledgements](#c-acknowledgements)
+  * [D. Attribution](#d-attribution)
   * [E. Disclaimer](#e-disclaimer)
+  * [F. Citation](#f-citation)
 
 <!-- End Document Outline -->
 
@@ -222,11 +222,11 @@ by means of a gray level becomes:
 
 Example:
 
-With, e.g., a DICOM Window center $W_c = 1023 HU$ and width $W_w = 4096 HU$ the whole range of $[-1024,3071] HU$ is taken to account for mapping. With a DICOM Window center $W_c = 200 HU$ and width $W_w = 600 HU$ only the range of $[-100,500] HU$ is mapped (see fig. 2.1. and see fig. 2.3.).
+With, e.g., a DICOM Window center $W_c = 1023 HU$ and width $W_w = 4096 HU$ the whole range of $[-1024,3071] HU$ is taken to account for mapping. With a DICOM Window center $W_c = 200 HU$ and width $W_w = 600 HU$ only the range of $[-100,500] HU$ is mapped (see figure 2.1. and see figure 2.3.).
 
 ![Graph of DICOM Window function](Docs/GraphDicomWindow.png "Graph of DICOM Window function")<br>*Fig. 2.1.: Graph of DICOM Window function with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
 
-For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, see fig. 2.2. The result is stored in a Volume-Render-Texture instance named `RT_Scalar_Volume` (8-bit R-channel).
+For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, see figure 2.2. The result is stored in a Volume-Render-Texture instance named `RT_Scalar_Volume` (8-bit R-channel).
 
 ![BP_ScalarVolume Detail Panel, DICOM Window](Docs/BPScalarVolume-DetailPanel-DICOMWindow.png "BP_ScalarVolume Detail Panel, DICOM Window")<br>*Fig. 2.2.: BP_ScalarVolume Detail Panel, DICOM Window*
 
@@ -235,7 +235,7 @@ For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, see fig. 2.2. 
 
 <div style='page-break-after: always'></div>
 
-#### 2.3.3. DICOM Window Mask
+#### 2.3.2. DICOM Window Mask
 
 To allow to render the lerped values only, a mask $m$ is applied to the volume's Hounsfiled data $v$. Values $v$ greater than the window right border $W_r$ and lesser than the window left border $W_l$ are mapped as follows:
 
@@ -254,7 +254,7 @@ by means of the mask becomes:
 
 ![Graph of mask for DICOM Window](Docs/GraphDicomWindowMask.png "Graph of mask for DICOM Window")<br>*Fig. 2.4.: Graph of mask for DICOM Window with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
 
-For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, Checkbox Mask see fig. 2.5. The result is stored in the Volume-Render-Texture instance `RT_Scalar_Volume` (8-bit G-channel).
+For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, Checkbox Mask see figure 2.5. The result is stored in the Volume-Render-Texture instance `RT_Scalar_Volume` (8-bit G-channel).
 
 ![BP_ScalarVolume Detail Panel, DICOM Window, Mask](Docs/BPScalarVolumeDetailPanel_DICOMWindowMask.png "BP_ScalarVolume Detail Panel, DICOM Window, Mask")<br>*Fig. 2.5.: BP_ScalarVolume Detail Panel, DICOM Window, Checkbox Mask*
 
@@ -263,7 +263,7 @@ For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, Checkbox Mask 
 
 <div style='page-break-after: always'></div>
 
-### 2.4. Transfer Function
+### 2.3. Transfer Function
 
 The Transfer Functions are based on Gradients from `Curve Linear Color` assets, bundled in a `Curve Atlas` asset as Look-Up Table:
 
@@ -274,19 +274,19 @@ The gradients show values as found in 3D Slicer, Module "Volume Rendering" [Pres
 
 <div style='page-break-after: always'></div>
 
-### 2.5. Volume Rendering
+### 2.4. Volume Rendering
 
-#### 2.5.1. Direct Volume Rendering
+#### 2.4.1. Direct Volume Rendering
 
 Direct Volume Rendering DVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
 
-#### 2.5.2. Indirect Volume Rendering
+#### 2.4.2. Indirect Volume Rendering
 
 Indirect Volume Rendering IVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
 
 <div style='page-break-after: always'></div>
 
-### 2.6. Shading
+### 2.5. Shading
 
 TODO:
 
@@ -372,14 +372,29 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 <div style='page-break-after: always'></div>
 
-### A. Attribution
+### A. Bibliography
 
-* The word mark *Unreal&reg;* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, URL: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
-* The word mark *DICOM&reg; &mdash;"Digital Imaging and Communication in Medicine"* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
-* The word mark *MetaImage&trade;* is a trademark or registered trademark of Kitware, Inc.
-* The word mark *3D Slicer* and the logo are trademarks of Brigham and Women’s Hospital (BWH) and may not be used without permission.
+#### A.1. Unreal Engine
 
-### B. Acknowledgements
+* Coordinate System:
+  * Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
+* Textures:
+  * Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
+  * Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. URL: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
+  * Michael Ivanov: **Unreal Engine and custom data textures**. URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
+
+#### A.2. Medical Image Processing
+
+* Volume Rendering:
+  * Engel, Klaus & Hadwiger, Markus & Kniss, Joe & Rezk Salama, Christof & Weiskopf, Daniel. (2006). **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
+  * Markus Hadwiger, Ali K. Al-Awami, Johanna Beyer, Marcos Agos, Hanspeter Pfister (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: IEEE Transactions on Visualization and Computer Graphics. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)
+* DICOM:
+  * [FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
+  * Roni Zaharia: **Getting Oriented using the Image Plane Module**. In: DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
+
+### B. Readings
+
+### C. Acknowledgements
 
 * Unreal Engine Plugin:
   * Bruggmann, Roland (2022): **Volume Creator**. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
@@ -391,29 +406,20 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 <div style='page-break-after: always'></div>
 
-### C. Bibliography
+### D. Attribution
 
-#### C.1. Unreal Engine
+* The word mark *Unreal&reg;* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, URL: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
+* The word mark *DICOM&reg; &mdash;"Digital Imaging and Communication in Medicine"* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
+* The word mark *MetaImage&trade;* is a trademark or registered trademark of Kitware, Inc.
+* The word mark *3D Slicer* and the logo are trademarks of Brigham and Women’s Hospital (BWH) and may not be used without permission.
 
-* Coordinate System:
-  * Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
-* Textures:
-  * Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
-  * Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. URL: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
-  * Michael Ivanov: **Unreal Engine and custom data textures**. URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
+### E. Disclaimer
 
-#### C.2. Medical Image Processing
+This documentation has **not been reviewed or approved** by the Food and Drug Administration FDA or by any other agency. It is the users responsibility to ensure compliance with applicable rules and regulations&mdash;be it in the US or elsewhere.
 
-* Volume Rendering:
-  * Engel, Klaus & Hadwiger, Markus & Kniss, Joe & Rezk Salama, Christof & Weiskopf, Daniel. (2006). **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
-  * Markus Hadwiger, Ali K. Al-Awami, Johanna Beyer, Marcos Agos, Hanspeter Pfister (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: IEEE Transactions on Visualization and Computer Graphics. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)
-* DICOM:
-  * [FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
-  * Roni Zaharia: **Getting Oriented using the Image Plane Module**. In: DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
+Read also *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation Disclaimer"* (file DocumentationDISCLAIMER.md), URL: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md).
 
-<div style='page-break-after: always'></div>
-
-### D. Citation
+### F. Citation
 
 **Software**: To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator"* software, please cite
 
@@ -422,12 +428,6 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 **Documentation**: To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"* (be it , e.g., the Readme or the Changelog), please cite
 
 > Bruggmann, Roland (2022). *Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
-
-### E. Disclaimer
-
-This documentation has **not been reviewed or approved** by the Food and Drug Administration FDA or by any other agency. It is the users responsibility to ensure compliance with applicable rules and regulations&mdash;be it in the US or elsewhere.
-
-Read also *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation Disclaimer"* (file DocumentationDISCLAIMER.md), URL: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md).
 
 ---
 <!-- Footer -->
