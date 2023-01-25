@@ -1,6 +1,6 @@
-# Unreal&reg; Engine Plugin: Volume Creator &ndash; Readme
+# Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &ndash; Readme
 
-This document is part of *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"*
+This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*
 
 * Author: Copyright 2023 Roland Bruggmann aka brugr9
 * Profile on UE Marketplace: [https://www.unrealengine.com/marketplace/profile/brugr9](https://www.unrealengine.com/marketplace/profile/brugr9)
@@ -12,13 +12,13 @@ This document is part of *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Doc
 
 ![FeaturedImage](Docs/FeaturedImage894x488.jpg "FeaturedImage")
 
-Efficient Real-time Rendering of Scalar Volumes
+Real-time Volume Rendering from Medical Imaging Data
 
 ## Description
 
-This plugin enables efficient image-based volume rendering from the Blueprint Visual Scripting system.
+This plugin enables efficient image-based volume rendering of scalar volumes from the Blueprint Visual Scripting system.
 
-The delivered assets provide rendering of CT or MRI data using shader software with transfer-functions from color curve gradients. To speed up rendering, optimization techniques such as empty space skipping or early ray termination are used. The delivered assets also enable importing image stacks and creating texture volumes.
+The delivered assets provide the rendering from medical imaging data (CT/MRI) using shader software with transfer-functions from color curve gradients. To speed up rendering, optimization techniques such as empty space skipping or early ray termination are used. The delivered assets also enable importing image stacks and creating texture volumes.
 
 <!-- UE Marketplace : End 1/2 -->
 ---
@@ -42,8 +42,6 @@ The delivered assets provide rendering of CT or MRI data using shader software w
     * [2.3.2. DICOM Window Mask](#232-dicom-window-mask)
   * [2.3. Transfer Function](#23-transfer-function)
   * [2.4. Volume Rendering](#24-volume-rendering)
-    * [2.4.1. Direct Volume Rendering](#241-direct-volume-rendering)
-    * [2.4.2. Indirect Volume Rendering](#242-indirect-volume-rendering)
   * [2.5. Shading](#25-shading)
 * [3. Demo](#3-demo)
   * [3.1. Desktop](#31-desktop)
@@ -53,7 +51,7 @@ The delivered assets provide rendering of CT or MRI data using shader software w
 * [Appendix](#appendix)
   * [Acronyms](#acronyms)
   * [Glossary](#glossary)
-  * [A. Bibliography](#a-bibliography)
+  * [A. References](#a-references)
     * [A.1. Unreal Engine](#a1-unreal-engine)
     * [A.2. Medical Image Processing](#a2-medical-image-processing)
   * [B. Readings](#b-readings)
@@ -276,13 +274,7 @@ The gradients show values as found in 3D Slicer, Module "Volume Rendering" [Pres
 
 ### 2.4. Volume Rendering
 
-#### 2.4.1. Direct Volume Rendering
-
 Direct Volume Rendering DVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
-
-#### 2.4.2. Indirect Volume Rendering
-
-Indirect Volume Rendering IVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
 
 <div style='page-break-after: always'></div>
 
@@ -339,40 +331,40 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 ### Acronyms
 
-* BMD &mdash; Bone Mineral Density
+<!-- * BMD &mdash; Bone Mineral Density -->
 * CT &mdash; Computed Tomography (X-ray)
-* CTA &mdash; Computed Tomography Angiography
+<!-- * CTA &mdash; Computed Tomography Angiography -->
 * DVR &mdash; Direct Volume Rendering
-* DXA &mdash; Dual-energy X-ray Absorptiometry
-* FOV &mdash; Field of View
+<!-- * DXA &mdash; Dual-energy X-ray Absorptiometry -->
+<!-- * FOV &mdash; Field of View -->
 * HU &mdash; Hounsfield Unit
-* IVR &mdash; Indirect Volume Rendering
+<!-- * IVR &mdash; Indirect Volume Rendering --
 * LhS &mdash; Left-handed System
-* LUT &mdash; Look-Up Table
-* MIP &mdash; Maximum Intensity Projection
-* MR &mdash; Magnetic Resonance
+<!-- * LUT &mdash; Look-Up Table -->
+<!-- * MIP &mdash; Maximum Intensity Projection -->
+<!-- * MR &mdash; Magnetic Resonance -->
 * MRI &mdash; Magnetic Resonance Imaging
-* MRT &mdash; Magnetic Resonance Tomography
+<!-- * MRT &mdash; Magnetic Resonance Tomography -->
 * PET &mdash; Positron Emission Tomography
-* QCT &mdash; Quantitative Computed Tomography
+<!-- * QCT &mdash; Quantitative Computed Tomography -->
 * RhS &mdash; Right-handed System
-* ROI &mdash; Region of Interest
-* SNR &mdash; Signal-to-Noise Ratio
+<!-- * ROI &mdash; Region of Interest -->
+<!-- * SNR &mdash; Signal-to-Noise Ratio -->
 * TF &mdash; Transfer Function
 
 ### Glossary
 
 * Anatomical Planes and Terms of Location:
-  * **Saggital**: Longitudinal (median) plane, divides in Left and Right (R); <br>positive R-Axis from Left to Right, color code red
-  * **Coronal**: Frontal plane, divides in Posterior and Anterior (A); <br>positive A-Axis from Posterior to Anterior, color code blue
-  * **Axial**: Horizontal plane, divides in Inferior and Superior (S); <br>positive S-Axis from Inferior to Superior, color code green
+  * **Saggital**: Longitudinal (median) plane, divides in Left and Right (R);<br>positive R-Axis from Left to Right, color code red
+  * **Coronal**: Frontal plane, divides in Posterior and Anterior (A);<br>positive A-Axis from Posterior to Anterior, color code blue
+  * **Axial**: Horizontal plane, divides in Inferior and Superior (S);<br>positive S-Axis from Inferior to Superior, color code green
 * Handedness, world Cartesian coordinate system:
   * Unreal Engine is using a Left-handed System (LhS): X-Front, Y-Right, Z-Up
   * DICOM is using a Right-handed System (RhS): X-Right, Y-Down, Z-Front
 
 <div style='page-break-after: always'></div>
 
-### A. Bibliography
+### A. References
 
 #### A.1. Unreal Engine
 
@@ -381,28 +373,27 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 * Textures:
   * Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
   * Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. URL: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
-  * Michael Ivanov: **Unreal Engine and custom data textures**. URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
+  * Michael Ivanov: **Unreal Engine and Custom Cata Textures**. URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 
 #### A.2. Medical Image Processing
 
-* Volume Rendering:
-  * Engel, Klaus & Hadwiger, Markus & Kniss, Joe & Rezk Salama, Christof & Weiskopf, Daniel. (2006). **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
-  * Markus Hadwiger, Ali K. Al-Awami, Johanna Beyer, Marcos Agos, Hanspeter Pfister (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: IEEE Transactions on Visualization and Computer Graphics. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)
 * DICOM:
   * [FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
-  * Roni Zaharia: **Getting Oriented using the Image Plane Module**. In: DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
+  * Roni Zaharia: **Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
+* Transfer Function:
+  * Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH): **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149.
 
 ### B. Readings
 
+* Engel, Klaus & Hadwiger, Markus & Kniss, Joe & Rezk Salama, Christof & Weiskopf, Daniel. (2006). **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
+* Markus Hadwiger, Ali K. Al-Awami, Johanna Beyer, Marcos Agos, Hanspeter Pfister (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)
+* Milan Ikits, Joe Kniss, Aaron Lefohn, Charles Hansen: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques)
+* **Volume Rendering Algorithm &ndash; An Overview**. In: ScienceDirect Topics. Online: [https://www.sciencedirect.com/topics/computer-science/volume-rendering-algorithm](https://www.sciencedirect.com/topics/computer-science/volume-rendering-algorithm)
+
 ### C. Acknowledgements
 
-* Unreal Engine Plugin:
-  * Bruggmann, Roland (2022): **Volume Creator**. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
-* Medical Data:
-  * van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
-* 3D Slicer:
-  * Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.
-  * Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH): **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149.
+* Bruggmann, Roland (2022): **Volume Creator**. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
+* van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
 
 <div style='page-break-after: always'></div>
 
@@ -411,13 +402,13 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 * The word mark *Unreal&reg;* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, URL: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
 * The word mark *DICOM&reg; &mdash;"Digital Imaging and Communication in Medicine"* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
 * The word mark *MetaImage&trade;* is a trademark or registered trademark of Kitware, Inc.
-* The word mark *3D Slicer* and the logo are trademarks of Brigham and Women’s Hospital (BWH) and may not be used without permission.
+* The word mark *3D Slicer* and the logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission.
 
 ### E. Disclaimer
 
 This documentation has **not been reviewed or approved** by the Food and Drug Administration FDA or by any other agency. It is the users responsibility to ensure compliance with applicable rules and regulations&mdash;be it in the US or elsewhere.
 
-Read also *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation Disclaimer"* (file DocumentationDISCLAIMER.md), URL: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md).
+Read also the *"Documentation Disclaimer"* (file DocumentationDISCLAIMER), Online: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md).
 
 ### F. Citation
 
@@ -425,13 +416,13 @@ Read also *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation Disc
 
 > Bruggmann, Roland (2022). *Unreal&reg; Engine Plugin: Volume Creator*, Version [#.#.#], UE [4.## or 5.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
 
-**Documentation**: To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"* (be it , e.g., the Readme or the Changelog), please cite
+**Documentation**: To acknowledge this documentation&mdash;be it, e.g., the Readme or the Changelog&mdash;please cite
 
-> Bruggmann, Roland (2022). *Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+> Bruggmann, Roland (2022). *Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
 
 ---
 <!-- Footer -->
 
 [![Creative Commons Attribution-ShareAlike 4.0 International License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-*"Unreal&reg; Engine Plugin: Volume Creator &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by [Roland Bruggmann](https://about.me/rbruggmann), licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+*"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by [Roland Bruggmann](https://about.me/rbruggmann), licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
