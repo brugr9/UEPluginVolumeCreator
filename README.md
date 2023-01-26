@@ -411,7 +411,10 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 This documentation has **not been reviewed or approved** by the Food and Drug Administration FDA or by any other agency. It is the users responsibility to ensure compliance with applicable rules and regulations&mdash;be it in the US or elsewhere.
 
-Read also the *"Documentation Disclaimer"* (file DocumentationDISCLAIMER), Online: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DocumentationDISCLAIMER.md).
+Read also:
+
+* *"Documentation Disclaimer"* (file DISCLAIMER.md), Online: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DISCLAIMER.md)
+* *"Software Disclaimer"* from Plugin folder Docs/DISCLAIMER.pdf
 
 ### F. Citation
 
