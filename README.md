@@ -16,9 +16,9 @@ Real-time Volume Rendering from Medical Imaging Data
 
 ## Description
 
-This plugin provides a user-friendly workflow for creating image-based and efficiently rendered 3D volumes from medical imaging data using the Blueprint Visual Scripting System.
+This plugin provides a user-friendly workflow for creating image-based 3D volumes from medical imaging data (CT/MRI) using the Blueprint Visual Scripting system.
 
-The delivered assets provide the rendering from medical imaging data (CT/MRI) using shader software with transfer-functions from color curve gradients. To speed up rendering, optimization techniques such as empty space skipping and early ray termination are used. The delivered assets also support importing image stacks and creating texture volumes, e.g., from DICOM&reg; files.
+The delivered assets support DICOM&reg; Window and bring Transfer Function templates from color curve gradients. The rendering is processed using efficiently shader software. To speed up rendering, optimization techniques such as empty space skipping and early ray termination are used. The delivered assets also support importing image stacks and creating texture volumes, e.g., from DICOM&reg; files.
 
 <!-- UE Marketplace : End 1/2 -->
 ---
@@ -52,8 +52,8 @@ The delivered assets provide the rendering from medical imaging data (CT/MRI) us
   * [Acronyms](#acronyms)
   * [Glossary](#glossary)
   * [A. References](#a-references)
-    * [A.1. Unreal Engine](#a1-unreal-engine)
-    * [A.2. Medical Image Processing](#a2-medical-image-processing)
+    * [A.1. Medical Image Processing](#a1-medical-image-processing)
+    * [A.2. Unreal Engine](#a2-unreal-engine)
   * [B. Readings](#b-readings)
   * [C. Acknowledgements](#c-acknowledgements)
   * [D. Attribution](#d-attribution)
@@ -98,7 +98,7 @@ The following workflow is discussed as a basic concept. We use an actor with an 
 * **DICOM Window**: Hounsfield Scale filter
 * **Transfer Function**: Color Gradients represented as `Curve Linear Color` assets packed in a `Curve Atlas`
 * **Volume Rendering**: Direct Volume Rendering DVR by Raymarching represented by Raymarching `Material` assets
-* **Shading**: unlit or with static lighting
+* **Shading**: unlit or static lighting
 
 TODO:
 
@@ -148,7 +148,7 @@ MetaImage&trade; *.mhd
 
 ##### 2.2.2.1. Memory
 
-Scalar volume size $V_1$ (cp. [FAQ]):
+Scalar volume size $V_1$ (cp. [DICOM-FAQ]):
 
 * A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
 * 4 channels RGBA
@@ -274,7 +274,10 @@ The gradients show values as found in 3D Slicer, Module "Volume Rendering" [Pres
 
 ### 2.4. Volume Rendering
 
-Direct Volume Rendering DVR with Materials from Raymarching Shaders, unlit or with (precomputed) static lighting.
+Direct Volume Rendering DVR with Materials from Raycasting or Raymarching Shaders, unlit or with (precomputed) static lighting.
+
+* Minimum Opacity Threshold
+* Maximum Opacity Threshold for Early Ray Termination
 
 <div style='page-break-after: always'></div>
 
@@ -321,9 +324,11 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 ## 4. Unsupported
 
-* **Labelmap Volume** &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation (cp. [3DSlicer-01]).
-* **Vector Volume** &ndash; where the voxels store multiple scalar values, e.g., three coordinates R-A-S as components of a displacement field (cp. [3DSlicer-01]).
-* **Tensor Volume** &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI (cp. [3DSlicer-01]).
+* **Labelmap Volume** &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.
+* **Vector Volume** &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field.
+* **Tensor Volume** &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI.
+
+(Terminology: cp. [Piper et al., Overview])
 
 <div style='page-break-after: always'></div>
 
@@ -331,71 +336,90 @@ With these input settings configured, from VolumeCreator Content/Showcase/VR ope
 
 ### Acronyms
 
-<!--> * BMD &mdash; Bone Mineral Density <-->
 * CT &mdash; Computed Tomography (X-ray)
-<!-- * CTA &mdash; Computed Tomography Angiography -->
+* CTA &mdash; Computed Tomography Angiography
 * DVR &mdash; Direct Volume Rendering
+* FPS &mdash; Frames per Second
+* FPV &mdash; First Person View
+* HU &mdash; Hounsfield Unit
+* LhS &mdash; Left-handed System
+* LPS &mdash; Left&ndash;Posterior&ndash;Superior
+* LUT &mdash; Look-Up Table
+* MIP &mdash; Maximum Intensity Projection
+* MR &mdash; Magnetic Resonance
+* MRI &mdash; Magnetic Resonance Imaging
+* MRT &mdash; Magnetic Resonance Tomography
+* PET &mdash; Positron Emission Tomography
+* RAS &mdash; Right&ndash;Anterior&ndash;Superior
+* RhS &mdash; Right-handed System
+* ROI &mdash; Region of Interest
+* TF &mdash; Transfer Function
+
+<!-- * BMD &mdash; Bone Mineral Density -->
 <!-- * DXA &mdash; Dual-energy X-ray Absorptiometry -->
 <!-- * FOV &mdash; Field of View -->
-* HU &mdash; Hounsfield Unit
-<!-- * IVR &mdash; Indirect Volume Rendering --
-* LhS &mdash; Left-handed System
-<!-- * LUT &mdash; Look-Up Table -->
-<!-- * MIP &mdash; Maximum Intensity Projection -->
-<!-- * MR &mdash; Magnetic Resonance -->
-* MRI &mdash; Magnetic Resonance Imaging
-<!-- * MRT &mdash; Magnetic Resonance Tomography -->
-* PET &mdash; Positron Emission Tomography
+<!-- * IVR &mdash; Indirect Volume Rendering -->
 <!-- * QCT &mdash; Quantitative Computed Tomography -->
-* RhS &mdash; Right-handed System
-<!-- * ROI &mdash; Region of Interest -->
 <!-- * SNR &mdash; Signal-to-Noise Ratio -->
-* TF &mdash; Transfer Function
 
 ### Glossary
 
-* Anatomical Planes and Terms of Location:
-  * **Saggital**: Longitudinal (median) plane, divides in Left and Right (R);<br>positive R-Axis from Left to Right, color code red
-  * **Coronal**: Frontal plane, divides in Posterior and Anterior (A);<br>positive A-Axis from Posterior to Anterior, color code blue
-  * **Axial**: Horizontal plane, divides in Inferior and Superior (S);<br>positive S-Axis from Inferior to Superior, color code green
-* Handedness, world Cartesian coordinate system:
-  * Unreal Engine is using a Left-handed System (LhS): X-Front, Y-Right, Z-Up
-  * DICOM is using a Right-handed System (RhS): X-Right, Y-Down, Z-Front
+* **Anatomical Coordinate System** &ndash; Anatomical Planes and Terms of Location (cp. [Sharma22]):
+  * **Saggital**: Longitudinal (median) plane, divides in *Right (R)* and *Left (L)*
+  * **Coronal**: Frontal plane, divides in front as *Anterior (A)* and behind as *Posterior (P)*
+  * **Axial**: Horizontal plane, divides in *Inferior (I)* towards *Feet (F)* and *Superior (S)* towards *Head (H)*
+  * DICOM images are using an **LPS** System: Left&ndash;Posterior&ndash;Superior (cp. [Adaloglouon20]):
+    * L: Direction R-L in which X increases
+    * P: Direction A-P in which Y increases
+    * S: Direction I-S or F-H in which Z increases
+  * *"[Left&ndash;Posterior&ndash;Superior] LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use [Right&ndash;Anterior&ndash;Superior] RAS"* (cp. [Adaloglouon20], *Anatomical coordinate system*).
+* **Cartesian Coordinate Systems** &ndash; Handedness:
+  * DICOM images are using a Right-handed System **RhS** of matrix or index coordinates as rows of columns of voxel values in a stack of slices (cp. [Adaloglouon20], *Medical Image coordinate system (Voxel space)*):
+    * i: Image width in columns, X increases to the right
+    * j: Image height in rows, Y increases downwards
+    * k: Image stack depth in slices, Z increases backwards
+  * Unreal Engine is using a Left-handed System **LhS** based First Person View FPV (cp. [Mower-Coord]):
+    * X increases to the front
+    * Y increases to the right
+    * Z increases upwards
 
 <div style='page-break-after: always'></div>
 
 ### A. References
 
-#### A.1. Unreal Engine
-
-* Coordinate System:
-  * [Mower] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
-* Textures:
-  * [UEDoc] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
-  * [Mower] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. URL: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
-  * [Ivanov] Michael Ivanov: **Unreal Engine and Custom Data Textures**. Jun 19, 2021 URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
-
-#### A.2. Medical Image Processing
+#### A.1. Medical Image Processing
 
 * DICOM:
-  * [FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
-  * [Zaharia] Roni Zaharia: **Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
+  * [DICOM-FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
+  * [DICOM-Browser] Innolitics: **DICOM Standard Browser**. Online: [https://dicom.innolitics.com/ciods/ct-image](https://dicom.innolitics.com/ciods/ct-image)
+  * [Sharma21] Shivam Sharma: **Introduction to DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 15, 2021. Online: [https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd](https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd)
+  * [Sharma22] Shivam Sharma: **DICOM Coordinate Systems &ndash; 3D DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 22, 2022. Online: [https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f](https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f)
+  * [Adaloglouon20] Nikolas Adaloglouon: **Understanding Coordinate Systems and DICOM for Deep Learning Medical Image Analysis**. In: *The AI Summer*. July 16, 2020. Online: [https://theaisummer.com/medical-image-coordinates/](https://theaisummer.com/medical-image-coordinates/)
+  * [Zaharia13] Roni Zaharia: **Chapter 14 - Image Orientation: Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. June 6, 2013. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
 * Volume Rendering:
-  * [Engel06] Klaus Engel, Markus Hadwiger, Joe Kniss, Christof Rezk Salama, Daniel Weiskopf (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
-  * [Hadwiger18] Markus Hadwiger, Ali K. Al-Awami, Johanna Beyer, Marcos Agos, Hanspeter Pfister (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)
-  * [3DSlicer-01] Steve Piper (Isomics), Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Nicole Aucoin (SPL, BWH): **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)
+  * [Engel et al. 06] Klaus Engel, Markus Hadwiger, Joe Kniss, Christof Rezk Salama, Daniel Weiskopf (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
+  * [Hadwiger et al. 18] Markus Hadwiger, Ali K. Al-Awami, Johanna Beyer, Marcos Agos, Hanspeter Pfister (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)
+  * [Piper et al.] Steve Piper (Isomics), Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Nicole Aucoin (SPL, BWH): **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)
 * Transfer Function:
-  * [3DSlicer-02] Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH): **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html)
+  * [Finet et al.] Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH): **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html)
+
+#### A.2. Unreal Engine
+
+* Coordinate System:
+  * [Mower-Coord] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
+* Textures:
+  * [UEDoc] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
+  * [Mower-Comp] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. URL: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
+  * [Ivanov21] Michael Ivanov: **Unreal Engine and Custom Data Textures**. Jun 19, 2021 URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 
 ### B. Readings
 
 * Milan Ikits, Joe Kniss, Aaron Lefohn, Charles Hansen: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques)
-* **Volume Rendering Algorithm &ndash; An Overview**. In: ScienceDirect Topics. Online: [https://www.sciencedirect.com/topics/computer-science/volume-rendering-algorithm](https://www.sciencedirect.com/topics/computer-science/volume-rendering-algorithm)
-* Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.
+<!-- * Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397. -->
 
 ### C. Acknowledgements
 
-* **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 5.1. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
+* **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
 * **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
 
 <div style='page-break-after: always'></div>
