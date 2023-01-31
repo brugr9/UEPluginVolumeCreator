@@ -16,9 +16,9 @@ Real-time Volume Rendering from Medical Imaging Data
 
 ## Description
 
-This plugin provides a user-friendly workflow for creating image-based 3D volumes from medical imaging data (CT/MRI) using the Blueprint Visual Scripting system.
+This plugin provides a user-friendly Blueprint Visual Scripting system based workflow for creating image-based 3D visualisation from medical imaging data (CT/MRI).
 
-The delivered assets support DICOM&reg; Window and bring Transfer Function templates from color curve gradients. The rendering is processed using efficiently shader software. To speed up rendering, optimization techniques such as empty space skipping and early ray termination are used. The delivered assets also support importing image stacks and creating texture volumes, e.g., from DICOM&reg; files.
+The delivered assets support DICOM&reg; Window and bring transfer function templates from color curve gradients. The rendering is processed using efficiently shader software. To speed up rendering, optimization techniques such as empty space skipping and early ray termination are in charge. The delivered assets also provide importing image stacks and creating texture volumes, e.g., from DICOM&reg; image files.
 
 <!-- UE Marketplace : End 1/2 -->
 ---
@@ -103,28 +103,20 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 The following workflow is discussed as a basic concept. We use an actor with an actor component Static Mesh 'Cube'. The cube is assiged a volume rendering material with parameters as follows:
 
-* **Hounsfield Volume**: Voxels from image stack represented as `Volume Texture` asset
-* **Window Volume**: DICOM windowed Hounsfield Scale filter
+* **Hounsfield Volume**: Voxels from image stack in Hounsfield Units represented as `Volume Texture` asset
+* **Window Volume**: DICOM Windowed `Volume Texture` asset
 * **Transfer Function**: Color Gradients represented as `Curve Linear Color` assets packed in a `Curve Atlas`
 * **Volume Rendering**: Direct Volume Rendering DVR by Raymarching represented by Raymarching `Material` assets
 * **Shading**: unlit or static lighting
 
-TODO:
-
-* **Actor Component**: Actor Component `ScalarVolume` which is a Mesh Cube with Material `Raymarching` by default
-
 ```mermaid
 classDiagram
-  class BP_ScalarVolume_L
   class BP_ScalarVolume_W
   class BP_ScalarVolume_W_L
-  class BP_ScalarVolume_HU
-  class BP_ScalarVolume_HU_L
-  <<Interface>> BP_ScalarVolume_L
+  class BP_ScalarVolume_H
+
   BP_ScalarVolume_W <|-- BP_ScalarVolume_W_L
-  BP_ScalarVolume_HU <|-- BP_ScalarVolume_HU_L
-  BP_ScalarVolume_L <|-- BP_ScalarVolume_W_L : implements
-  BP_ScalarVolume_L <|-- BP_ScalarVolume_HU_L : implements
+  BP_ScalarVolume_W_L <|-- BP_ScalarVolume_H
 ```
 
 ### 2.2. Scalar Volumes
@@ -282,8 +274,6 @@ For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, Checkbox Mask 
 
 Direct Volume Rendering DVR with Materials from Raycasting or Raymarching Shaders, unlit or with (precomputed) static lighting.
 
-* Maximum Opacity Threshold for Early Ray Termination
-
 #### 2.4.1. Region Of Interest
 
 * MeshCube as Reference Object, ideally subordinated in Outline Hierarchy (Scene Graph)
@@ -294,28 +284,52 @@ Direct Volume Rendering DVR with Materials from Raycasting or Raymarching Shader
 * MeshPlane object as Reference Object
 * geometry subtraction
 
-#### 2.4.2. Ray Steps
+#### 2.4.3. Distance Power
 
-* Number of Raycasting Resampling Steps
-* Default Value: 256
-* Range [1, 1024]
+The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray.
 
-Can be seen as an optimization method (cp. [Luecke05], *Fragmented Line Ray-Casting*):
+* Default Value: `1.0`
+* Range: [`0.1`, `2.0`]
+* Resampling Distance Power:
+  * With a value of `1.0` (default) the calculated resampling distance is used.
+  * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
+  * With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
+
+This parameter may be seen as an optimisation method, cp. [Luecke05], *Fragmented Line Ray-Casting*:
 > *To lower the number of operations necessary for computing a single frame, [...] the distance between two successive resampling locations, i.e the sampling distance, could be increased, thereby decreasing the number of actual locations used for volume reconstruction.*
 > *However, it is worth mentioning, that incorporating any of these optimization approaches usually tends to result in generated images of less quality compared to an unoptimized ray-casting volume renderer.*
 
-#### 2.4.3. Transfer Function
+#### 2.4.4. Resampling Steps
 
-The Transfer Functions are based on Gradients from `Curve Linear Color` assets, bundled in a `Curve Atlas` asset as Look-Up Table:
+* Default Value: `256`
+* Range: [`1`, `1024`]
+* Maximum Number of Resampling Steps:
+  * A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
+  * A small number may decrease rendering quality but is faster.
 
-* Curve Linear Color assets named `Curve_TF-[*]_Color`
-* Curve Atlas asset named `T_TF_CurveAtlas`
+* Maximum Number of Resampling Steps
+* Default Value: `256`
+* Range: [`1`, `1024`]
+* Explanation:
+  * A large number means more steps&mdash;the resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
+  * A small number may decrease rendering quality but is faster.
 
-The gradients show values as found in 3D Slicer, Module "Volume Rendering" [Presets on GitHub](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml).
+#### 2.4.4. Transfer Function
 
-#### 2.4.4. Alpha Max
+The transfer functions are based on color gradients from `Curve Linear Color` assets, bundled in a Texture 2D `Curve Atlas` asset as Look-Up Table LUT:
 
-Iteratively added up Alpha Value Maximum as Early Ray Termination Threshold
+* Curve Linear Color *TF* assets named `Curve_TF-[*]_Color`
+* Curve Atlas *TF-LUT* asset named `T_Curve_TF-LUT_ColorAtlas`
+
+The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
+
+#### 2.4.5. Alpha Max
+
+Maximum Opacity Threshold for Early Ray Termination
+
+* Maximum Value from Iteratively added up Alpha Channel
+* Default Value: `0.8`
+* Range: [`0.0`, `1.0`]
 
 <div style='page-break-after: always'></div>
 
@@ -323,10 +337,10 @@ Iteratively added up Alpha Value Maximum as Early Ray Termination Threshold
 
 #### 2.5.1. Phong
 
-* Ambient: Ambient Reflection Value in [0.0, 1.0], Default `0.1`
-* Diffuse: Diffuse Reflection Value in [0.0, 1.0], Default `0.9`
-* Specular: Specular Reflection Value in [0.0, 1.0], Default `0.2`
-* Specular Power: Specular Reflection Power Value  in [1, 50], Default `10`
+* Ambient: Ambient Reflection Value in [`0.0`, `1.0`], Default `0.1`
+* Diffuse: Diffuse Reflection Value in [`0.0`, `1.0`], Default `0.9`
+* Specular: Specular Reflection Value in [`0.0`, `1.0`], Default `0.2`
+* Specular Power: Specular Reflection Power Value  in [`1`, `50`], Default `10`
 
 #### 2.5.2. Lighting
 
@@ -344,24 +358,11 @@ Screenshot of Content Browser with VolumeCreator Content, Folder 'Demo':
 
 ![Screenshot of plugin Content](Docs/ScreenshotPluginContent.jpg "Screenshot of plugin Content")
 
-### 3.1. Input Bindings
+`Map_DVR-Demo`
 
-Under `Project Settings > Engine > Input` push button `Import` and select file `VolumeCreator/Config/Input.ini`.
+![Screenshot of Map_DVR-Demo](Docs/DemoMap.gif "Screenshot of Map_DVR-Demo")
 
-![Screenshot of Project Setting, Input Bindings](Docs/ProjectSettings-Engine-Input-Bindings.jpg "Screenshot of Project Setting, Input Bindings")
-<br>*Fig. 3.1.: Screenshot of Project Setting, Input Bindings*
-
-With these input settings configured, from VolumeCreator Content/Showcase/VR open Blueprint `BP_VRPawn`, find its Details Panel and edit entry 'VRPawn > Per Platform Controllers':
-
-* Left Controller Class: `BP_LeftMotionController` (from dropdown)
-* Right Controller Class: `BP_RightMotionController` (from dropdown)
-
-![Screenshot of BP_VRPawn, Per Platform Controllers](Docs/Showcase-VR-BP_VRPawn.jpg "Screenshot of BP_VRPawn, Per Platform Controllers")
-<br>*Fig. 3.2.: Screenshot of BP_VRPawn, Per Platform Controllers*
-
-### 3.2. Play In Editor
-
-With the level Map_Demo-DVR openned, from the Level Editor, click the Play button to Play-in-Editor PIE:
+With the level `Map_DVR-Demo` opened, from the Level Editor, click the Play button to Play-in-Editor PIE:
 
 ![Screenshot of Demo Map PIE](Docs/DemoMapPIE.gif "Screenshot of Demo Map PIE")
 
@@ -415,7 +416,7 @@ With the level Map_Demo-DVR openned, from the Level Editor, click the Play butto
   * **Saggital**: Longitudinal (median) plane, divides in *Right (R)* and *Left (L)*
   * **Coronal**: Frontal plane, divides in front as *Anterior (A)* and behind as *Posterior (P)*
   * **Axial**: Horizontal plane, divides in *Inferior (I)* towards *Feet (F)* and *Superior (S)* towards *Head (H)*
-  * DICOM images are using an **LPS** System: Left&ndash;Posterior&ndash;Superior (cp. [Adaloglouon20]):
+  * DICOM images are using a Left&ndash;Posterior&ndash;Superior **LPS** System (cp. [Adaloglouon20]):
     * L: Direction R-L in which X increases
     * P: Direction A-P in which Y increases
     * S: Direction I-S or F-H in which Z increases
@@ -438,14 +439,13 @@ With the level Map_Demo-DVR openned, from the Level Editor, click the Play butto
 
 * Blueprint Prefix: `BP_`
 * Scalar Volume Type Suffix:
-  * Hounsfield Units: `_HU`
+  * Hounsfield Units: `_H`
   * DICOM Window: `_W`
-  * Lit (Phong, Static Light): `_L`
+  * Lightmap: `_L`
 * Examples:
-  * Blueprint, Scalar Volume, Unlit: `BP_ScalarVolume`
-  * Blueprint, Scalar Volume, Lit: `BP_ScalarVolume_L`
-  * Blueprint, Scalar Volume, Hounsfield Units, Unlit: `BP_ScalarVolume_HU`
-  * Blueprint, Scalar Volume, Hounsfield Units, Lit: `BP_ScalarVolume_HU_L`
+  * Blueprint, Scalar Volume, from Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
+  * Blueprint, Scalar Volume, from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
+  * Blueprint, Scalar Volume, from DICOM Window and Lightmap Volume Texture: **`BP_ScalarVolume_W_L`**
 
 #### Material Library
 
@@ -456,38 +456,49 @@ With the level Map_Demo-DVR openned, from the Level Editor, click the Play butto
 * Material Prefix: `M_`
 * Name Prefix:
   * Direct Volume Rendering: `DVR-`
-* Lighting Suffix: `_L`
+* Parameter Render Texture Suffix:
+  * DICOM Window: `_W`
+  * Lightmap: `_L`
 * Examples:
-  * Material, DVR Unlit (Emissive): `M_DVR-Raycasting`
-  * Material, DVR Lit: `M_DVR-Raycasting_L`
+  * Material, DVR, DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
+  * Material, DVR, DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_W_L`**
 
 ###### Render Texture
 
 * Render Texture Prefix: `RT_`
+* Volume Texture Suffix: `_Volume`
 * Name Prefix:
   * Direct Volume Rendering: `DVR-`
-* Volume Texture Suffix: `_Volume`
 * Volume Type Suffix:
   * DICOM Window: `_W`
   * Lightmap: `_L`
 * Examples:
-  * Render Texture Volume, DVR DICOM Window: `RT_DVR_W_Volume`
-  * Render Texture Volume, DVR Lightmap: `RT_DVR_L_Volume`
+  * Render Texture Volume, DVR, DICOM Window: **`RT_DVR_W_Volume`**
+  * Render Texture Volume, DVR, Lightmap: **`RT_DVR_L_Volume`**
 
 ##### Transfer Function
 
-* Texture Prefix: `T_`
+###### Gradient
+
 * Curve Prefix: `Curve_`
+* Curve Linear Color Suffix: `_Color`
 * Name Prefix:
   * Transfer Function: `TF-`
   * Computer Tomography: `CT-`
   * Magnetic Resonance: `MR-`
-* Curve Linear Color Suffix: `_Color`
-* Color Atlas Suffix: `_ColorAtlas`
 * Examples:
-  * Curve Linear Color, Transfer Function, Computer Tomography: `Curve_TF-CT-AAA2_Color`
-  * Curve Linear Color, Transfer Function, Magnetic Resonance: `Curve_TF-MR-Angio_Color`
-  * Color Atlas, Transfer Functions: `T_Curve_TF_ColorAtlas`
+  * Curve Linear Color, Transfer Function, Computer Tomography: **`Curve_TF-CT-AAA2_Color`**
+  * Curve Linear Color, Transfer Function, Magnetic Resonance: **`Curve_TF-MR-Angio_Color`**
+
+###### LUT
+
+* Texture Prefix: `T_`
+* Curve Prefix: `Curve_`
+* Color Atlas Suffix: `_ColorAtlas`
+* Name Prefix:
+  * Transfer Function: `TF-`
+* Examples:
+  * Texture 2D Color Atlas, Transfer Function LUT: **`T_Curve_TF-LUT_ColorAtlas`**
 
 #### Volumes
 
@@ -495,14 +506,14 @@ With the level Map_Demo-DVR openned, from the Level Editor, click the Play butto
 * Data Asset Suffix: `_Data`
 * Volume Texture Suffix: `_Volume`
 * Volume Type Suffix:
-  * Hounsfield Units: `_HU`
+  * Hounsfield Units: `_H`
   * DICOM Window: `_W`
   * Lightmap: `_L`
 * Examples:
   * Data Asset: `T_Default_Data`
-  * Volume Texture, Hounsfield Units: `T_Default_HU_Volume`
-  * Volume Texture, DICOM Window: `T_Default_W_Volume`
-  * Volume Texture, Lightmap: `T_Default_L_Volume`
+  * Volume Texture, Hounsfield Units: **`T_Default_H_Volume`**
+  * Volume Texture, DICOM Window: **`T_Default_W_Volume`**
+  * Volume Texture, Lightmap: **`T_Default_L_Volume`**
 
 <div style='page-break-after: always'></div>
 
@@ -520,10 +531,9 @@ With the level Map_Demo-DVR openned, from the Level Editor, click the Play butto
 * Volume Rendering:
   * [Engel et al. 06] Klaus Engel, Markus Hadwiger, Joe Kniss, Christof Rezk Salama, Daniel Weiskopf (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
   * [Hadwiger et al. 18] Markus Hadwiger, Ali K. Al-Awami, Johanna Beyer, Marcos Agos, Hanspeter Pfister (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)
-  * [Piper et al.] Steve Piper (Isomics), Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Nicole Aucoin (SPL, BWH): **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)
   * [Luecke05] Peter Lücke: **Volume Rendering Techniques for Medical Imaging**. Diplomarbeit. Technische Universität München, Fakultät für Informatik. April 15, 2005. In collaboration with Siemens Corporate Research Inc., Princeton, USA. Online: [https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf](https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf)
-* Transfer Function:
-  * [Finet et al.] Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH): **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html)
+  * [Piper et al.] Steve Piper (Isomics), Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Nicole Aucoin (SPL, BWH): **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)
+  * [Finet et al.] Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH): **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html); Transfer Function Presets on GitHub: [https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)
 
 #### A.2. Unreal Engine
 
