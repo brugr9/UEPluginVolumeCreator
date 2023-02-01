@@ -32,10 +32,10 @@ The delivered assets support DICOM&reg; Window and bring transfer function templ
 * [1. Setup](#1-setup)
   * [1.1. Installation](#11-installation)
   * [1.2. Project Configuration](#12-project-configuration)
-* [2. Usage](#2-usage)
+* [2. User Interface](#2-user-interface)
   * [2.1. Concept](#21-concept)
-  * [2.2. Scalar Volumes](#22-scalar-volumes)
-    * [2.2.1. Import Dataset](#221-import-dataset)
+  * [2.2. Dataset](#22-dataset)
+    * [2.2.1. Import](#221-import)
     * [2.2.2. Data Background](#222-data-background)
   * [2.3. DICOM Window](#23-dicom-window)
     * [2.3.1. DICOM Window Function](#231-dicom-window-function)
@@ -43,23 +43,22 @@ The delivered assets support DICOM&reg; Window and bring transfer function templ
   * [2.4. Volume Rendering](#24-volume-rendering)
     * [2.4.1. Region Of Interest](#241-region-of-interest)
     * [2.4.2. Clip Plane](#242-clip-plane)
-    * [2.4.2. Ray Steps](#242-ray-steps)
-    * [2.4.3. Transfer Function](#243-transfer-function)
-    * [2.4.4. Alpha Max](#244-alpha-max)
+    * [2.4.3. Distance Power](#243-distance-power)
+    * [2.4.4. Resampling Steps](#244-resampling-steps)
+    * [2.4.4. Transfer Function](#244-transfer-function)
+    * [2.4.5. Alpha Max](#245-alpha-max)
   * [2.5. Volume Shading](#25-volume-shading)
     * [2.5.1. Phong](#251-phong)
     * [2.5.2. Lighting](#252-lighting)
 * [3. Demo](#3-demo)
-  * [3.1. Input Bindings](#31-input-bindings)
-  * [3.2. Play In Editor](#32-play-in-editor)
 * [4. Unsupported](#4-unsupported)
 * [Appendix](#appendix)
   * [Acronyms](#acronyms)
   * [Glossary](#glossary)
   * [Asset Naming Convention](#asset-naming-convention)
     * [Blueprints](#blueprints)
+    * [Datasets](#datasets)
     * [Material Library](#material-library)
-    * [Volumes](#volumes)
   * [A. References](#a-references)
     * [A.1. Medical Image Processing](#a1-medical-image-processing)
     * [A.2. Unreal Engine](#a2-unreal-engine)
@@ -97,7 +96,7 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 <div style='page-break-after: always'></div>
 
-## 2. Usage
+## 2. User Interface
 
 ### 2.1. Concept
 
@@ -119,7 +118,7 @@ classDiagram
   BP_ScalarVolume_W_L <|-- BP_ScalarVolume_H
 ```
 
-### 2.2. Scalar Volumes
+### 2.2. Dataset
 
 An image-stack based volume&mdash;commonly known as scalar volume&mdash;is kept as Volume Texture asset in Unreal Engine.
 
@@ -131,7 +130,7 @@ Plugin features:
 
 <div style='page-break-after: always'></div>
 
-#### 2.2.1. Import Dataset
+#### 2.2.1. Import
 
 CT image data is expected to come in Hounsfield Units $HU$ as values in a range of $[-1024,3071]$ which are $4096$ gray levels for different materials. These $4096$ gray levels can be optimally represented with a twelve-digit binary number ($2^{12} = 4096$).
 
@@ -435,17 +434,53 @@ With the level `Map_DVR-Demo` opened, from the Level Editor, click the Play butt
 
 ### Asset Naming Convention
 
+Citation from [UEDoc, Recommended Asset Naming Conventions]:
+> *`[AssetTypePrefix]_[AssetName]_[Descriptor]_[OptionalVariantLetterOrNumber]`*
+>
+>* *`AssetTypePrefix` identifies the type of Asset, refer to the table below for details.*
+>* *`AssetName` is the Asset's name.*
+>* *`Descriptor` provides additional context for the Asset, to help identify how it is used. For example, whether a texture is a normal map or an opacity map.*
+>* *`OptionalVariantLetterOrNumber` is optionally used to differentiate between multiple versions or variations of an asset.*
+
+See also [Allar22].
+
 #### Blueprints
 
-* Blueprint Prefix: `BP_`
-* Scalar Volume Type Suffix:
+* `AssetTypePrefix`:
+  * Blueprint: `BP_`
+* `AssetName`:
+  * `ScalarVolume`
+* `Descriptor`, Scalar Volume Type Suffix:
   * Hounsfield Units: `_H`
   * DICOM Window: `_W`
   * Lightmap: `_L`
-* Examples:
-  * Blueprint, Scalar Volume, from Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
-  * Blueprint, Scalar Volume, from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
-  * Blueprint, Scalar Volume, from DICOM Window and Lightmap Volume Texture: **`BP_ScalarVolume_W_L`**
+
+Examples:
+
+* Blueprint, Scalar Volume, from Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
+* Blueprint, Scalar Volume, from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
+* Blueprint, Scalar Volume, from DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_W_L`**
+
+#### Datasets
+
+* `AssetTypePrefix`
+  * Texture: `T_`
+* `AssetName`:
+  * Templates: `Default`
+* `Descriptor`:
+  * Data Asset Suffix: `_Data`
+  * Volume Type Suffix:
+    * Hounsfield Units: `_H`
+    * DICOM Window: `_W`
+    * Lightmap: `_L`
+  * Volume Texture Suffix: `_Volume`
+
+Examples:
+
+* Data Asset: **`T_Default_Data`**
+* Volume Texture, Hounsfield Units: **`T_Default_H_Volume`**
+* Volume Texture, DICOM Window: **`T_Default_W_Volume`**
+* Volume Texture, Lightmap: **`T_Default_L_Volume`**
 
 #### Material Library
 
@@ -453,67 +488,70 @@ With the level `Map_DVR-Demo` opened, from the Level Editor, click the Play butt
 
 ###### Material
 
-* Material Prefix: `M_`
-* Name Prefix:
-  * Direct Volume Rendering: `DVR-`
-* Parameter Render Texture Suffix:
+* `AssetTypePrefix`
+  * Material: `M_`
+* `AssetName`:
+  * Volume Rendering Type Prefix: `DVR-`
+  * Volume Rendering Method: `Raycasting`
+* `Descriptor`, Parameter Render Texture Suffix:
   * DICOM Window: `_W`
   * Lightmap: `_L`
-* Examples:
-  * Material, DVR, DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
-  * Material, DVR, DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_W_L`**
+
+Examples:
+
+* Material, DVR, DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
+* Material, DVR, DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_W_L`**
 
 ###### Render Texture
 
-* Render Texture Prefix: `RT_`
-* Volume Texture Suffix: `_Volume`
-* Name Prefix:
-  * Direct Volume Rendering: `DVR-`
-* Volume Type Suffix:
-  * DICOM Window: `_W`
-  * Lightmap: `_L`
-* Examples:
-  * Render Texture Volume, DVR, DICOM Window: **`RT_DVR_W_Volume`**
-  * Render Texture Volume, DVR, Lightmap: **`RT_DVR_L_Volume`**
+* `AssetTypePrefix`
+  * Render Texture: `RT_`
+* `AssetName`:
+  * Volume Rendering Type: `DVR`
+* `Descriptor`:
+  * Volume Type Suffix:
+    * DICOM Window: `_W`
+    * Lightmap: `_L`
+  * Volume Texture Suffix: `_Volume`
+
+Examples:
+
+* Render Texture Volume, DVR, DICOM Window: **`RT_DVR_W_Volume`**
+* Render Texture Volume, DVR, Lightmap: **`RT_DVR_L_Volume`**
 
 ##### Transfer Function
 
 ###### Gradient
 
-* Curve Prefix: `Curve_`
-* Curve Linear Color Suffix: `_Color`
-* Name Prefix:
-  * Transfer Function: `TF-`
-  * Computer Tomography: `CT-`
-  * Magnetic Resonance: `MR-`
-* Examples:
-  * Curve Linear Color, Transfer Function, Computer Tomography: **`Curve_TF-CT-AAA2_Color`**
-  * Curve Linear Color, Transfer Function, Magnetic Resonance: **`Curve_TF-MR-Angio_Color`**
+* `AssetTypePrefix`
+  * Curve: `Curve_`
+* `AssetName`:
+  * Transfer Function Prefix: `TF-`
+  * Acquisition Type Prefix:
+    * Computer Tomography: `CT-`
+    * Magnetic Resonance: `MR-`
+* `Descriptor`:
+  * Curve Linear Color Suffix: `_Color`
+
+Examples:
+
+* Curve Linear Color, Transfer Function, Computer Tomography: **`Curve_TF-CT-AAA2_Color`**
+* Curve Linear Color, Transfer Function, Magnetic Resonance: **`Curve_TF-MR-Angio_Color`**
 
 ###### LUT
 
-* Texture Prefix: `T_`
-* Curve Prefix: `Curve_`
-* Color Atlas Suffix: `_ColorAtlas`
-* Name Prefix:
-  * Transfer Function: `TF-`
-* Examples:
-  * Texture 2D Color Atlas, Transfer Function LUT: **`T_Curve_TF-LUT_ColorAtlas`**
+* `AssetTypePrefix`:
+  * Texture: `T_`
+  * Curve: `Curve_`
+* `AssetName`:
+  * Transfer Function Prefix: `TF-`
+  * Look-Up Table: `LUT`
+* `Descriptor`:
+  * Color Atlas Suffix: `_ColorAtlas`
 
-#### Volumes
+Examples:
 
-* Texture Prefix: `T_`
-* Data Asset Suffix: `_Data`
-* Volume Texture Suffix: `_Volume`
-* Volume Type Suffix:
-  * Hounsfield Units: `_H`
-  * DICOM Window: `_W`
-  * Lightmap: `_L`
-* Examples:
-  * Data Asset: `T_Default_Data`
-  * Volume Texture, Hounsfield Units: **`T_Default_H_Volume`**
-  * Volume Texture, DICOM Window: **`T_Default_W_Volume`**
-  * Volume Texture, Lightmap: **`T_Default_L_Volume`**
+* Texture 2D Color Atlas, Transfer Function LUT: **`T_Curve_TF-LUT_ColorAtlas`**
 
 <div style='page-break-after: always'></div>
 
@@ -537,10 +575,14 @@ With the level `Map_DVR-Demo` opened, from the Level Editor, click the Play butt
 
 #### A.2. Unreal Engine
 
+* [UEDoc] Epic Games: **Unreal Engine Documentation**. URL: [https://docs.unrealengine.com](https://docs.unrealengine.com)
 * Coordinate System:
   * [Mower-Coord] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
+* Naming Convention:
+  * [UEDoc, Recommended Asset Naming Conventions] Epic Games: **Recommended Asset Naming Conventions**. URL: [https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/](https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/)
+  * [Allar22] Michael Allar: **Gamemakin UE Style Guide**. Mar 7, 2022. URL: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide)
 * Textures:
-  * [UEDoc] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
+  * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
   * [Mower-Comp] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. URL: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
   * [Ivanov21] Michael Ivanov: **Unreal Engine and Custom Data Textures**. Jun 19, 2021 URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 
