@@ -275,22 +275,20 @@ Direct Volume Rendering DVR with Materials from Raycasting or Raymarching Shader
 
 #### 2.4.1. Region Of Interest
 
-* MeshCube as Reference Object, ideally subordinated in Outline Hierarchy (Scene Graph)
-* geometry subtraction
+* MeshCube: `BP_RegionOfInterest` instance as Reference Object, ideally subordinated in Outline Hierarchy (Scene Graph)
+* used for geometry subtraction in the shader
 
 #### 2.4.2. Clip Plane
 
-* MeshPlane object as Reference Object
-* geometry subtraction
+* MeshPlane: `BP_ClipPlane` instance as object as Reference Object
+* used for geometry subtraction in the shader
 
 #### 2.4.3. Distance Power
-
-The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray.
 
 * Default Value: `1.0`
 * Range: [`0.1`, `2.0`]
 * Resampling Distance Power:
-  * With a value of `1.0` (default) the calculated resampling distance is used.
+  * The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used.
   * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
   * With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
 
@@ -304,13 +302,6 @@ This parameter may be seen as an optimisation method, cp. [Luecke05], *Fragmente
 * Range: [`1`, `1024`]
 * Maximum Number of Resampling Steps:
   * A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
-  * A small number may decrease rendering quality but is faster.
-
-* Maximum Number of Resampling Steps
-* Default Value: `256`
-* Range: [`1`, `1024`]
-* Explanation:
-  * A large number means more steps&mdash;the resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
   * A small number may decrease rendering quality but is faster.
 
 #### 2.4.4. Transfer Function
@@ -521,7 +512,7 @@ Examples:
 
 ##### Transfer Function
 
-###### Gradient
+###### Gradients
 
 * `AssetTypePrefix`
   * Curve: `Curve_`
@@ -538,7 +529,7 @@ Examples:
 * Curve Linear Color, Transfer Function, Computer Tomography: **`Curve_TF-CT-AAA2_Color`**
 * Curve Linear Color, Transfer Function, Magnetic Resonance: **`Curve_TF-MR-Angio_Color`**
 
-###### LUT
+###### Look-Up Table
 
 * `AssetTypePrefix`:
   * Texture: `T_`
