@@ -45,8 +45,10 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 * [7. Asset Naming Convention](#7-asset-naming-convention)
   * [7.1. Blueprints](#71-blueprints)
   * [7.2. Datasets](#72-datasets)
+    * [7.2.1. Structures](#721-structures)
+    * [7.2.2. Volumes](#722-volumes)
   * [7.3. Material Library](#73-material-library)
-    * [7.3.1. DVR](#731-dvr)
+    * [7.3.1. Scalar Volume](#731-scalar-volume)
     * [7.3.2. Transfer Function](#732-transfer-function)
 * [8. Demo](#8-demo)
 * [Appendix](#appendix)
@@ -281,7 +283,7 @@ Maximum Opacity Threshold for Early Ray Termination
 
 * Spot Lights: Array of `BP_StaticSpotLight` Object Reference
 * Half Resolution: Default `true` (checked)
-* Lightmap Volume: Volume Render Target Object Reference, Default `RT_Lightmap_Volume`
+* Lightmap Volume: Volume Render Target Object Reference, Default `RT_ScalarVolume_L_Volume`
 
 <div style='page-break-after: always'></div>
 
@@ -387,6 +389,25 @@ Examples:
 
 ### 7.2. Datasets
 
+#### 7.2.1. Structures
+
+* `AssetTypePrefix`
+  * Texture: `F`
+* `AssetName`:
+  * Templates: `Default`
+* `Descriptor`:
+  * Volume Type Suffix:
+    * Hounsfield Units: `_H`
+    * DICOM Window: `_W`
+    * Lightmap: `_L`
+  * Data Asset Suffix: `_Data`
+
+Examples:
+
+* Data Asset: **`FDefault_Data`**
+
+#### 7.2.2. Volumes
+
 * `AssetTypePrefix`
   * Texture: `T_`
 * `AssetName`:
@@ -401,47 +422,53 @@ Examples:
 
 Examples:
 
-* Data Asset: **`T_Default_Data`**
 * Volume Texture, Hounsfield Units: **`T_Default_H_Volume`**
 * Volume Texture, DICOM Window: **`T_Default_W_Volume`**
 * Volume Texture, Lightmap: **`T_Default_L_Volume`**
 
 ### 7.3. Material Library
 
-#### 7.3.1. DVR
+#### 7.3.1. Scalar Volume
 
 ##### 7.3.1.1. Material
 
 * `AssetTypePrefix`
   * Material: `M_`
 * `AssetName`:
-  * Volume Rendering Type Prefix: `DVR-`
-  * Volume Rendering Method: `Raycasting`
-* `Descriptor`, Parameter Render Texture Suffix:
-  * DICOM Window: `_W`
-  * Lightmap: `_L`
+  * Volume Rendering Type Prefix: `DVR-`, `IVR-`
+  * Volume Rendering Method: `Raycasting`, `Raymarching`
+* `Descriptor`:
+  * DICOM Window Suffix: `_W`
+  * Lightmap Suffix: `_L`
+  * Compute Shader Suffix: `_C`
 
 Examples:
 
-* Material, DVR, DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
-* Material, DVR, DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_W_L`**
+* Material, DVR Raycasting, DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
+* Material, DVR Raycasting, DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_W_L`**
+* Material, DVR Raymarching, DICOM Window as Parameter: **`M_DVR-Raymarching_W`**
+* Material, DVR Raymarching, DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_W_L`**
+* Material, IVR Raycasting, DICOM Window as Parameter: **`M_IVR-Raycasting_W`**
+* Material, IVR Raycasting, DICOM Window and Lightmap as Parameter: **`M_IVR-Raycasting_W_L`**
+* Material, Scalar Volume, DICOM Window Compute Shader: **`M_ScalarVolume_W_C`**
+* Material, Scalar Volume, Lightmap Compute Shader: **`M_ScalarVolume_L_C`**
 
 ##### 7.3.1.2. Render Texture
 
 * `AssetTypePrefix`
   * Render Texture: `RT_`
 * `AssetName`:
-  * Volume Rendering Type: `DVR`
+  * Volume Type: `ScalarVolume`
 * `Descriptor`:
-  * Volume Type Suffix:
+  * Data Type Suffix:
     * DICOM Window: `_W`
     * Lightmap: `_L`
   * Volume Texture Suffix: `_Volume`
 
 Examples:
 
-* Render Texture Volume, DVR, DICOM Window: **`RT_DVR_W_Volume`**
-* Render Texture Volume, DVR, Lightmap: **`RT_DVR_L_Volume`**
+* Render Texture Volume, DVR, DICOM Window: **`RT_ScalarVolume_W_Volume`**
+* Render Texture Volume, DVR, Lightmap: **`RT_ScalarVolume_L_Volume`**
 
 #### 7.3.2. Transfer Function
 
