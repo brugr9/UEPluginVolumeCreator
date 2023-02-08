@@ -18,39 +18,30 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
   * [2.2. Region of Interest](#22-region-of-interest)
   * [2.3. Clip Plane](#23-clip-plane)
   * [2.4. Static Spot-Light](#24-static-spot-light)
-* [3. Blueprint BP_ScalarVolume_H](#3-blueprint-bp_scalarvolume_h)
-  * [3.2. Dataset](#32-dataset)
-  * [3.3. DICOM Window](#33-dicom-window)
-    * [3.3.1. DICOM Window Function](#331-dicom-window-function)
-    * [3.3.2. DICOM Window Mask](#332-dicom-window-mask)
-  * [3.4. Volume Rendering](#34-volume-rendering)
-    * [3.4.1. Region Of Interest](#341-region-of-interest)
-    * [3.4.2. Clip Plane](#342-clip-plane)
-    * [3.4.3. Distance Power](#343-distance-power)
-    * [3.4.4. Resampling Steps](#344-resampling-steps)
-    * [3.4.4. Transfer Function](#344-transfer-function)
-    * [3.4.5. Alpha Max](#345-alpha-max)
-  * [3.5. Volume Shading](#35-volume-shading)
-    * [3.5.1. Phong](#351-phong)
-    * [3.5.2. Lighting](#352-lighting)
-* [4. Blueprint BP_ScalarVolume_W](#4-blueprint-bp_scalarvolume_w)
-* [5. Blueprint BP_ScalarVolume_W_L](#5-blueprint-bp_scalarvolume_w_l)
-* [6. Import](#6-import)
-  * [6.1. Import DICOM](#61-import-dicom)
-  * [6.2. Import MetaImage](#62-import-metaimage)
-  * [6.3. Import Grayscale Images](#63-import-grayscale-images)
-  * [6.2. Data Background](#62-data-background)
-    * [6.2.1. Memory](#621-memory)
-    * [6.2.2. Processing](#622-processing)
-* [7. Asset Naming Convention](#7-asset-naming-convention)
-  * [7.1. Blueprints](#71-blueprints)
-  * [7.2. Datasets](#72-datasets)
-    * [7.2.1. Structures](#721-structures)
-    * [7.2.2. Volumes](#722-volumes)
-  * [7.3. Material Library](#73-material-library)
-    * [7.3.1. Scalar Volume](#731-scalar-volume)
-    * [7.3.2. Transfer Function](#732-transfer-function)
-* [8. Demo](#8-demo)
+* [3. Blueprint ScalarVolume and Inheriting Actors](#3-blueprint-scalarvolume-and-inheriting-actors)
+  * [3.1. Actor BP ScalarVolume H](#31-actor-bp-scalarvolume-h)
+    * [3.1.1. Instance](#311-instance)
+    * [3.1.2. Dataset](#312-dataset)
+    * [3.1.3. DICOM Window](#313-dicom-window)
+    * [3.1.4. Volume Rendering](#314-volume-rendering)
+    * [3.1.5. Volume Shading](#315-volume-shading)
+  * [3.2. Actor BP ScalarVolume W](#32-actor-bp-scalarvolume-w)
+  * [3.3. Actor BP ScalarVolume W L](#33-actor-bp-scalarvolume-w-l)
+* [4. Import](#4-import)
+  * [4.1. Import DICOM](#41-import-dicom)
+  * [4.2. Import MetaImage](#42-import-metaimage)
+  * [4.3. Import Grayscale Images](#43-import-grayscale-images)
+  * [4.2. Data Background](#42-data-background)
+    * [4.2.1. Memory](#421-memory)
+    * [4.2.2. Processing](#422-processing)
+* [5. Asset Naming Convention](#5-asset-naming-convention)
+  * [5.1. Blueprints](#51-blueprints)
+  * [5.2. Datasets](#52-datasets)
+    * [5.2.1. Structures](#521-structures)
+    * [5.2.2. Volumes](#522-volumes)
+  * [5.3. Material Library](#53-material-library)
+    * [5.3.1. Scalar Volume](#531-scalar-volume)
+    * [5.3.2. Transfer Function](#532-transfer-function)
 * [Appendix](#appendix)
   * [Acronyms](#acronyms)
   * [Glossary](#glossary)
@@ -95,59 +86,122 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ## 2. Concept
 
+The plugin provides rendering of image-stack based volumes&mdash;commonly known as **scalar volumes** (see section 2.1.). The plugin however *does not support* the following type of volumes (terminology cp. [Piper et al., Overview]):
+
+* *Labelmap Volume* &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.
+* *Vector Volume* &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field.
+* *Tensor Volume* &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI.
+
+The volume geometry can be reduced with a **region of interest** and/or with a **clip plane**. In addition, the volume can be illuminated with **static spot-lights** (see sections 2.2. - 2.4.). The scalar volume datasets are handled in Blueprint actors (see section 3.).
+
 ### 2.1. Scalar Volumes
 
-The following workflow is discussed as a basic concept. We use an actor with an actor component Static Mesh 'Cube'. The cube is assiged a volume rendering material with parameters as follows:
+In this plugin, image-stack based scalar volumes are kept in `Volume Texture` assets aka `Texture3D`, which serve as voxel container for the following three different content&mdash;the assets name suffix indicate the intended content or use resp. in each case (cp. section *[Asset Naming Convention](#7-asset-naming-convention)*):
 
-* **Hounsfield Volume**: Voxels from image stack in Hounsfield Units represented as `Volume Texture` asset
-* **Window Volume**: DICOM Windowed `Volume Render Texture` or `Volume Texture` asset
-* **Lightmap Volume**: Static lighting `Volume Render Texture` or `Volume Texture` asset
+* **Hounsfield Units**: Voxels from image stack in Hounsfield Units <br>represented as `Volume Texture`; asset name suffix `_H`
+* **DICOM Window**: DICOM windowed data <br>represented as `TextureRenderTargetVolume` or `Volume Texture`; asset name suffix `_W`
+* **Lightmap**: Static lighting data <br>represented as `TextureRenderTargetVolume` or `Volume Texture`; asset name suffix `_L`
 
-```mermaid
-classDiagram
-  class BP_ScalarVolume_W
-  class BP_ScalarVolume_W_L
-  class BP_ScalarVolume_H
+Plugin Content:
 
-  BP_ScalarVolume_W <|-- BP_ScalarVolume_W_L
-  BP_ScalarVolume_W_L <|-- BP_ScalarVolume_H
-```
-
-Unsupported:
-
-* **Labelmap Volume** &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.
-* **Vector Volume** &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field.
-* **Tensor Volume** &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI.
-
-(Terminology: cp. [Piper et al., Overview])
+* Volume Textures: `T_ScalarVolume_H_Volume`, `T_ScalarVolume_W_Volume`, `T_ScalarVolume_L_Volume`
 
 <div style='page-break-after: always'></div>
 
 ### 2.2. Region of Interest
 
-Blueprint `BP_RegionOfInterest`
+The plugin provides with a Blueprint actor named `BP_RegionOfInterest` with a `StaticMeshComponent` of type `Cube` with gravity and collision disabled. The material instance `MI_FramingEdges_ROI` is assigned to the mesh (see figure 2.2.).
+
+Plugin Content:
+
+* Blueprint Actor: `BP_RegionOfInterest`
+* Material Instance: `MI_FramingEdges_ROI`
+
+![Blueprint Actor BP_RegionOfInterest](Docs/BP_RegionOfInterest.png "Blueprint Actor BP_RegionOfInterest")<br>*Fig. 2.2.: Blueprint Actor BP_RegionOfInterest*
 
 ### 2.3. Clip Plane
 
-Blueprint `BP_ClipPlane`
+The plugin provides with a Blueprint pawn named `BP_ClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_FramingEdges_ClipPlane` is assigned to the mesh (see figure 2.3.).
+
+Plugin Content:
+
+* Blueprint Pawn: `BP_ClipPlane`
+* Material Instance: `MI_FramingEdges_ClipPlane`
+
+![Blueprint Pawn BP_ClipPlane](Docs/BP_ClipPlane.png "Blueprint Pawn BP_ClipPlane")<br>*Fig. 2.3.: Blueprint Pawn BP_ClipPlane*
 
 ### 2.4. Static Spot-Light
 
-Blueprint `BP_StaticSpotLight`
+The plugin provides with a Blueprint SpotLight named `BP_StaticSpotLight` whose transform mobility is set to static (see figure 2.4.).
 
-## 3. Blueprint BP_ScalarVolume_H
+Plugin Content:
 
-### 3.2. Dataset
+* Blueprint Pawn: `BP_StaticSpotLight`
+
+![Blueprint SpotLight BP_StaticSpotLight](Docs/BP_StaticSpotLight.png "Blueprint SpotLight BP_StaticSpotLight")<br>*Fig. 2.4.: Blueprint SpotLight BP_StaticSpotLight*
+
+## 3. Blueprint ScalarVolume and Inheriting Actors
+
+The scalar volume datasets are handled in actors based on an abstract Blueprint named `BP_ScalarVolume`, which holds a `StaticMeshComponent` of type `Cube` named `ScalarVolumeMesh` and another `StaticMeshComponent` of type `Cube` named `BoundingBox` (see Class Diagram in figure 3.1.).
+
+Plugin Content:
+
+* Blueprint Actors: `BP_ScalarVolume`, `BP_ScalarVolume_H`, `BP_ScalarVolume_W`, `BP_ScalarVolume_W_L`
+
+*Fig 3.1.: Class Diagramm*
+```mermaid
+classDiagram
+  class BP_ScalarVolume{
+    +StaticMeshComponent Cube : ScalarVolumeMesh
+    +StaticMeshComponent Cube : BoundingBox
+    +FParameterVolumeRendering : VolumeRendering
+    +EnumVolumeRenderingMethod : Method
+    -MaterialInstanceDynamic : MI_ScalarVolume_Dynamic
+    +RescaleScalarVolumeMesh(FParameter_Voxel VoxelSpacing)
+  }
+  class BP_ScalarVolume_H{
+    +FScalarVolume_H : Dataset
+    -TextureRenderTargetVolume : WindowVolumeRT
+    -TextureRenderTargetVolume : LightmapVolumeRT
+    #ConstructionScript()
+    +CalcWindowVolumeRT()
+    +CalcLightmapVolumeRT()
+    +SaveWindowVolumeRT()
+    +SaveLightmapVolumeRT()
+    +EventDispatcher : OnChangedWindowVolumeRT()
+    +EventDispatcher : OnChangedLightmapVolumeRT()
+  }
+  class BP_ScalarVolume_W{
+    +FScalarVolume_W : Dataset
+    #ConstructionScript()
+  }
+  class BP_ScalarVolume_W_L{
+    +FScalarVolume_L : Shading
+    #ConstructionScript()
+  }
+
+  <<Abstract>> BP_ScalarVolume
+
+  BP_ScalarVolume <|-- BP_ScalarVolume_H : Inheritance
+  BP_ScalarVolume <|-- BP_ScalarVolume_W : Inheritance
+  BP_ScalarVolume_W <|-- BP_ScalarVolume_W_L : Inheritance
+```
+
+### 3.1. Actor BP ScalarVolume H
+
+#### 3.1.1. Instance
+
+#### 3.1.2. Dataset
 
 An image-stack based volume&mdash;commonly known as scalar volume&mdash;is kept as Volume Texture asset in Unreal Engine.
 
-### 3.3. DICOM Window
+#### 3.1.3. DICOM Window
 
-CT image data is expected to come in Hounsfield Units $HU$ in a range of $[-1024,3071]$ representing $4096$ gray levels for different materials where air is defined as $-1000 HU$ and water as $0 HU$. But computer screens only can visualize $256$ gray levels, represented by a value range of $[0, 255]$. Therefore the $4096$ Hounsfield Units have to be mapped to the $256$ screen gray scale levels. This is done by linear interpolation (Lerp).
+CT image data is expected to come in Hounsfield Units $HU$ in a range of $[-1024,3072]$ representing $4096$ gray levels for different materials where air is defined as $-1000 HU$ and water as $0 HU$. But computer screens only can visualize $256$ gray levels, represented by a value range of $[0, 255]$. Therefore the $4096$ Hounsfield Units have to be mapped to the $256$ screen gray scale levels. This is done by linear interpolation (Lerp).
 
 If the whole range of $4096$ Hounsfield data is mapped to $256$ gray levels, the contrast becomes quite bad. Therefore, the so called DICOM Window was introduced to downsize the range of Hounsfield data to map.
 
-#### 3.3.1. DICOM Window Function
+##### 3.1.3.1. DICOM Window Function
 
 A DICOM Window is defined in $HU$ by its center $W_c$&mdash;aka level, and width $W_w$&mdash;aka contrast. The DICOM window center $W_c$ and width $W_w$ define the window right border $W_r$ and left border $W_l$:
 
@@ -175,7 +229,7 @@ by means of a gray level becomes:
 
 Example:
 
-With, e.g., a DICOM Window center $W_c = 1023 HU$ and width $W_w = 4096 HU$ the whole range of $[-1024,3071] HU$ is taken to account for mapping. With a DICOM Window center $W_c = 200 HU$ and width $W_w = 600 HU$ only the range of $[-100,500] HU$ is mapped (see figure 2.1. and see figure 2.3.).
+With, e.g., a DICOM Window center $W_c = 1023 HU$ and width $W_w = 4096 HU$ the whole range of $[-1024,3072] HU$ is taken to account for mapping. With a DICOM Window center $W_c = 200 HU$ and width $W_w = 600 HU$ only the range of $[-100,500] HU$ is mapped (see figure 2.1. and see figure 2.3.).
 
 ![Graph of DICOM Window function](Docs/GraphDicomWindow.png "Graph of DICOM Window function")<br>*Fig. 3.1.: Graph of DICOM Window function with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
 
@@ -188,7 +242,7 @@ For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, see figure 2.2
 
 <div style='page-break-after: always'></div>
 
-#### 3.3.2. DICOM Window Mask
+##### 3.1.3.2. DICOM Window Mask
 
 To allow to render the lerped values only, a mask $m$ is applied to the volume's Hounsfiled data $v$. Values $v$ greater than the window right border $W_r$ and lesser than the window left border $W_l$ are mapped as follows:
 
@@ -216,21 +270,21 @@ For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, Checkbox Mask 
 
 <div style='page-break-after: always'></div>
 
-### 3.4. Volume Rendering
+#### 3.1.4. Volume Rendering
 
 Direct Volume Rendering DVR with Materials from Raycasting or Raymarching Shaders, unlit or with (precomputed) static lighting.
 
-#### 3.4.1. Region Of Interest
+##### 3.1.4.1. Region Of Interest
 
 * MeshCube: `BP_RegionOfInterest` instance as Reference Object, ideally subordinated in Outline Hierarchy (Scene Graph)
 * used for geometry subtraction in the shader
 
-#### 3.4.2. Clip Plane
+##### 3.1.4.2. Clip Plane
 
 * MeshPlane: `BP_ClipPlane` instance as object as Reference Object
 * used for geometry subtraction in the shader
 
-#### 3.4.3. Distance Power
+##### 3.1.4.3. Distance Power
 
 * Default Value: `1.0`
 * Range: [`0.1`, `2.0`]
@@ -243,7 +297,7 @@ This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragme
 > *To lower the number of operations necessary for computing a single frame, [...] the distance between two successive resampling locations, i.e the sampling distance, could be increased, thereby decreasing the number of actual locations used for volume reconstruction.*
 > *However, it is worth mentioning, that incorporating any of these optimization approaches usually tends to result in generated images of less quality compared to an unoptimized ray-casting volume renderer.*
 
-#### 3.4.4. Resampling Steps
+##### 3.1.4.4. Resampling Steps
 
 * Default Value: `256`
 * Range: [`1`, `1024`]
@@ -251,7 +305,7 @@ This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragme
   * A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
   * A small number may decrease rendering quality but is faster.
 
-#### 3.4.4. Transfer Function
+##### 3.1.4.4. Transfer Function
 
 The transfer functions are based on color gradients from `Curve Linear Color` assets, bundled in a Texture 2D `Curve Atlas` asset as Look-Up Table LUT:
 
@@ -260,7 +314,7 @@ The transfer functions are based on color gradients from `Curve Linear Color` as
 
 The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
 
-#### 3.4.5. Alpha Max
+##### 3.1.4.5. Alpha Max
 
 Maximum Opacity Threshold for Early Ray Termination
 
@@ -270,16 +324,16 @@ Maximum Opacity Threshold for Early Ray Termination
 
 <div style='page-break-after: always'></div>
 
-### 3.5. Volume Shading
+#### 3.1.5. Volume Shading
 
-#### 3.5.1. Phong
+##### 3.1.5.1. Phong
 
 * Ambient: Ambient Reflection Value in [`0.0`, `1.0`], Default `0.1`
 * Diffuse: Diffuse Reflection Value in [`0.0`, `1.0`], Default `0.9`
 * Specular: Specular Reflection Value in [`0.0`, `1.0`], Default `0.2`
 * Specular Power: Specular Reflection Power Value  in [`1`, `50`], Default `10`
 
-#### 3.5.2. Lighting
+##### 3.1.5.2. Lighting
 
 * Spot Lights: Array of `BP_StaticSpotLight` Object Reference
 * Half Resolution: Default `true` (checked)
@@ -287,39 +341,39 @@ Maximum Opacity Threshold for Early Ray Termination
 
 <div style='page-break-after: always'></div>
 
-## 4. Blueprint BP_ScalarVolume_W
+### 3.2. Actor BP ScalarVolume W
 
 <div style='page-break-after: always'></div>
 
-## 5. Blueprint BP_ScalarVolume_W_L
+### 3.3. Actor BP ScalarVolume W L
 
 <div style='page-break-after: always'></div>
 
-## 6. Import
+## 4. Import
 
-CT image data is expected to come in Hounsfield Units $HU$ as values in a range of $[-1024,3071]$ which are $4096$ gray levels for different materials. These $4096$ gray levels can be optimally represented with a twelve-digit binary number ($2^{12} = 4096$).
+CT image data is expected to come in Hounsfield Units $HU$ as values in a range of $[-1024,3072]$ which are $4096$ gray levels for different materials. These $4096$ gray levels can be optimally represented with a twelve-digit binary number (12 bit, $2^{12} = 4096$).
 
 Naming Convention: Underlines in file names (`_`) are replaced by minus in asset names (`-`)
 
-### 6.1. Import DICOM
+### 4.1. Import DICOM
 
 DICOM&reg; *.dcm
 
 The results are stored in a Volume Render Texture named `RT_Scalar_Volume`, R-channel.
 
-### 6.2. Import MetaImage
+### 4.2. Import MetaImage
 
 MetaImage&trade; *.mhd
 
-### 6.3. Import Grayscale Images
+### 4.3. Import Grayscale Images
 
 TODO:
 
 <div style='page-break-after: always'></div>
 
-### 6.2. Data Background
+### 4.2. Data Background
 
-#### 6.2.1. Memory
+#### 4.2.1. Memory
 
 Scalar volume size $V_1$ (cp. [DICOM-FAQ]):
 
@@ -337,7 +391,7 @@ If the images are double the size (stack of 1024 images with 1024 x 1024 pixel p
 
 $ V_3 = 1024^3 \times 4 \times 8\ {}bit = 34’359’738’368\ {}bit = 34.359\ {}Gigabit = 4295\ {}MB $
 
-#### 6.2.2. Processing
+#### 4.2.2. Processing
 
 With processing, e.g., $30 \text{ fps}$:
 
@@ -359,9 +413,9 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 
 <div style='page-break-after: always'></div>
 
-## 7. Asset Naming Convention
+## 5. Asset Naming Convention
 
-Citation from [UEDoc, Recommended Asset Naming Conventions] (see also [Allar22]):
+The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Naming Conventions] (see also [Allar22]):
 > *`[AssetTypePrefix]_[AssetName]_[Descriptor]_[OptionalVariantLetterOrNumber]`*
 >
 >* *`AssetTypePrefix` identifies the type of Asset [...].*
@@ -369,14 +423,16 @@ Citation from [UEDoc, Recommended Asset Naming Conventions] (see also [Allar22])
 >* *`Descriptor` provides additional context for the Asset, to help identify how it is used. For example, whether a texture is a normal map or an opacity map.*
 >* *`OptionalVariantLetterOrNumber` is optionally used to differentiate between multiple versions or variations of an asset.*
 
-### 7.1. Blueprints
+In the `AssetName` dashes "`-`" are used, no underlines "`_`".
+
+### 5.1. Blueprints
 
 * `AssetTypePrefix`:
   * Blueprint: `BP_`
 * `AssetName`:
   * `ScalarVolume`
 * `Descriptor`:
-  * Scalar Volume Type Suffix:
+  * Volume Type Suffix:
     * Hounsfield Units: `_H`
     * DICOM Window: `_W`
     * Lightmap: `_L`
@@ -387,9 +443,9 @@ Examples:
 * Blueprint, Scalar Volume, from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
 * Blueprint, Scalar Volume, from DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_W_L`**
 
-### 7.2. Datasets
+### 5.2. Datasets
 
-#### 7.2.1. Structures
+#### 5.2.1. Structures
 
 * `AssetTypePrefix`
   * Texture: `F`
@@ -404,9 +460,11 @@ Examples:
 
 Examples:
 
-* Data Asset: **`FDefault_Data`**
+* Data Asset: **`FDefault_H_Data`**
+* Data Asset: **`FDefault_W_Data`**
+* Data Asset: **`FDefault_W_L_Data`**
 
-#### 7.2.2. Volumes
+#### 5.2.2. Volumes
 
 * `AssetTypePrefix`
   * Texture: `T_`
@@ -422,45 +480,51 @@ Examples:
 
 Examples:
 
-* Volume Texture, Hounsfield Units: **`T_Default_H_Volume`**
-* Volume Texture, DICOM Window: **`T_Default_W_Volume`**
-* Volume Texture, Lightmap: **`T_Default_L_Volume`**
+* Volume Texture, Hounsfield Units: **`T_ScalarVolume_H_Volume`**
+* Volume Texture, DICOM Window: **`T_ScalarVolume_W_Volume`**
+* Volume Texture, Lightmap: **`T_ScalarVolume_L_Volume`**
 
-### 7.3. Material Library
+### 5.3. Material Library
 
-#### 7.3.1. Scalar Volume
+#### 5.3.1. Scalar Volume
 
-##### 7.3.1.1. Material
+##### 5.3.1.1. Material
 
 * `AssetTypePrefix`
   * Material: `M_`
+  * Material Instance: `MI_`
 * `AssetName`:
   * Volume Rendering Type Prefix: `DVR-`, `IVR-`
   * Volume Rendering Method: `Raycasting`, `Raymarching`
 * `Descriptor`:
-  * DICOM Window Suffix: `_W`
-  * Lightmap Suffix: `_L`
-  * Compute Shader Suffix: `_C`
+  * Volume Type Suffix:
+    * DICOM Window: `_W`
+    * Lightmap: `_L`
+  * Compute Shader Suffix: `_CS`
 
 Examples:
 
-* Material, DVR Raycasting, DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
-* Material, DVR Raycasting, DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_W_L`**
-* Material, DVR Raymarching, DICOM Window as Parameter: **`M_DVR-Raymarching_W`**
-* Material, DVR Raymarching, DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_W_L`**
-* Material, IVR Raycasting, DICOM Window as Parameter: **`M_IVR-Raycasting_W`**
-* Material, IVR Raycasting, DICOM Window and Lightmap as Parameter: **`M_IVR-Raycasting_W_L`**
-* Material, Scalar Volume, DICOM Window Compute Shader: **`M_ScalarVolume_W_C`**
-* Material, Scalar Volume, Lightmap Compute Shader: **`M_ScalarVolume_L_C`**
+* Material, DVR Raycasting
+  * DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
+  * DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_W_L`**
+* Material, DVR Raymarching
+  * DICOM Window as Parameter: **`M_DVR-Raymarching_W`**
+  * DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_W_L`**
+* Material, IVR Raycasting:
+  * DICOM Window as Parameter: **`M_IVR-Raycasting_W`**
+  * DICOM Window and Lightmap as Parameter: **`M_IVR-Raycasting_W_L`**
+* Material, Scalar Volume, Compute Shader:
+  * DICOM Window: **`M_ScalarVolume_CS_W`**
+  * Lightmap: **`M_ScalarVolume_CS_L`**
 
-##### 7.3.1.2. Render Texture
+##### 5.3.1.2. Render Texture
 
 * `AssetTypePrefix`
   * Render Texture: `RT_`
 * `AssetName`:
   * Volume Type: `ScalarVolume`
 * `Descriptor`:
-  * Data Type Suffix:
+  * Volume Type Suffix:
     * DICOM Window: `_W`
     * Lightmap: `_L`
   * Volume Texture Suffix: `_Volume`
@@ -470,9 +534,9 @@ Examples:
 * Render Texture Volume, DVR, DICOM Window: **`RT_ScalarVolume_W_Volume`**
 * Render Texture Volume, DVR, Lightmap: **`RT_ScalarVolume_L_Volume`**
 
-#### 7.3.2. Transfer Function
+#### 5.3.2. Transfer Function
 
-##### 7.3.2.1. Gradients
+##### 5.3.2.1. Gradients
 
 * `AssetTypePrefix`
   * Curve: `Curve_`
@@ -489,7 +553,7 @@ Examples:
 * Curve Linear Color, Transfer Function, Computer Tomography: **`Curve_TF-CT-AAA2_Color`**
 * Curve Linear Color, Transfer Function, Magnetic Resonance: **`Curve_TF-MR-Angio_Color`**
 
-##### 7.3.2.2. Look-Up Table
+##### 5.3.2.2. Look-Up Table
 
 * `AssetTypePrefix`:
   * Texture: `T_`
@@ -506,24 +570,6 @@ Examples:
 
 <div style='page-break-after: always'></div>
 
-## 8. Demo
-
-The plugin folder 'Demo' provides with two Blueprints ... `BP_Demo-DVR-TF-Gradient` as well as with two maps `Map_Demo-VolumeCreator`.
-
-Screenshot of Content Browser with VolumeCreator Content, Folder 'Demo':
-
-![Screenshot of plugin Content](Docs/ScreenshotPluginContent.jpg "Screenshot of plugin Content")
-
-`Map_DVR-Demo`
-
-![Screenshot of Map_DVR-Demo](Docs/DemoMap.gif "Screenshot of Map_DVR-Demo")
-
-With the level `Map_DVR-Demo` opened, from the Level Editor, click the Play button to Play-in-Editor PIE:
-
-![Screenshot of Demo Map PIE](Docs/DemoMapPIE.gif "Screenshot of Demo Map PIE")
-
-<div style='page-break-after: always'></div>
-
 ## Appendix
 
 ### Acronyms
@@ -535,6 +581,7 @@ With the level `Map_DVR-Demo` opened, from the Level Editor, click the Play butt
 * FPS &mdash; Frames per Second
 * FPV &mdash; First Person View
 * HU &mdash; Hounsfield Unit
+* IVR &mdash; Indirect Volume Rendering
 * LhS &mdash; Left-handed System
 * LPS &mdash; Left&ndash;Posterior&ndash;Superior
 * LUT &mdash; Look-Up Table
@@ -547,13 +594,6 @@ With the level `Map_DVR-Demo` opened, from the Level Editor, click the Play butt
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
 * TF &mdash; Transfer Function
-
-<!-- * BMD &mdash; Bone Mineral Density -->
-<!-- * DXA &mdash; Dual-energy X-ray Absorptiometry -->
-<!-- * FOV &mdash; Field of View -->
-<!-- * IVR &mdash; Indirect Volume Rendering -->
-<!-- * QCT &mdash; Quantitative Computed Tomography -->
-<!-- * SNR &mdash; Signal-to-Noise Ratio -->
 
 <div style='page-break-after: always'></div>
 
@@ -578,9 +618,9 @@ DICOM images are using a Left&ndash;Posterior&ndash;Superior **LPS** System (cp.
 
 DICOM images are using a Right-handed System **RhS** of matrix or index coordinates as rows of columns of voxel values in a stack of slices (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
 
-* X or i: Image width in columns, increases to the right
-* Y or j: Image height in rows, increases downwards
-* Z or k: Image stack depth in slices, increases backwards
+* i or X: Image width in columns, increases to the right
+* j or Y: Image height in rows, increases downwards
+* k or Z: Image stack depth in slices, increases backwards
 
 Unreal Engine is using a Left-handed System **LhS** based First Person View FPV (cp. [Mower-Coord]):
 
@@ -630,7 +670,6 @@ Unreal Engine is using a Left-handed System **LhS** based First Person View FPV 
 ### C. Acknowledgements
 
 * **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
-* **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
 
 <div style='page-break-after: always'></div>
 
