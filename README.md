@@ -146,7 +146,7 @@ The scalar volume datasets are handled in actors based on an abstract Blueprint 
 
 Plugin Content:
 
-* Blueprint Actors: `BP_ScalarVolume`, `BP_ScalarVolume_H`, `BP_ScalarVolume_W`, `BP_ScalarVolume_W_L`
+* Blueprint Actors: `BP_ScalarVolume`, `BP_ScalarVolume_H`, `BP_ScalarVolume_W`, `BP_ScalarVolume_WL`
 
 *Fig 3.1.: Class Diagramm*
 ```mermaid
@@ -175,7 +175,7 @@ classDiagram
     +FScalarVolume_W : Dataset
     #ConstructionScript()
   }
-  class BP_ScalarVolume_W_L{
+  class BP_ScalarVolume_WL{
     +FScalarVolume_L : Shading
     #ConstructionScript()
   }
@@ -184,7 +184,7 @@ classDiagram
 
   BP_ScalarVolume <|-- BP_ScalarVolume_H : Inheritance
   BP_ScalarVolume <|-- BP_ScalarVolume_W : Inheritance
-  BP_ScalarVolume_W <|-- BP_ScalarVolume_W_L : Inheritance
+  BP_ScalarVolume_W <|-- BP_ScalarVolume_WL : Inheritance
 ```
 
 ### 3.1. Actor BP ScalarVolume H
@@ -423,7 +423,8 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
 >* *`Descriptor` provides additional context for the Asset, to help identify how it is used. For example, whether a texture is a normal map or an opacity map.*
 >* *`OptionalVariantLetterOrNumber` is optionally used to differentiate between multiple versions or variations of an asset.*
 
-In the `AssetName` dashes "`-`" are used, no underlines "`_`".
+* In the `AssetName`, dashes "`-`" are used, no underlines "`_`".
+* In the `Descriptor`, single letter suffixes are combined without additional underlines "`_`".
 
 ### 5.1. Blueprints
 
@@ -441,7 +442,7 @@ Examples:
 
 * Blueprint, Scalar Volume, from Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
 * Blueprint, Scalar Volume, from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
-* Blueprint, Scalar Volume, from DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_W_L`**
+* Blueprint, Scalar Volume, from DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_WL`**
 
 ### 5.2. Datasets
 
@@ -462,7 +463,7 @@ Examples:
 
 * Data Asset: **`FDefault_H_Data`**
 * Data Asset: **`FDefault_W_Data`**
-* Data Asset: **`FDefault_W_L_Data`**
+* Data Asset: **`FDefault_WL_Data`**
 
 #### 5.2.2. Volumes
 
@@ -506,16 +507,16 @@ Examples:
 
 * Material, DVR Raycasting
   * DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
-  * DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_W_L`**
+  * DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_WL`**
 * Material, DVR Raymarching
   * DICOM Window as Parameter: **`M_DVR-Raymarching_W`**
-  * DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_W_L`**
+  * DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_WL`**
 * Material, IVR Raycasting:
   * DICOM Window as Parameter: **`M_IVR-Raycasting_W`**
-  * DICOM Window and Lightmap as Parameter: **`M_IVR-Raycasting_W_L`**
+  * DICOM Window and Lightmap as Parameter: **`M_IVR-Raycasting_WL`**
 * Material, Scalar Volume, Compute Shader:
-  * DICOM Window: **`M_ScalarVolume_CS_W`**
-  * Lightmap: **`M_ScalarVolume_CS_L`**
+  * DICOM Window: **`M_ScalarVolume_CSW`**
+  * Lightmap: **`M_ScalarVolume_CSL`**
 
 ##### 5.3.1.2. Render Texture
 
@@ -574,6 +575,7 @@ Examples:
 
 ### Acronyms
 
+* CS &mdash; Compute Shader
 * CT &mdash; Computed Tomography (X-ray)
 * CTA &mdash; Computed Tomography Angiography
 * DICOM &mdash; Digital Imaging and Communications in Medicine
