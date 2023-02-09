@@ -92,7 +92,7 @@ The plugin provides rendering of image-stack based volumes&mdash;commonly known 
 * *Vector Volume* &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field.
 * *Tensor Volume* &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI.
 
-The volume geometry can be reduced with a **region of interest** and/or with a **clip plane**. In addition, the volume can be illuminated with **static spot-lights** (see sections 2.2. - 2.4.). The scalar volume datasets are handled in Blueprint actors (see section 3.).
+The volume geometry can be reduced with a **region of interest** (see section 2.2.) and/or with a **clip plane** (see section 2.3.). In addition, the volume can be illuminated with **static spot-lights** (see section 2.4.). The scalar volume datasets are handled in Blueprint actors (see section 3.).
 
 ### 2.1. Scalar Volumes
 
@@ -148,43 +148,136 @@ Plugin Content:
 
 * Blueprint Actors: `BP_ScalarVolume`, `BP_ScalarVolume_H`, `BP_ScalarVolume_W`, `BP_ScalarVolume_WL`
 
-*Fig 3.1.: Class Diagramm*
+*Fig 3.1.: Struct Composition Diagramm*
+```mermaid
+classDiagram
+  class F_ScalarVolume{
+    +BP_RegionOfInterest : RegionOfInterest
+    +BP_ClipPlane : ClipPlane
+    +Float : DistancePower
+    +Integer : ResamplingSteps
+    +CurveLinearColor : TransferFunction
+    +Float : AlphaMax
+  }
+  class F_ScalarVolume_H{
+    +VolumeTexture : HounsfieldVolume
+    +F_VoxelSpacing : VoxelSpacing
+    +F_DicomWindow : DicomWindow
+    +Boolean : WindowMask
+    +F_Phong : PhongShading
+    +F_Lightmap : Lightmap
+  }
+  class F_ScalarVolume_W{
+    +VolumeTexture : WindowVolume
+    +F_VoxelSpacing : VoxelSpacing
+    +F_DicomWindow : DicomWindow
+  }
+  class F_ScalarVolume_L{
+    +VolumeTexture : LightmapVolume
+    +F_Phong : PhongShading
+  }
+  class F_VoxelSpacing{
+    +Integer : Columns
+    +Float : ColumnSpacing
+    +Integer : Rows
+    +Float : RowSpacing
+    +Integer : Slices
+    +Float : SliceThickness
+  }
+  class F_DicomWindow{
+    +F_WindowCenterWidth : Location
+    +F_WindowLeftRight : Border
+  }
+  class F_WindowCenterWidth{
+    +Integer : Center
+    +Integer : Width
+  }
+  class F_WindowLeftRight{
+    +Integer : Left
+    +Integer : Right
+  }
+  class F_Phong{
+    +Float : Ambient
+    +Float : Diffuse
+    +Float : Specular
+    +Integer : SpecularPower
+  }
+  class F_Lightmap{
+    +Boolean : EnableLighting
+    +BP_StaticSpotLight Array : SpotLights
+    +Boolean : HalfResolution
+  }
+
+  F_ScalarVolume_H --* F_VoxelSpacing
+  F_ScalarVolume_H --* F_DicomWindow
+  F_ScalarVolume_H --* F_Lightmap
+  F_ScalarVolume_H --* F_Phong
+
+  F_ScalarVolume_W --* F_VoxelSpacing
+  F_ScalarVolume_W --* F_DicomWindow
+
+  F_ScalarVolume_L --* F_Phong
+
+  F_DicomWindow --* F_WindowCenterWidth
+  F_DicomWindow --* F_WindowLeftRight
+```
+
+*Fig 3.2.: Blueprint Inheritance Diagramm*
 ```mermaid
 classDiagram
   class BP_ScalarVolume{
+    <<Abstract>>
     +StaticMeshComponent Cube : ScalarVolumeMesh
     +StaticMeshComponent Cube : BoundingBox
-    +FParameterVolumeRendering : VolumeRendering
+    +F_ScalarVolume : VolumeRendering
     +EnumVolumeRenderingMethod : Method
     -MaterialInstanceDynamic : MI_ScalarVolume_Dynamic
-    +RescaleScalarVolumeMesh(FParameter_Voxel VoxelSpacing)
+    +RescaleScalarVolumeMesh(F_VoxelSpacing VoxelSpacing)
   }
   class BP_ScalarVolume_H{
-    +FScalarVolume_H : Dataset
-    -TextureRenderTargetVolume : WindowVolumeRT
-    -TextureRenderTargetVolume : LightmapVolumeRT
+    +F_ScalarVolume_H : Dataset
+    -TextureRenderTargetVolume : WindowRT
+    -TextureRenderTargetVolume : LightmapRT
     #ConstructionScript()
-    +CalcWindowVolumeRT()
-    +CalcLightmapVolumeRT()
-    +SaveWindowVolumeRT()
-    +SaveLightmapVolumeRT()
-    +EventDispatcher : OnChangedWindowVolumeRT()
-    +EventDispatcher : OnChangedLightmapVolumeRT()
+    +ComputeWindowRT()
+    +ComputeLightmapRT()
+    +SaveWindowRT()
+    +SaveLightmapRT()
+    +EventDispatcher : OnChangedWindowRT()
+    +EventDispatcher : OnChangedLightmapRT()
+  }
+    class BPI_ScalarVolume_W{
+    <<Interface>>
+    +Update_WindowVolume()
+    +Update_Steps()
+    +Update_RegionOfInterest()
+    +Update_ClipPlane()
+    +Update_TransferFunction()
+    +Update_AlphaMax()
+  }
+  class BPI_ScalarVolume_L{
+    <<Interface>>
+    +Update_LightmapVolume()
+    +Update_Ambient()
+    +Update_Diffuse()
+    +Update_Specular()
+    +Update_SpecularPower()
   }
   class BP_ScalarVolume_W{
-    +FScalarVolume_W : Dataset
+    +F_ScalarVolume_W : Dataset
     #ConstructionScript()
   }
   class BP_ScalarVolume_WL{
-    +FScalarVolume_L : Shading
+    +F_ScalarVolume_L : Shading
     #ConstructionScript()
   }
 
-  <<Abstract>> BP_ScalarVolume
-
   BP_ScalarVolume <|-- BP_ScalarVolume_H : Inheritance
   BP_ScalarVolume <|-- BP_ScalarVolume_W : Inheritance
+  BPI_ScalarVolume_W --|> BP_ScalarVolume_W : Realization
   BP_ScalarVolume_W <|-- BP_ScalarVolume_WL : Inheritance
+  BPI_ScalarVolume_L --|> BP_ScalarVolume_WL : Realization
+
 ```
 
 ### 3.1. Actor BP ScalarVolume H
@@ -515,8 +608,8 @@ Examples:
   * DICOM Window as Parameter: **`M_IVR-Raycasting_W`**
   * DICOM Window and Lightmap as Parameter: **`M_IVR-Raycasting_WL`**
 * Material, Scalar Volume, Compute Shader:
-  * DICOM Window: **`M_ScalarVolume_CSW`**
-  * Lightmap: **`M_ScalarVolume_CSL`**
+  * Compute DICOM Window: **`M_ScalarVolume_CSW`**
+  * Compute Lightmap: **`M_ScalarVolume_CSL`**
 
 ##### 5.3.1.2. Render Texture
 
@@ -551,8 +644,8 @@ Examples:
 
 Examples:
 
-* Curve Linear Color, Transfer Function, Computer Tomography: **`Curve_TF-CT-AAA2_Color`**
-* Curve Linear Color, Transfer Function, Magnetic Resonance: **`Curve_TF-MR-Angio_Color`**
+* Curve Linear Color, Transfer Function, Computer Tomography, AAA: **`Curve_TF-CT-AAA_Color`**
+* Curve Linear Color, Transfer Function, Magnetic Resonance, MIP: **`Curve_TF-MR-MIP_Color`**
 
 ##### 5.3.2.2. Look-Up Table
 
@@ -575,6 +668,8 @@ Examples:
 
 ### Acronyms
 
+* AAA &mdash; Abdominal Aortic Aneurysm
+* BB &mdash; Bounding Box
 * CS &mdash; Compute Shader
 * CT &mdash; Computed Tomography (X-ray)
 * CTA &mdash; Computed Tomography Angiography
@@ -591,11 +686,12 @@ Examples:
 * MR &mdash; Magnetic Resonance
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
-* PET &mdash; Positron Emission Tomography
 * RAS &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
 * TF &mdash; Transfer Function
+
+<!--* PET &mdash; Positron Emission Tomography-->
 
 <div style='page-break-after: always'></div>
 
@@ -603,7 +699,7 @@ Examples:
 
 #### Anatomical Coordinate System
 
-Anatomical Planes and Terms of Location (cp. [ Sharma 2022]):
+Anatomical Planes and Terms of Location (cp. [Sharma 2022]):
 
 * **Saggital**: Longitudinal (median) plane, divides in *Right (R)* and *Left (L)*
 * **Coronal**: Frontal plane, divides in front as *Anterior (A)* and behind as *Posterior (P)*
@@ -640,8 +736,8 @@ Unreal Engine is using a Left-handed System **LhS** based First Person View FPV 
   * [DICOM] **The DICOM Standard**. Online: [https://www.dicomstandard.org/current](https://www.dicomstandard.org/current)
   * [DICOM-FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
   * [DICOM-Browser] Innolitics: **DICOM Standard Browser**. Online: [https://dicom.innolitics.com/ciods/ct-image](https://dicom.innolitics.com/ciods/ct-image)
-  * [ Sharma 2021] Shivam Sharma: **Introduction to DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 15, 2021. Online: [https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd](https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd)
-  * [ Sharma 2022] Shivam Sharma: **DICOM Coordinate Systems &ndash; 3D DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 22, 2022. Online: [https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f](https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f)
+  * [Sharma 2021] Shivam Sharma: **Introduction to DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 15, 2021. Online: [https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd](https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd)
+  * [Sharma 2022] Shivam Sharma: **DICOM Coordinate Systems &ndash; 3D DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 22, 2022. Online: [https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f](https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f)
   * [Adaloglouon 2020] Nikolas Adaloglouon: **Understanding Coordinate Systems and DICOM for Deep Learning Medical Image Analysis**. In: *The AI Summer*. July 16, 2020. Online: [https://theaisummer.com/medical-image-coordinates/](https://theaisummer.com/medical-image-coordinates/)
   * [Zaharia 2013] Roni Zaharia: **Chapter 14 - Image Orientation: Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. June 6, 2013. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
 * Volume Rendering:
