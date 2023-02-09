@@ -142,13 +142,75 @@ Plugin Content:
 
 ## 3. Blueprint ScalarVolume and Inheriting Actors
 
-The scalar volume datasets are handled in actors based on an abstract Blueprint named `BP_ScalarVolume`, which holds a `StaticMeshComponent` of type `Cube` named `ScalarVolumeMesh` and another `StaticMeshComponent` of type `Cube` named `BoundingBox` (see Class Diagram in figure 3.1.).
+The scalar volume datasets are handled in actors based on an abstract Blueprint named `BPA_ScalarVolume`, which holds a `StaticMeshComponent` of type `Cube` named `ScalarVolumeMesh` and another `StaticMeshComponent` of type `Cube` named `BoundingBox` (see Class Diagram in figure 3.1.).
 
 Plugin Content:
 
-* Blueprint Actors: `BP_ScalarVolume`, `BP_ScalarVolume_H`, `BP_ScalarVolume_W`, `BP_ScalarVolume_WL`
+* Blueprint Actors: `BPA_ScalarVolume`, `BP_ScalarVolume_H`, `BP_ScalarVolume_W`, `BP_ScalarVolume_WL`
 
-*Fig 3.1.: Struct Composition Diagramm*
+*Fig 3.1.: Blueprint Inheritance Diagramm*
+```mermaid
+classDiagram
+  class BPA_ScalarVolume{
+    <<Abstract>>
+    +StaticMeshComponent Cube : ScalarVolumeMesh
+    +StaticMeshComponent Cube : BoundingBox
+    +F_ScalarVolume : VolumeRendering
+    +E_VolumeRenderingMethod : Method
+    +MaterialInstanceDynamic : MI_ScalarVolume_Dynamic
+    +RescaleScalarVolumeMesh(F_VoxelSpacing VoxelSpacing)
+  }
+  class BP_ScalarVolume_H{
+    +F_ScalarVolume_H : Dataset
+    -TextureRenderTargetVolume : WindowRT
+    -TextureRenderTargetVolume : LightmapRT
+    #ConstructionScript()
+    +ComputeWindowRT()
+    +ComputeLightmapRT()
+    +SaveWindowRT()
+    +SaveLightmapRT()
+    +EventDispatcher : OnChangedWindowRT()
+    +EventDispatcher : OnChangedLightmapRT()
+  }
+  class BPI_ScalarVolume_W{
+    <<Interface>>
+    +Update_WindowVolume()
+    +Update_Steps()
+    +Update_RegionOfInterest()
+    +Update_ClipPlane()
+    +Update_TransferFunction()
+    +Update_AlphaMax()
+  }
+  class BPI_ScalarVolume_L{
+    <<Interface>>
+    +Update_LightmapVolume()
+    +Update_Ambient()
+    +Update_Diffuse()
+    +Update_Specular()
+    +Update_SpecularPower()
+  }
+  class BP_ScalarVolume_W{
+    +F_ScalarVolume_W : Dataset
+    #ConstructionScript()
+  }
+  class BP_ScalarVolume_WL{
+    +F_ScalarVolume_L : Shading
+    #ConstructionScript()
+  }
+
+  BPA_ScalarVolume <|-- BP_ScalarVolume_H : Inherits
+  BPI_ScalarVolume_W <|.. BP_ScalarVolume_H : Implements
+  BPI_ScalarVolume_L <|.. BP_ScalarVolume_H : Implements
+
+  BPI_ScalarVolume_W <|.. BP_ScalarVolume_W : Implements
+  BPI_ScalarVolume_L <|.. BP_ScalarVolume_WL : Implements
+
+  BPA_ScalarVolume <|-- BP_ScalarVolume_W : Inherits
+  BP_ScalarVolume_W <|-- BP_ScalarVolume_WL : Inherits  
+
+```
+  
+*Fig 3.2.: Struct Composition Diagramm*
 ```mermaid
 classDiagram
   class F_ScalarVolume{
@@ -222,64 +284,6 @@ classDiagram
   F_DicomWindow --* F_WindowLeftRight
 ```
 
-*Fig 3.2.: Blueprint Inheritance Diagramm*
-```mermaid
-classDiagram
-  class BP_ScalarVolume{
-    <<Abstract>>
-    +StaticMeshComponent Cube : ScalarVolumeMesh
-    +StaticMeshComponent Cube : BoundingBox
-    +F_ScalarVolume : VolumeRendering
-    +EnumVolumeRenderingMethod : Method
-    -MaterialInstanceDynamic : MI_ScalarVolume_Dynamic
-    +RescaleScalarVolumeMesh(F_VoxelSpacing VoxelSpacing)
-  }
-  class BP_ScalarVolume_H{
-    +F_ScalarVolume_H : Dataset
-    -TextureRenderTargetVolume : WindowRT
-    -TextureRenderTargetVolume : LightmapRT
-    #ConstructionScript()
-    +ComputeWindowRT()
-    +ComputeLightmapRT()
-    +SaveWindowRT()
-    +SaveLightmapRT()
-    +EventDispatcher : OnChangedWindowRT()
-    +EventDispatcher : OnChangedLightmapRT()
-  }
-    class BPI_ScalarVolume_W{
-    <<Interface>>
-    +Update_WindowVolume()
-    +Update_Steps()
-    +Update_RegionOfInterest()
-    +Update_ClipPlane()
-    +Update_TransferFunction()
-    +Update_AlphaMax()
-  }
-  class BPI_ScalarVolume_L{
-    <<Interface>>
-    +Update_LightmapVolume()
-    +Update_Ambient()
-    +Update_Diffuse()
-    +Update_Specular()
-    +Update_SpecularPower()
-  }
-  class BP_ScalarVolume_W{
-    +F_ScalarVolume_W : Dataset
-    #ConstructionScript()
-  }
-  class BP_ScalarVolume_WL{
-    +F_ScalarVolume_L : Shading
-    #ConstructionScript()
-  }
-
-  BP_ScalarVolume <|-- BP_ScalarVolume_H : Inheritance
-  BP_ScalarVolume <|-- BP_ScalarVolume_W : Inheritance
-  BPI_ScalarVolume_W --|> BP_ScalarVolume_W : Realization
-  BP_ScalarVolume_W <|-- BP_ScalarVolume_WL : Inheritance
-  BPI_ScalarVolume_L --|> BP_ScalarVolume_WL : Realization
-
-```
-
 ### 3.1. Actor BP ScalarVolume H
 
 #### 3.1.1. Instance
@@ -326,12 +330,12 @@ With, e.g., a DICOM Window center $W_c = 1023 HU$ and width $W_w = 4096 HU$ the 
 
 ![Graph of DICOM Window function](Docs/GraphDicomWindow.png "Graph of DICOM Window function")<br>*Fig. 3.1.: Graph of DICOM Window function with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
 
-For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, see figure 2.2. The result is stored in a Volume-Render-Texture instance named `RT_Scalar_Volume` (8-bit R-channel).
+For Blueprint Actor `BPA_ScalarVolume` Detail Panel, DICOM Window, see figure 2.2. The result is stored in a Volume-Render-Texture instance named `RT_Scalar_Volume` (8-bit R-channel).
 
-![BP_ScalarVolume Detail Panel, DICOM Window](Docs/BPScalarVolume-DetailPanel-DICOMWindow.png "BP_ScalarVolume Detail Panel, DICOM Window")<br>*Fig. 3.2.: BP_ScalarVolume Detail Panel, DICOM Window*
+![BPA_ScalarVolume Detail Panel, DICOM Window](Docs/BPScalarVolume-DetailPanel-DICOMWindow.png "BPA_ScalarVolume Detail Panel, DICOM Window")<br>*Fig. 3.2.: BPA_ScalarVolume Detail Panel, DICOM Window*
 
-![Demo BP_ScalarVolume DICOM Window 1](Docs/Demo-BPScalarVolume-DICOMWindow-01.png "Demo BP_ScalarVolume DICOM Window 1")
-![Demo BP_ScalarVolume DICOM Window 2](Docs/Demo-BPScalarVolume-DICOMWindow-02.png "Demo BP_ScalarVolume DICOM Window 2")<br>*Fig. 3.3.: DICOM Window Rendering Result Comparison*
+![Demo BPA_ScalarVolume DICOM Window 1](Docs/Demo-BPScalarVolume-DICOMWindow-01.png "Demo BPA_ScalarVolume DICOM Window 1")
+![Demo BPA_ScalarVolume DICOM Window 2](Docs/Demo-BPScalarVolume-DICOMWindow-02.png "Demo BPA_ScalarVolume DICOM Window 2")<br>*Fig. 3.3.: DICOM Window Rendering Result Comparison*
 
 <div style='page-break-after: always'></div>
 
@@ -354,12 +358,12 @@ by means of the mask becomes:
 
 ![Graph of mask for DICOM Window](Docs/GraphDicomWindowMask.png "Graph of mask for DICOM Window")<br>*Fig. 3.4.: Graph of mask for DICOM Window with $W_c = 200$ and $W_w = 600$ ($W_r = 500$ and $W_l = -100$)*
 
-For Blueprint Actor `BP_ScalarVolume` Detail Panel, DICOM Window, Checkbox Mask see figure 2.5. The result is stored in the Volume-Render-Texture instance `RT_Scalar_Volume` (8-bit G-channel).
+For Blueprint Actor `BPA_ScalarVolume` Detail Panel, DICOM Window, Checkbox Mask see figure 2.5. The result is stored in the Volume-Render-Texture instance `RT_Scalar_Volume` (8-bit G-channel).
 
-![BP_ScalarVolume Detail Panel, DICOM Window, Mask](Docs/BPScalarVolumeDetailPanel_DICOMWindowMask.png "BP_ScalarVolume Detail Panel, DICOM Window, Mask")<br>*Fig. 3.5.: BP_ScalarVolume Detail Panel, DICOM Window, Checkbox Mask*
+![BPA_ScalarVolume Detail Panel, DICOM Window, Mask](Docs/BPScalarVolumeDetailPanel_DICOMWindowMask.png "BPA_ScalarVolume Detail Panel, DICOM Window, Mask")<br>*Fig. 3.5.: BPA_ScalarVolume Detail Panel, DICOM Window, Checkbox Mask*
 
-![Demo BP_ScalarVolume DICOM Window Mask 1](Docs/Demo-BPScalarVolume-DICOMWindow-Mask-01.png "Demo BP_ScalarVolume DICOM Window Mask 1")
-![Demo BP_ScalarVolume DICOM Window Mask 2](Docs/Demo-BPScalarVolume-DICOMWindow-Mask-02.png "Demo BP_ScalarVolume DICOM Window Mask 2")<br>*Fig. 3.3.: DICOM Window Mask Rendering Result Comparison*
+![Demo BPA_ScalarVolume DICOM Window Mask 1](Docs/Demo-BPScalarVolume-DICOMWindow-Mask-01.png "Demo BPA_ScalarVolume DICOM Window Mask 1")
+![Demo BPA_ScalarVolume DICOM Window Mask 2](Docs/Demo-BPScalarVolume-DICOMWindow-Mask-02.png "Demo BPA_ScalarVolume DICOM Window Mask 2")<br>*Fig. 3.3.: DICOM Window Mask Rendering Result Comparison*
 
 <div style='page-break-after: always'></div>
 
@@ -398,7 +402,7 @@ This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragme
   * A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
   * A small number may decrease rendering quality but is faster.
 
-##### 3.1.4.4. Transfer Function
+##### 3.1.4.5. Transfer Function
 
 The transfer functions are based on color gradients from `Curve Linear Color` assets, bundled in a Texture 2D `Curve Atlas` asset as Look-Up Table LUT:
 
@@ -407,7 +411,7 @@ The transfer functions are based on color gradients from `Curve Linear Color` as
 
 The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
 
-##### 3.1.4.5. Alpha Max
+##### 3.1.4.6. Alpha Max
 
 Maximum Opacity Threshold for Early Ray Termination
 
@@ -430,7 +434,7 @@ Maximum Opacity Threshold for Early Ray Termination
 
 * Spot Lights: Array of `BP_StaticSpotLight` Object Reference
 * Half Resolution: Default `true` (checked)
-* Lightmap Volume: Volume Render Target Object Reference, Default `RT_ScalarVolume_L_Volume`
+* Lightmap Volume: Texture Render Target Volume Object Reference, Default `RT_ScalarVolume_L_Volume`
 
 <div style='page-break-after: always'></div>
 
@@ -452,7 +456,7 @@ Naming Convention: Underlines in file names (`_`) are replaced by minus in asset
 
 DICOM&reg; *.dcm
 
-The results are stored in a Volume Render Texture named `RT_Scalar_Volume`, R-channel.
+The results are stored in a Render Target Volume named `RT_Scalar_Volume`, R-channel.
 
 ### 4.2. Import MetaImage
 
@@ -523,6 +527,8 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
 
 * `AssetTypePrefix`:
   * Blueprint: `BP_`
+  * Blueprint Interface: `BPI_`
+  * Blueprint Abstract Class: `BPA_`
 * `AssetName`:
   * `ScalarVolume`
 * `Descriptor`:
@@ -533,16 +539,21 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
 
 Examples:
 
-* Blueprint, Scalar Volume, from Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
-* Blueprint, Scalar Volume, from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
-* Blueprint, Scalar Volume, from DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_WL`**
+* Blueprint, Abstract Class, Scalar Volume: **`BPA_ScalarVolume`**
+* Blueprint Interface
+  * Scalar Volume, DICOM Window: **`BPI_ScalarVolume_W`**
+  * Scalar Volume, Lightmap: **`BPI_ScalarVolume_L`**
+* Blueprint, Scalar Volume
+  * from Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
+  * from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
+  * from DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_WL`**
 
 ### 5.2. Datasets
 
 #### 5.2.1. Structures
 
 * `AssetTypePrefix`
-  * Texture: `F`
+  * Struct: `F_`
 * `AssetName`:
   * Templates: `Default`
 * `Descriptor`:
@@ -554,9 +565,9 @@ Examples:
 
 Examples:
 
-* Data Asset: **`FDefault_H_Data`**
-* Data Asset: **`FDefault_W_Data`**
-* Data Asset: **`FDefault_WL_Data`**
+* Data Asset: **`F_Default_H_Data`**
+* Data Asset: **`F_Default_W_Data`**
+* Data Asset: **`F_Default_WL_Data`**
 
 #### 5.2.2. Volumes
 
@@ -574,9 +585,10 @@ Examples:
 
 Examples:
 
-* Volume Texture, Hounsfield Units: **`T_ScalarVolume_H_Volume`**
-* Volume Texture, DICOM Window: **`T_ScalarVolume_W_Volume`**
-* Volume Texture, Lightmap: **`T_ScalarVolume_L_Volume`**
+* Volume Texture
+  * Hounsfield Units: **`T_ScalarVolume_H_Volume`**
+  * DICOM Window: **`T_ScalarVolume_W_Volume`**
+  * Lightmap: **`T_ScalarVolume_L_Volume`**
 
 ### 5.3. Material Library
 
@@ -611,10 +623,10 @@ Examples:
   * Compute DICOM Window: **`M_ScalarVolume_CSW`**
   * Compute Lightmap: **`M_ScalarVolume_CSL`**
 
-##### 5.3.1.2. Render Texture
+##### 5.3.1.2. Texture Render Target
 
 * `AssetTypePrefix`
-  * Render Texture: `RT_`
+  * Texture Render Target: `RT_`
 * `AssetName`:
   * Volume Type: `ScalarVolume`
 * `Descriptor`:
@@ -625,8 +637,9 @@ Examples:
 
 Examples:
 
-* Render Texture Volume, DVR, DICOM Window: **`RT_ScalarVolume_W_Volume`**
-* Render Texture Volume, DVR, Lightmap: **`RT_ScalarVolume_L_Volume`**
+* Texture Render Target Volume
+  * DICOM Window: **`RT_ScalarVolume_W_Volume`**
+  * Lightmap: **`RT_ScalarVolume_L_Volume`**
 
 #### 5.3.2. Transfer Function
 
