@@ -110,7 +110,7 @@ Plugin Content:
 
 ### 2.2. Region of Interest
 
-The plugin provides with a Blueprint actor named `BP_RegionOfInterest` with a `StaticMeshComponent` of type `Cube` with gravity and collision disabled. The material instance `MI_FramingEdges_ROI` is assigned to the mesh (see figure 2.2.).
+The plugin provides with a Blueprint actor named `BP_RegionOfInterest` with a `StaticMeshComponent` of type `Cube`. The material instance `MI_FramingEdges_ROI` is assigned to the mesh (see figure 2.2.).
 
 Plugin Content:
 
@@ -121,14 +121,14 @@ Plugin Content:
 
 ### 2.3. Clip Plane
 
-The plugin provides with a Blueprint pawn named `BP_ClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_FramingEdges_ClipPlane` is assigned to the mesh (see figure 2.3.).
+The plugin provides with a Blueprint actor named `BP_ClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_FramingEdges_ClipPlane` is assigned to the mesh (see figure 2.3.).
 
 Plugin Content:
 
-* Blueprint Pawn: `BP_ClipPlane`
+* Blueprint Actor: `BP_ClipPlane`
 * Material Instance: `MI_FramingEdges_ClipPlane`
 
-![Blueprint Pawn BP_ClipPlane](Docs/BP_ClipPlane.png "Blueprint Pawn BP_ClipPlane")<br>*Fig. 2.3.: Blueprint Pawn BP_ClipPlane*
+![Blueprint Actor BP_ClipPlane](Docs/BP_ClipPlane.png "Blueprint Actor BP_ClipPlane")<br>*Fig. 2.3.: Blueprint Actor BP_ClipPlane*
 
 ### 2.4. Static Spot-Light
 
@@ -136,7 +136,7 @@ The plugin provides with a Blueprint SpotLight named `BP_StaticSpotLight` whose 
 
 Plugin Content:
 
-* Blueprint Pawn: `BP_StaticSpotLight`
+* Blueprint Actor: `BP_StaticSpotLight`
 
 ![Blueprint SpotLight BP_StaticSpotLight](Docs/BP_StaticSpotLight.png "Blueprint SpotLight BP_StaticSpotLight")<br>*Fig. 2.4.: Blueprint SpotLight BP_StaticSpotLight*
 
@@ -766,13 +766,14 @@ Unreal Engine is using a Left-handed System **LhS** based First Person View FPV 
 
 * [UEDoc] Epic Games: **Unreal Engine Documentation**. URL: [https://docs.unrealengine.com](https://docs.unrealengine.com)
 * Coordinate System:
-  * [Mower-Coord] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
+  * [Mower-Unit] Nick Mower: **Scale and Measurement Inside Unreal Engine 4**. In: TechArt-Hub. Online: [https://www.techarthub.com/scale-and-measurement-inside-unreal-engine-4/](https://www.techarthub.com/scale-and-measurement-inside-unreal-engine-4/)
+  * [Mower-Coord] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. In: TechArt-Hub. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
 * Naming Convention:
   * [UEDoc, Recommended Asset Naming Conventions] Epic Games: **Recommended Asset Naming Conventions**. URL: [https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/](https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/)
   * [Allar22] Michael Allar: **Gamemakin UE Style Guide**. Mar 7, 2022. URL: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide)
 * Textures:
   * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
-  * [Mower-Comp] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. URL: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
+  * [Mower-Comp] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. In: TechArt-Hub. Online: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
   * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. Jun 19, 2021 URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 
 ### B. Readings
