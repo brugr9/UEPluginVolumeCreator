@@ -171,13 +171,15 @@ classDiagram
     +SaveLightmapRT()
     +EventDispatcher : OnChangedWindowRT()
     +EventDispatcher : OnChangedLightmapRT()
+    +Update_WindowVolume()
   }
   class BPI_ScalarVolume_W{
     <<Interface>>
     +Update_WindowVolume()
-    +Update_Steps()
     +Update_RegionOfInterest()
     +Update_ClipPlane()
+    +Update_DistancePower()
+    +Update_Steps()
     +Update_TransferFunction()
     +Update_AlphaMax()
   }
@@ -192,6 +194,7 @@ classDiagram
   class BP_ScalarVolume_W{
     +F_ScalarVolume_W : Dataset
     #ConstructionScript()
+    +Update_WindowVolume()
   }
   class BP_ScalarVolume_WL{
     +F_ScalarVolume_L : Shading
@@ -199,10 +202,9 @@ classDiagram
   }
 
   BPA_ScalarVolume <|-- BP_ScalarVolume_H : Inherits
-  BPI_ScalarVolume_W <|.. BP_ScalarVolume_H : Implements
+  BPI_ScalarVolume_W <|.. BPA_ScalarVolume : Implements
   BPI_ScalarVolume_L <|.. BP_ScalarVolume_H : Implements
 
-  BPI_ScalarVolume_W <|.. BP_ScalarVolume_W : Implements
   BPI_ScalarVolume_L <|.. BP_ScalarVolume_WL : Implements
 
   BPA_ScalarVolume <|-- BP_ScalarVolume_W : Inherits
