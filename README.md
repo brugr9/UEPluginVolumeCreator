@@ -29,9 +29,9 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 * [4. Import](#4-import)
   * [4.1. Import DICOM](#41-import-dicom)
   * [4.2. Import MetaImage](#42-import-metaimage)
-  * [4.2. Data Background](#42-data-background)
-    * [4.2.1. Memory](#421-memory)
-    * [4.2.2. Processing](#422-processing)
+  * [4.3. Data Background](#43-data-background)
+    * [4.3.1. Memory](#431-memory)
+    * [4.3.2. Processing](#432-processing)
 * [6. Outlook](#6-outlook)
 * [Appendix](#appendix)
   * [Acronyms](#acronyms)
@@ -430,7 +430,7 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 Not yet implmeneted features:
 
 * Widgets:
-  * Multiplanar Reconstruction RAS `WPB_MPR-RAS`
+  * Multiplanar Reconstruction `WPB_MPR-RAS`
   * Region of Interest Handle `WPB_ROI-Handle`
   * Transfer Function Editor `WPB_TF-Editor`
 * Volume Texture:
@@ -453,14 +453,20 @@ Unsupported volume type (terminology cp. [Piper et al., Overview]):
 * BB &mdash; Bounding Box
 * CS &mdash; Compute Shader
 * CT &mdash; Computed Tomography (X-ray)
+* CTA &mdash; Computed Tomography Angiography
 * DICOM &mdash; Digital Imaging and Communications in Medicine
 * DVR &mdash; Direct Volume Rendering
+* FPS &mdash; Frames per Second
 * FPV &mdash; First Person View
 * HU &mdash; Hounsfield Unit
 * LhS &mdash; Left-handed System
 * LPS &mdash; Left&ndash;Posterior&ndash;Superior
 * LUT &mdash; Look-Up Table
 * MIP &mdash; Maximum Intensity Projection
+* MPR &mdash; Multiplanar Reconstruction
+* MR &mdash; Magnetic Resonance
+* MRI &mdash; Magnetic Resonance Imaging
+* MRT &mdash; Magnetic Resonance Tomography
 * RAS &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
@@ -468,13 +474,7 @@ Unsupported volume type (terminology cp. [Piper et al., Overview]):
 
 <!--* AAA &mdash; Abdominal Aortic Aneurysm-->
 <!--* CRI &mdash; Colour Rendering Index-->
-<!--* CTA &mdash; Computed Tomography Angiography-->
-<!--* FPS &mdash; Frames per Second-->
 <!--* IVR &mdash; Indirect Volume Rendering-->
-<!--* MPR &mdash; Multiplanar Reconstruction-->
-<!--* MR &mdash; Magnetic Resonance-->
-<!--* MRI &mdash; Magnetic Resonance Imaging-->
-<!--* MRT &mdash; Magnetic Resonance Tomography-->
 <!--* PET &mdash; Positron Emission Tomography-->
 <!--* VOI &mdash; Volume of Interest-->
 
