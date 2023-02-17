@@ -429,14 +429,7 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 
 Not yet implmeneted features:
 
-* Widgets:
-  * Multiplanar Reconstruction `WPB_MPR-RAS`
-  * Region of Interest Handle `WPB_ROI-Handle`
-  * Transfer Function Editor `WPB_TF-Editor`
-* Volume Texture:
-  * Intensity from Magnetic Resonance Imaging `T_ScalarVolume_I_Volume`
-* Materials:
-  * Indirect Volume Rendering
+* Indirect Volume Rendering
 
 Unsupported volume type (terminology cp. [Piper et al., Overview]):
 
@@ -486,8 +479,8 @@ Unsupported volume type (terminology cp. [Piper et al., Overview]):
 
 Anatomical Planes and Terms of Location (cp. [Sharma 2022]):
 
-* **Saggital**: Longitudinal (median) plane, divides in *Right (R)* and *Left (L)*
-* **Coronal**: Frontal plane, divides in front as *Anterior (A)* and behind as *Posterior (P)*
+* **Saggital**: Longitudinal (median) plane, divides in *Left (L)* and *Right (R)*
+* **Coronal**: Frontal plane, divides in behind as *Posterior (P)* and front as *Anterior (A)*
 * **Axial**: Horizontal plane, divides in *Inferior (I)* towards *Feet (F)* and *Superior (S)* towards *Head (H)*
 
 DICOM images are using a Left&ndash;Posterior&ndash;Superior **LPS** System (cp. [Adaloglouon 2020], *Anatomical coordinate system*):
@@ -501,15 +494,27 @@ DICOM images are using a Left&ndash;Posterior&ndash;Superior **LPS** System (cp.
 
 DICOM images are using a Right-handed System **RhS** of matrix or index coordinates as rows of columns of voxel values in a stack of slices (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
 
-* i or X: Image width in columns, increases to the right
-* j or Y: Image height in rows, increases downwards
-* k or Z: Image stack depth in slices, increases backwards
+* i: Image width in columns, increases to the right
+* j: Image height in rows, increases downwards
+* k: Image stack depth in slices, increases backwards
 
 Unreal Engine is using a Left-handed System **LhS** based First Person View FPV (cp. [Mower, Coordinate System]):
 
 * X increases to the front
 * Y increases to the right
 * Z increases upwards
+
+#### This Plugin
+
+This plugin makes use of a **left handed** Right&ndash;Anterior&ndash;Superior **RAS** System:
+
+* **R**: Direction L-R in which ***Y increases***
+* **A**: Direction P-A in which ***X increases***
+* **S**: Direction I-S or F-H in which Z increases
+
+![Left handed Right&ndash;Anterior&ndash;Superior RAS ROI Handles](Docs/LhRAS.png "Left handed Right&ndash;Anterior&ndash;Superior RAS ROI Handles")<br>*Fig. G.1.: Left handed Right&ndash;Anterior&ndash;Superior RAS ROI Handles*
+
+![Left handed Right&ndash;Anterior&ndash;Superior RAS Widget](Docs/LhRAS-02.png "Left handed Right&ndash;Anterior&ndash;Superior RAS Widget")<br>*Fig. G.2.: Left handed Right&ndash;Anterior&ndash;Superior RAS Widget*
 
 <div style='page-break-after: always'></div>
 
@@ -535,7 +540,8 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
   * `ScalarVolume`
 * `Descriptor`:
   * Volume Type Suffix:
-    * Hounsfield Units: `_H`
+    * Hounsfield Units (CT): `_H`
+    * Intensity (MR): `_I`
     * DICOM Window: `_W`
     * Lightmap: `_L`
 
@@ -547,6 +553,7 @@ Examples:
   * Scalar Volume, Lightmap: **`BPI_ScalarVolume_L`**
 * Blueprint, Scalar Volume
   * from Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
+  * from Intensity Volume Texture: **`BP_ScalarVolume_I`**
   * from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
   * from DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_WL`**
 
@@ -589,6 +596,7 @@ Examples:
 
 * Volume Texture
   * Hounsfield Units: **`T_ScalarVolume_H_Volume`**
+  * Intensity: **`T_ScalarVolume_I_Volume`**
   * DICOM Window: **`T_ScalarVolume_W_Volume`**
   * Lightmap: **`T_ScalarVolume_L_Volume`**
 
@@ -605,22 +613,22 @@ Examples:
   * Volume Rendering Type Prefix: `DVR-`
   * Volume Rendering Method: `Raycasting`, `Raymarching`
 * `Descriptor`:
+  * Compute Shader Suffix: `_CS`
   * Volume Type Suffix:
     * DICOM Window: `_W`
     * Lightmap: `_L`
-  * Compute Shader Suffix: `_CS`
 
 Examples:
 
+* Material, Scalar Volume, Compute Shader:
+  * Compute DICOM Window: **`M_ScalarVolume_CSW`**
+  * Compute Lightmap: **`M_ScalarVolume_CSL`**
 * Material, DVR Raycasting
   * DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
   * DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_WL`**
 * Material, DVR Raymarching
   * DICOM Window as Parameter: **`M_DVR-Raymarching_W`**
   * DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_WL`**
-* Material, Scalar Volume, Compute Shader:
-  * Compute DICOM Window: **`M_ScalarVolume_CSW`**
-  * Compute Lightmap: **`M_ScalarVolume_CSL`**
 
 ###### Texture Render Target
 
@@ -642,35 +650,36 @@ Examples:
 
 ##### Transfer Function
 
-###### Gradients
-
 * `AssetTypePrefix`
   * Curve: `Curve_`
+  * Texture: `T_`
 * `AssetName`:
   * Transfer Function Prefix: `TF-`
   * Acquisition Type Prefix:
     * Computer Tomography: `CT-`
+    * Computer Tomography: `MR-`
 * `Descriptor`:
   * Curve Linear Color Suffix: `_Color`
-
-Examples:
-
-* Curve Linear Color, Transfer Function, Magnetic Resonance, MIP: **`Curve_TF-CT-MIP_Color`**
-
-###### Look-Up Table
-
-* `AssetTypePrefix`:
-  * Texture: `T_`
-  * Curve: `Curve_`
-* `AssetName`:
-  * Transfer Function Prefix: `TF-`
-  * Look-Up Table: `LUT`
-* `Descriptor`:
   * Color Atlas Suffix: `_ColorAtlas`
 
 Examples:
 
-* Texture 2D Color Atlas, Transfer Function LUT: **`T_Curve_TF-LUT_ColorAtlas`**
+* Curve Linear Color, Transfer Function, CT, MIP: **`Curve_TF-CT-MIP_Color`**
+* Texture 2D Color Atlas, Transfer Function: **`T_Curve_TF_ColorAtlas`**
+
+##### Look-Up Tables
+
+* `AssetTypePrefix`:
+  * Texture: `T_`
+* `AssetName`:
+  * Look-Up Table: `LUT-`
+* `Descriptor`:
+  * Texture Array Suffix: `_Array`
+  
+Examples:
+
+* Texture 2D, LUT: **`T_LUT-DiscreteBlue`**
+* Texture 2D Array, LUT: **`T_LUT_Array`**
 
 <div style='page-break-after: always'></div>
 
