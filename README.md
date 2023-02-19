@@ -443,6 +443,7 @@ Unsupported volume type (terminology cp. [Piper et al., Overview]):
 
 ### Acronyms
 
+* ARS &mdash; Anterior&ndash;Right&ndash;Superior
 * BB &mdash; Bounding Box
 * CS &mdash; Compute Shader
 * CT &mdash; Computed Tomography (X-ray)
@@ -479,9 +480,9 @@ Unsupported volume type (terminology cp. [Piper et al., Overview]):
 
 Anatomical Planes and Terms of Location (cp. [Sharma 2022]):
 
-* **Saggital**: Longitudinal (median) plane, divides in *Left (L)* and *Right (R)*
-* **Coronal**: Frontal plane, divides in behind as *Posterior (P)* and front as *Anterior (A)*
-* **Axial**: Horizontal plane, divides in *Inferior (I)* towards *Feet (F)* and *Superior (S)* towards *Head (H)*
+* **Coronal**: Frontal plane, divides in behind as **Posterior (P)** and front as **Anterior (A)**
+* **Saggital**: Longitudinal (median) plane, divides in **Left (L)** and **Right (R)**
+* **Axial**: Horizontal plane, divides in **Inferior (I)** towards feet and **Superior (S)** towards head
 
 DICOM images are using a Left&ndash;Posterior&ndash;Superior **LPS** System (cp. [Adaloglouon 2020], *Anatomical coordinate system*):
 > *"[Left&ndash;Posterior&ndash;Superior] LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use [Right&ndash;Anterior&ndash;Superior] RAS"*
@@ -506,15 +507,15 @@ Unreal Engine is using a Left-handed System **LhS** based First Person View FPV 
 
 #### This Plugin
 
-This plugin makes use of a **left handed** Right&ndash;Anterior&ndash;Superior **RAS** System:
+The anatomical coordinate system in this plugin - with UE's use of an LhS - results in an Anterior&ndash;Right&ndash;Superior ARS anatomical coordinate system:
 
-* **R**: Direction L-R in which ***Y increases***
-* **A**: Direction P-A in which ***X increases***
-* **S**: Direction I-S or F-H in which Z increases
+* **A**: Direction in which X increases
+* **R**: Direction in which Y increases
+* **S**: Direction in which Z increases
 
-![Left handed Right&ndash;Anterior&ndash;Superior RAS ROI Handles](Docs/LhRAS.png "Left handed Right&ndash;Anterior&ndash;Superior RAS ROI Handles")<br>*Fig. G.1.: Left handed Right&ndash;Anterior&ndash;Superior RAS ROI Handles*
+![ROI Handles with Left handed Location Gizmo](Docs/LhRAS.png "ROI Handles with Left handed Location Gizmo")<br>*Fig. G.1.: ROI Handles with Left handed Location Gizmo*
 
-![Left handed Right&ndash;Anterior&ndash;Superior RAS Widget](Docs/LhRAS-02.png "Left handed Right&ndash;Anterior&ndash;Superior RAS Widget")<br>*Fig. G.2.: Left handed Right&ndash;Anterior&ndash;Superior RAS Widget*
+![Orientation Guide with Left handed Location Gizmo](Docs/LhRAS-02.png "Orientation Guide with Left handed Location Gizmo")<br>*Fig. G.2.: Orientation Guide with Left handed Location Gizmo*
 
 <div style='page-break-after: always'></div>
 
@@ -701,6 +702,9 @@ Examples:
   * [Luecke 2005] Peter Lücke: **Volume Rendering Techniques for Medical Imaging**. Diplomarbeit. Technische Universität München, Fakultät für Informatik. April 15, 2005. In collaboration with Siemens Corporate Research Inc., Princeton, USA. Online: [https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf](https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf)
   * [Piper et al.] Steve Piper (Isomics), Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Nicole Aucoin (SPL, BWH): **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)
   * [Finet et al.] Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH): **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html); Transfer Function Presets on GitHub: [https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)
+* Lighting:
+  * [21] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: [https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)
+  <!--* [22] **The Different Colors Of Operating Theatre Lights**. In: Website "Forum Theatre". September 15, 2022. Online: [https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/](https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/)-->
 
 #### A.2. Unreal Engine
 
@@ -717,8 +721,6 @@ Examples:
   * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. Jun 19, 2021 URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. URL: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
-  * [21] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: [https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)
-  <!--* [22] **The Different Colors Of Operating Theatre Lights**. In: Website "Forum Theatre". September 15, 2022. Online: [https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/](https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/)-->
 
 ### B. Readings
 
