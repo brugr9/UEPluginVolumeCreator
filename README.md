@@ -14,10 +14,10 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
   * [1.1. Installation](#11-installation)
   * [1.2. Project Configuration](#12-project-configuration)
 * [2. Concept](#2-concept)
-  * [2.1. Scalar Volumes](#21-scalar-volumes)
+  * [2.1. Scalar Volume](#21-scalar-volume)
   * [2.2. Region of Interest](#22-region-of-interest)
   * [2.3. Clip Plane](#23-clip-plane)
-  * [2.4. Static Spot-Light](#24-static-spot-light)
+  * [2.4. Spot-Light](#24-spot-light)
 * [3. Blueprint ScalarVolume and Inheriting Actors](#3-blueprint-scalarvolume-and-inheriting-actors)
   * [3.1. Actor BP ScalarVolume H](#31-actor-bp-scalarvolume-h)
     * [3.1.2. Dataset](#312-dataset)
@@ -36,8 +36,11 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 * [Appendix](#appendix)
   * [Acronyms](#acronyms)
   * [Glossary](#glossary)
-  * [Asset Naming Convention](#asset-naming-convention)
+    * [Coordinate Systems and Terms of Location](#coordinate-systems-and-terms-of-location)
+    * [Asset Naming Convention](#asset-naming-convention)
   * [A. References](#a-references)
+    * [A.1. Medical Imaging](#a1-medical-imaging)
+    * [A.2. Unreal Engine](#a2-unreal-engine)
   * [B. Readings](#b-readings)
   * [C. Acknowledgements](#c-acknowledgements)
   * [D. Attribution](#d-attribution)
@@ -76,7 +79,7 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 The plugin provides rendering of image-stack based volumes, commonly known as **scalar volumes** (see section 2.1.). The plugin however does not support other type of volumes, like label map volumes, vector volumes or tensor volumes. The volume geometry can be reduced with a **region of interest** (see section 2.2.) and/or with a **clip plane** (see section 2.3.). In addition, the volume can be illuminated with **static spot-lights** (see section 2.4.). The scalar volume datasets are handled in Blueprint actors &mdash; which includes, e.g., pixel spacing and DICOM Window settings (see section 3.).
 
-### 2.1. Scalar Volumes
+### 2.1. Scalar Volume
 
 In this plugin, image-stack based scalar volumes are kept in `VolumeTexture` assets (suffix `_Volume`). A `VolumeTexture` may serve as voxel container of three different kind of content. The assets name suffix indicates the intended content type (cp. section *[Asset Naming Convention](#7-asset-naming-convention)*):
 
@@ -89,18 +92,22 @@ Plugin Content:
 * Volume Textures (Default Containers): `T_ScalarVolume_H_Volume`, `T_ScalarVolume_W_Volume`, `T_ScalarVolume_L_Volume`
 * Volume Render Textures (Shader Textures): `RT_ScalarVolume_W_Volume`, `RT_ScalarVolume_L_Volume`
 
+TODO: Multiplanar Rendering MPR or Direct Volume Rendering DVR
+
 <div style='page-break-after: always'></div>
 
 ### 2.2. Region of Interest
 
-The plugin provides with a Blueprint actor named `BP_RegionOfInterest` with a `StaticMeshComponent` of type `Cube`. The material instance `MI_FramingEdges_ROI` is assigned to the mesh (see figure 2.2.).
+The plugin provides with a Blueprint actor named `BP_ROI` with a `StaticMeshComponent` of type `Cube`. The material instance `MI_FramingEdges_ROI` is assigned to the mesh (see figure 2.2.).
 
 Plugin Content:
 
-* Blueprint Actor: `BP_RegionOfInterest`
+* Blueprint Actor: `BP_ROI`
 * Material Instance: `MI_FramingEdges_ROI`
 
-![Blueprint Actor BP_RegionOfInterest](Docs/BP_RegionOfInterest.png "Blueprint Actor BP_RegionOfInterest")<br>*Fig. 2.2.: Blueprint Actor BP_RegionOfInterest*
+![Blueprint Actor BP_ROI](Docs/BP_ROI.png "Blueprint Actor BP_ROI")<br>*Fig. 2.2.: Blueprint Actor BP_ROI*
+
+TODO: ROI-Handles, ROI-Box, ROI-Star
 
 ### 2.3. Clip Plane
 
@@ -113,9 +120,9 @@ Plugin Content:
 
 ![Blueprint Actor BP_ClipPlane](Docs/BP_ClipPlane.png "Blueprint Actor BP_ClipPlane")<br>*Fig. 2.3.: Blueprint Actor BP_ClipPlane*
 
-### 2.4. Static Spot-Light
+### 2.4. Spot-Light
 
-The plugin provides with a Blueprint SpotLight named `BP_StaticSpotLight` whose transform mobility is set to static (see figure 2.4.). Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light:
+The plugin provides with a Blueprint SpotLight named `BP_StaticSpotLight` whose transform mobility is set to *static* (see figure 2.4.). Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light:
 
 * Intensity (Brightness): 1700 Lumen (see [UEDoc, Physical Lighting Units])
 * Temperature: 5100 K (cp. [21])
@@ -202,7 +209,7 @@ classDiagram
 ```mermaid
 classDiagram
   class F_ScalarVolume{
-    +BP_RegionOfInterest : RegionOfInterest
+    +BP_ROI : RegionOfInterest
     +BP_ClipPlane : ClipPlane
     +Float : DistancePower
     +Integer : ResamplingSteps
@@ -292,7 +299,7 @@ Direct Volume Rendering DVR with Materials from Raycasting or Raymarching Shader
 
 ##### 3.1.4.1. Region Of Interest
 
-* MeshCube: `BP_RegionOfInterest` instance as Reference Object, ideally subordinated in Outline Hierarchy (Scene Graph)
+* MeshCube: `BP_ROI` instance as Reference Object, ideally subordinated in Outline Hierarchy (Scene Graph)
 * used for geometry subtraction in the shader
 
 ##### 3.1.4.2. Clip Plane
@@ -430,12 +437,10 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 Not yet implmeneted features:
 
 * Indirect Volume Rendering
-
-Unsupported volume type (terminology cp. [Piper et al., Overview]):
-
-* *Labelmap Volume* &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.
-* *Vector Volume* &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field.
-* *Tensor Volume* &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI.
+* Unsupported volume type (terminology cp. [Piper et al., Overview]):
+  * *Labelmap Volume* &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.
+  * *Vector Volume* &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field.
+  * *Tensor Volume* &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI.
 
 <div style='page-break-after: always'></div>
 
@@ -476,50 +481,58 @@ Unsupported volume type (terminology cp. [Piper et al., Overview]):
 
 ### Glossary
 
-#### Anatomical Coordinate System
+#### Coordinate Systems and Terms of Location
 
-Anatomical Planes and Terms of Location (cp. [Sharma 2022]):
+Anatomical Planes and Terms of Location (cp. [Sharma 2022]) on a person standing upright:
 
-* **Coronal**: Frontal plane, divides in behind as **Posterior (P)** and front as **Anterior (A)**
-* **Saggital**: Longitudinal (median) plane, divides in **Left (L)** and **Right (R)**
-* **Axial**: Horizontal plane, divides in **Inferior (I)** towards feet and **Superior (S)** towards head
+* **Coronal Plane**: Frontal plane, divides in back as **Posterior (P)** and front as **Anterior (A)**
+* **Saggital Plane**: Longitudinal (median) plane, divides in **Left (L)** and **Right (R)**
+* **Axial Plane**: Horizontal plane, divides in **Inferior (I)** towards feet and **Superior (S)** towards head
+
+##### DICOM
 
 DICOM images are using a Left&ndash;Posterior&ndash;Superior **LPS** System (cp. [Adaloglouon 2020], *Anatomical coordinate system*):
 > *"[Left&ndash;Posterior&ndash;Superior] LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use [Right&ndash;Anterior&ndash;Superior] RAS"*
 
-* **L**: Direction R-L in which X increases
-* **P**: Direction A-P in which Y increases
-* **S**: Direction I-S or F-H in which Z increases
+* **L**: X increases from R to L
+* **P**: Y increases from A to P
+* **S**: Z increases from I to S
 
-#### Cartesian Coordinate Systems
-
-DICOM images are using a Right-handed System **RhS** of matrix or index coordinates as rows of columns of voxel values in a stack of slices (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
+DICOM images are using a Right-handed System **RhS** of matrix or index coordinates as rows of columns of pixel values in a stack of slices (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
 
 * i: Image width in columns, increases to the right
 * j: Image height in rows, increases downwards
 * k: Image stack depth in slices, increases backwards
 
+##### Unreal Engine
+
 Unreal Engine is using a Left-handed System **LhS** based First Person View FPV (cp. [Mower, Coordinate System]):
 
-* X increases to the front
-* Y increases to the right
-* Z increases upwards
+* X increases from **Back** to **Front**, color code red
+* Y increases from **Left** to **Right**, color code green
+* Z increases upwards from **Bottom** to **Top**, color code blue
 
-#### This Plugin
+##### This Plugin
 
-The anatomical coordinate system in this plugin - with UE's use of an LhS - results in an Anterior&ndash;Right&ndash;Superior ARS anatomical coordinate system:
+The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&mdash;results in an Anterior&ndash;Right&ndash;Superior **ARS** anatomical coordinate system (cp. figure G.1.):
 
-* **A**: Direction in which X increases
-* **R**: Direction in which Y increases
-* **S**: Direction in which Z increases
+* **A**: X increases from Back to Front, color code red; anatomical from **Posterior (P)** to **Anterior (A)**
+* **R**: Y increases from Left to Right, color code green; anatomical from  **Left (L)** to **Right (R)**
+* **S**: Z increases upwards from Bottom to Top, color code blue; anatomical from **Inferior (I)** to **Superior (S)**
 
-![ROI Handles with Left handed Location Gizmo](Docs/LhRAS.png "ROI Handles with Left handed Location Gizmo")<br>*Fig. G.1.: ROI Handles with Left handed Location Gizmo*
+![Orientation Guide with Left Handed Location Gizmo](Docs/LhRAS-02.png "Orientation Guide with Left Handed Location Gizmo")<br>*Fig. G.1.: Orientation Guide with Left Handed UE-Location-Gizmo*
 
-![Orientation Guide with Left handed Location Gizmo](Docs/LhRAS-02.png "Orientation Guide with Left handed Location Gizmo")<br>*Fig. G.2.: Orientation Guide with Left handed Location Gizmo*
+Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
+
+* **Coronal**: Frontal **YZ-Plane**, divides in Back / Posterior (P) and Front / Anterior (A)
+* **Saggital**: Longitudinal **XZ-Plane**, divides in Left (L) and Right (R)
+* **Axial**: Horizontal **XY-Plane**, divides in Bottom / Inferior (I) and Top / Superior (S)
+
+![ROI Handles with Left Handed Location Gizmo](Docs/LhRAS.png "ROI Handles with Left Handed Location Gizmo")<br>*Fig. G.2.: ROI-Handles with Left Handed UE-Location-Gizmo*
 
 <div style='page-break-after: always'></div>
 
-### Asset Naming Convention
+#### Asset Naming Convention
 
 The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Naming Conventions] (see also [Allar 2022]):
 > *`[AssetTypePrefix]_[AssetName]_[Descriptor]_[OptionalVariantLetterOrNumber]`*
@@ -532,7 +545,7 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
 * In the `AssetName`, dashes "`-`" are used, no underlines "`_`".
 * In the `Descriptor`, single letter suffixes are combined without additional underlines "`_`".
 
-#### Blueprints
+##### Blueprints
 
 * `AssetTypePrefix`:
   * Blueprint: `BP_`
@@ -541,8 +554,7 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
   * `ScalarVolume`
 * `Descriptor`:
   * Volume Type Suffix:
-    * Hounsfield Units (CT): `_H`
-    * Intensity (MR): `_I`
+    * Hounsfield Units: `_H`
     * DICOM Window: `_W`
     * Lightmap: `_L`
 
@@ -553,14 +565,13 @@ Examples:
   * Scalar Volume, DICOM Window: **`BPI_ScalarVolume_W`**
   * Scalar Volume, Lightmap: **`BPI_ScalarVolume_L`**
 * Blueprint, Scalar Volume
-  * from Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
-  * from Intensity Volume Texture: **`BP_ScalarVolume_I`**
-  * from DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
-  * from DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_WL`**
+  * From Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
+  * From DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
+  * From DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_WL`**
 
-#### Datasets
+##### Data
 
-##### Structures
+###### Structures
 
 * `AssetTypePrefix`
   * Struct: `F_`
@@ -579,7 +590,7 @@ Examples:
 * Data Asset: **`F_Default_W_Data`**
 * Data Asset: **`F_Default_WL_Data`**
 
-##### Volumes
+###### Volumes
 
 * `AssetTypePrefix`
   * Texture: `T_`
@@ -597,13 +608,10 @@ Examples:
 
 * Volume Texture
   * Hounsfield Units: **`T_ScalarVolume_H_Volume`**
-  * Intensity: **`T_ScalarVolume_I_Volume`**
   * DICOM Window: **`T_ScalarVolume_W_Volume`**
   * Lightmap: **`T_ScalarVolume_L_Volume`**
 
-#### Material Library
-
-##### Scalar Volume
+##### Material Library
 
 ###### Material
 
@@ -611,7 +619,7 @@ Examples:
   * Material: `M_`
   * Material Instance: `MI_`
 * `AssetName`:
-  * Volume Rendering Type Prefix: `DVR-`
+  * Rendering Type Prefix: `MPR-`, `DVR-`
   * Volume Rendering Method: `Raycasting`, `Raymarching`
 * `Descriptor`:
   * Compute Shader Suffix: `_CS`
@@ -621,21 +629,24 @@ Examples:
 
 Examples:
 
-* Material, Scalar Volume, Compute Shader:
-  * Compute DICOM Window: **`M_ScalarVolume_CSW`**
-  * Compute Lightmap: **`M_ScalarVolume_CSL`**
-* Material, DVR Raycasting
-  * DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
-  * DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_WL`**
-* Material, DVR Raymarching
-  * DICOM Window as Parameter: **`M_DVR-Raymarching_W`**
-  * DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_WL`**
+* MPR: **`M_MPR_Master`**, **`MI_MPR-Coronal`**, **`MI_MPR-Sagittal`**, **`MI_MPR-Axial`**
+* Scalar Volume:
+  * Compute Shader:
+    * Compute DICOM Window: **`M_ScalarVolume_CSW`**
+    * Compute Lightmap: **`M_ScalarVolume_CSL`**
+  * DVR Raycasting:
+    * DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
+    * DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_WL`**
+  * DVR Raymarching:
+    * DICOM Window as Parameter: **`M_DVR-Raymarching_W`**
+    * DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_WL`**
 
 ###### Texture Render Target
 
 * `AssetTypePrefix`
   * Texture Render Target: `RT_`
 * `AssetName`:
+  * Rendering Type Prefix: `MPR`
   * Volume Type: `ScalarVolume`
 * `Descriptor`:
   * Volume Type Suffix:
@@ -645,11 +656,29 @@ Examples:
 
 Examples:
 
-* Texture Render Target Volume
+* Texture Render Target 2D:
+  * MPR, Coronal: **`RT_MPR-Coronal`**
+  * MPR, Sagittal: **`RT_MPR-Sagittal`**
+  * MPR, Axial: **`RT_MPR-Axial`**
+* Texture Render Target Volume:
   * DICOM Window: **`RT_ScalarVolume_W_Volume`**
   * Lightmap: **`RT_ScalarVolume_L_Volume`**
 
-##### Transfer Function
+###### Look-Up Table
+
+* `AssetTypePrefix`:
+  * Texture: `T_`
+* `AssetName`:
+  * Look-Up Table: `LUT-`
+* `Descriptor`:
+  * Texture Array Suffix: `_Array`
+  
+Examples:
+
+* Texture 2D, LUT: **`T_LUT-DiscreteBlue`**
+* Texture 2D Array, LUT: **`T_LUT_Array`**
+
+###### Transfer Function
 
 * `AssetTypePrefix`
   * Curve: `Curve_`
@@ -668,25 +697,11 @@ Examples:
 * Curve Linear Color, Transfer Function, CT, MIP: **`Curve_TF-CT-MIP_Color`**
 * Texture 2D Color Atlas, Transfer Function: **`T_Curve_TF_ColorAtlas`**
 
-##### Look-Up Tables
-
-* `AssetTypePrefix`:
-  * Texture: `T_`
-* `AssetName`:
-  * Look-Up Table: `LUT-`
-* `Descriptor`:
-  * Texture Array Suffix: `_Array`
-  
-Examples:
-
-* Texture 2D, LUT: **`T_LUT-DiscreteBlue`**
-* Texture 2D Array, LUT: **`T_LUT_Array`**
-
 <div style='page-break-after: always'></div>
 
 ### A. References
 
-#### A.1. Medical Image Processing
+#### A.1. Medical Imaging
 
 * DICOM:
   * [DICOM] **The DICOM Standard**. Online: [https://www.dicomstandard.org/current](https://www.dicomstandard.org/current)
