@@ -18,14 +18,14 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
   * [2.2. Region of Interest](#22-region-of-interest)
   * [2.3. Clip Plane](#23-clip-plane)
   * [2.4. Spot-Light](#24-spot-light)
-* [3. Blueprint ScalarVolume and Inheriting Actors](#3-blueprint-scalarvolume-and-inheriting-actors)
-  * [3.1. Actor BP ScalarVolume H](#31-actor-bp-scalarvolume-h)
+* [3. Blueprint SV and Inheriting Actors](#3-blueprint-sv-and-inheriting-actors)
+  * [3.1. Actor BP SV H](#31-actor-bp-sv-h)
     * [3.1.2. Dataset](#312-dataset)
     * [3.1.3. DICOM Window](#313-dicom-window)
     * [3.1.4. Volume Rendering](#314-volume-rendering)
     * [3.1.5. Volume Shading](#315-volume-shading)
-  * [3.2. Actor BP ScalarVolume W](#32-actor-bp-scalarvolume-w)
-  * [3.3. Actor BP ScalarVolume W L](#33-actor-bp-scalarvolume-w-l)
+  * [3.2. Actor BP SV W](#32-actor-bp-sv-w)
+  * [3.3. Actor BP SV W L](#33-actor-bp-sv-w-l)
 * [4. Import](#4-import)
   * [4.1. Import DICOM](#41-import-dicom)
   * [4.2. Import MetaImage](#42-import-metaimage)
@@ -89,8 +89,8 @@ In this plugin, image-stack based scalar volumes are kept in `VolumeTexture` ass
 
 Plugin Content:
 
-* Volume Textures (Default Containers): `T_ScalarVolume_H_Volume`, `T_ScalarVolume_W_Volume`, `T_ScalarVolume_L_Volume`
-* Volume Render Textures (Shader Textures): `RT_ScalarVolume_W_Volume`, `RT_ScalarVolume_L_Volume`
+* Volume Textures (Default Containers): `T_SV_H_Volume`, `T_SV_W_Volume`, `T_SV_L_Volume`
+* Volume Render Textures (Shader Textures): `RT_SV_W_Volume`, `RT_SV_L_Volume`
 
 TODO: Multiplanar Rendering MPR or Direct Volume Rendering DVR
 
@@ -133,28 +133,28 @@ Plugin Content:
 
 ![Blueprint SpotLight BP_StaticSpotLight](Docs/BP_StaticSpotLight.png "Blueprint SpotLight BP_StaticSpotLight")<br>*Fig. 2.4.: Blueprint SpotLight BP_StaticSpotLight*
 
-## 3. Blueprint ScalarVolume and Inheriting Actors
+## 3. Blueprint SV and Inheriting Actors
 
-The scalar volume datasets are handled in actors based on an abstract Blueprint named `BPA_ScalarVolume`, which holds a `StaticMeshComponent` of type `Cube` named `ScalarVolumeMesh` and another `StaticMeshComponent` of type `Cube` named `BoundingBox` (see Class Diagram in figure 3.1.).
+The scalar volume datasets are handled in actors based on an abstract Blueprint named `BPA_SV`, which holds a `StaticMeshComponent` of type `Cube` named `SVMesh` and another `StaticMeshComponent` of type `Cube` named `BoundingBox` (see Class Diagram in figure 3.1.).
 
 Plugin Content:
 
-* Blueprint Actors: `BPA_ScalarVolume`, `BP_ScalarVolume_H`, `BP_ScalarVolume_W`, `BP_ScalarVolume_WL`
+* Blueprint Actors: `BPA_SV`, `BP_SV_H`, `BP_SV_W`, `BP_SV_WL`
 
 *Fig 3.1.: Blueprint Inheritance Diagramm*
 ```mermaid
 classDiagram
-  class BPA_ScalarVolume{
+  class BPA_SV{
     <<Abstract>>
-    +StaticMeshComponent Cube : ScalarVolumeMesh
+    +StaticMeshComponent Cube : SVMesh
     +StaticMeshComponent Cube : BoundingBox
-    +F_ScalarVolume : VolumeRendering
+    +F_SV : VolumeRendering
     +E_VolumeRenderingMethod : Method
-    +MaterialInstanceDynamic : MI_ScalarVolume_Dynamic
-    +RescaleScalarVolumeMesh(F_PixelSpacing PixelSpacing)
+    +MaterialInstanceDynamic : MI_SV_Dynamic
+    +RescaleSVMesh(F_PixelSpacing PixelSpacing)
   }
-  class BP_ScalarVolume_H{
-    +F_ScalarVolume_H : Dataset
+  class BP_SV_H{
+    +F_SV_H : Dataset
     -TextureRenderTargetVolume : WindowRT
     -TextureRenderTargetVolume : LightmapRT
     #ConstructionScript()
@@ -166,7 +166,7 @@ classDiagram
     +EventDispatcher : OnChangedLightmapRT()
     +Update_WindowVolume()
   }
-  class BPI_ScalarVolume_W{
+  class BPI_SV_W{
     <<Interface>>
     +Update_WindowVolume()
     +Update_RegionOfInterest()
@@ -176,7 +176,7 @@ classDiagram
     +Update_TransferFunction()
     +Update_AlphaMax()
   }
-  class BPI_ScalarVolume_L{
+  class BPI_SV_L{
     <<Interface>>
     +Update_LightmapVolume()
     +Update_Ambient()
@@ -184,31 +184,31 @@ classDiagram
     +Update_Specular()
     +Update_SpecularPower()
   }
-  class BP_ScalarVolume_W{
-    +F_ScalarVolume_W : Dataset
+  class BP_SV_W{
+    +F_SV_W : Dataset
     #ConstructionScript()
     +Update_WindowVolume()
   }
-  class BP_ScalarVolume_WL{
-    +F_ScalarVolume_L : Shading
+  class BP_SV_WL{
+    +F_SV_L : Shading
     #ConstructionScript()
   }
 
-  BPA_ScalarVolume <|-- BP_ScalarVolume_H : Inherits
-  BPI_ScalarVolume_W <|.. BPA_ScalarVolume : Implements
-  BPI_ScalarVolume_L <|.. BP_ScalarVolume_H : Implements
+  BPA_SV <|-- BP_SV_H : Inherits
+  BPI_SV_W <|.. BPA_SV : Implements
+  BPI_SV_L <|.. BP_SV_H : Implements
 
-  BPI_ScalarVolume_L <|.. BP_ScalarVolume_WL : Implements
+  BPI_SV_L <|.. BP_SV_WL : Implements
 
-  BPA_ScalarVolume <|-- BP_ScalarVolume_W : Inherits
-  BP_ScalarVolume_W <|-- BP_ScalarVolume_WL : Inherits  
+  BPA_SV <|-- BP_SV_W : Inherits
+  BP_SV_W <|-- BP_SV_WL : Inherits  
 
 ```
   
 *Fig 3.2.: Struct Composition Diagramm*
 ```mermaid
 classDiagram
-  class F_ScalarVolume{
+  class F_SV{
     +BP_ROI : RegionOfInterest
     +BP_ClipPlane : ClipPlane
     +Float : DistancePower
@@ -216,7 +216,7 @@ classDiagram
     +CurveLinearColor : TransferFunction
     +Float : AlphaMax
   }
-  class F_ScalarVolume_H{
+  class F_SV_H{
     +VolumeTexture : HounsfieldVolume
     +F_PixelSpacing : PixelSpacing
     +F_DicomWindow : DicomWindow
@@ -224,12 +224,12 @@ classDiagram
     +F_Phong : PhongShading
     +F_Lightmap : Lightmap
   }
-  class F_ScalarVolume_W{
+  class F_SV_W{
     +VolumeTexture : WindowVolume
     +F_PixelSpacing : PixelSpacing
     +F_DicomWindow : DicomWindow
   }
-  class F_ScalarVolume_L{
+  class F_SV_L{
     +VolumeTexture : LightmapVolume
     +F_Phong : PhongShading
   }
@@ -265,21 +265,21 @@ classDiagram
     +Boolean : HalfResolution
   }
 
-  F_ScalarVolume_H --* F_PixelSpacing
-  F_ScalarVolume_H --* F_DicomWindow
-  F_ScalarVolume_H --* F_Lightmap
-  F_ScalarVolume_H --* F_Phong
+  F_SV_H --* F_PixelSpacing
+  F_SV_H --* F_DicomWindow
+  F_SV_H --* F_Lightmap
+  F_SV_H --* F_Phong
 
-  F_ScalarVolume_W --* F_PixelSpacing
-  F_ScalarVolume_W --* F_DicomWindow
+  F_SV_W --* F_PixelSpacing
+  F_SV_W --* F_DicomWindow
 
-  F_ScalarVolume_L --* F_Phong
+  F_SV_L --* F_Phong
 
   F_DicomWindow --* F_WindowLocation
   F_DicomWindow --* F_WindowBorder
 ```
 
-### 3.1. Actor BP ScalarVolume H
+### 3.1. Actor BP SV H
 
 #### 3.1.2. Dataset
 
@@ -349,6 +349,8 @@ Maximum Opacity Threshold for Early Ray Termination
 
 #### 3.1.5. Volume Shading
 
+https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshiftLightParameters-DiffuseScale
+
 ##### 3.1.5.1. Phong
 
 * Ambient: Ambient Reflection Value in [`0.0`, `1.0`], Default `0.1`
@@ -360,15 +362,15 @@ Maximum Opacity Threshold for Early Ray Termination
 
 * Spot Lights: Array of `BP_StaticSpotLight` Object Reference
 * Half Resolution: Default `true` (checked)
-* Lightmap Volume: Texture Render Target Volume Object Reference, Default `RT_ScalarVolume_L_Volume`
+* Lightmap Volume: Texture Render Target Volume Object Reference, Default `RT_SV_L_Volume`
 
 <div style='page-break-after: always'></div>
 
-### 3.2. Actor BP ScalarVolume W
+### 3.2. Actor BP SV W
 
 <div style='page-break-after: always'></div>
 
-### 3.3. Actor BP ScalarVolume W L
+### 3.3. Actor BP SV W L
 
 <div style='page-break-after: always'></div>
 
@@ -469,6 +471,7 @@ Not yet implmeneted features:
 * RAS &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
+* SV &mdash; Scalar Volume
 * TF &mdash; Transfer Function
 
 <!--* AAA &mdash; Abdominal Aortic Aneurysm-->
@@ -551,7 +554,7 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
   * Blueprint: `BP_`
   * Blueprint Interface: `BPI_`
 * `AssetName`:
-  * `ScalarVolume`
+  * `SV`
 * `Descriptor`:
   * Volume Type Suffix:
     * Hounsfield Units: `_H`
@@ -560,14 +563,14 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
 
 Examples:
 
-* Blueprint, Scalar Volume, Abstract Class: **`BP_ScalarVolume`**
+* Blueprint, Scalar Volume, Abstract Class: **`BP_SV`**
 * Blueprint Interface
-  * Scalar Volume, DICOM Window: **`BPI_ScalarVolume_W`**
-  * Scalar Volume, Lightmap: **`BPI_ScalarVolume_L`**
+  * Scalar Volume, DICOM Window: **`BPI_SV_W`**
+  * Scalar Volume, Lightmap: **`BPI_SV_L`**
 * Blueprint, Scalar Volume
-  * From Hounsfield Units Volume Texture: **`BP_ScalarVolume_H`**
-  * From DICOM Window Volume Texture: **`BP_ScalarVolume_W`**
-  * From DICOM Window and Lightmap Volume Textures: **`BP_ScalarVolume_WL`**
+  * From Hounsfield Units Volume Texture: **`BP_SV_H`**
+  * From DICOM Window Volume Texture: **`BP_SV_W`**
+  * From DICOM Window and Lightmap Volume Textures: **`BP_SV_WL`**
 
 ##### Data
 
@@ -607,9 +610,9 @@ Examples:
 Examples:
 
 * Volume Texture
-  * Hounsfield Units: **`T_ScalarVolume_H_Volume`**
-  * DICOM Window: **`T_ScalarVolume_W_Volume`**
-  * Lightmap: **`T_ScalarVolume_L_Volume`**
+  * Hounsfield Units: **`T_SV_H_Volume`**
+  * DICOM Window: **`T_SV_W_Volume`**
+  * Lightmap: **`T_SV_L_Volume`**
 
 ##### Material Library
 
@@ -632,8 +635,8 @@ Examples:
 * MPR: **`M_MPR_Master`**, **`MI_MPR-Coronal`**, **`MI_MPR-Sagittal`**, **`MI_MPR-Axial`**
 * Scalar Volume:
   * Compute Shader:
-    * Compute DICOM Window: **`M_ScalarVolume_CSW`**
-    * Compute Lightmap: **`M_ScalarVolume_CSL`**
+    * Compute DICOM Window: **`M_SV_CSW`**
+    * Compute Lightmap: **`M_SV_CSL`**
   * DVR Raycasting:
     * DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
     * DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_WL`**
@@ -647,7 +650,7 @@ Examples:
   * Texture Render Target: `RT_`
 * `AssetName`:
   * Rendering Type Prefix: `MPR`
-  * Volume Type: `ScalarVolume`
+  * Volume Type: `SV`
 * `Descriptor`:
   * Volume Type Suffix:
     * DICOM Window: `_W`
@@ -661,8 +664,8 @@ Examples:
   * MPR, Sagittal: **`RT_MPR-Sagittal`**
   * MPR, Axial: **`RT_MPR-Axial`**
 * Texture Render Target Volume:
-  * DICOM Window: **`RT_ScalarVolume_W_Volume`**
-  * Lightmap: **`RT_ScalarVolume_L_Volume`**
+  * DICOM Window: **`RT_SV_W_Volume`**
+  * Lightmap: **`RT_SV_L_Volume`**
 
 ###### Look-Up Table
 
