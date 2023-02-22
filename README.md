@@ -16,8 +16,12 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 * [2. Concept](#2-concept)
   * [2.1. Scalar Volume](#21-scalar-volume)
   * [2.2. Region of Interest](#22-region-of-interest)
+    * [2.2.1. ROI-SV](#221-roi-sv)
+    * [2.2.2. ROI-MPR-3D](#222-roi-mpr-3d)
+    * [2.2.3. ROI-Handles](#223-roi-handles)
   * [2.3. Clip Plane](#23-clip-plane)
   * [2.4. Spot-Light](#24-spot-light)
+  * [2.5. Rendering Workflow](#25-rendering-workflow)
 * [3. Blueprint SV and Inheriting Actors](#3-blueprint-sv-and-inheriting-actors)
   * [3.1. Actor BP SV H](#31-actor-bp-sv-h)
     * [3.1.2. Dataset](#312-dataset)
@@ -102,12 +106,20 @@ The plugin provides with a Blueprint actor named `BP_ROI` with a `StaticMeshComp
 
 Plugin Content:
 
-* Blueprint Actor: `BP_ROI`
-* Material Instance: `MI_FramingEdges_ROI`
+* Blueprint, Abstract Actor: `BP_ROI`
+* Blueprint, Interface: `BPI_ROI`
 
 ![Blueprint Actor BP_ROI](Docs/BP_ROI.png "Blueprint Actor BP_ROI")<br>*Fig. 2.2.: Blueprint Actor BP_ROI*
 
-TODO: ROI-Handles, ROI-Box, ROI-Star
+#### 2.2.1. ROI-SV
+
+* Material Instance: `MI_Edges_ROI`
+
+#### 2.2.2. ROI-MPR-3D
+
+* Material Instance: `MI__ROI`
+
+#### 2.2.3. ROI-Handles
 
 ### 2.3. Clip Plane
 
@@ -132,6 +144,166 @@ Plugin Content:
 * Blueprint Actor: `BP_StaticSpotLight`
 
 ![Blueprint SpotLight BP_StaticSpotLight](Docs/BP_StaticSpotLight.png "Blueprint SpotLight BP_StaticSpotLight")<br>*Fig. 2.4.: Blueprint SpotLight BP_StaticSpotLight*
+
+### 2.5. Rendering Workflow
+
+*Fig 2.1.: Sequence Diagramm, Import Workflow*
+```mermaid
+sequenceDiagram
+  rect rgb(50, 200, 50)
+  activate *.dcm
+  activate Importer
+  Importer->>*.dcm: Read
+  activate T_SV_H_Volume
+  deactivate *.dcm
+  Importer->>T_SV_H_Volume: Save
+  deactivate Importer
+  deactivate T_SV_H_Volume
+  end
+```
+
+*Fig 2.2.: Sequence Diagramm, DVR Workflow - From Hounsfield Unit Volume with DICOM Window, TF and ROI*
+```mermaid
+sequenceDiagram
+  rect rgb(0, 200, 255)
+    T_SV_H_Volume->>M_SV_W_CS: Param.
+    DICOM_Window->>M_SV_W_CS: Param.
+    M_SV_W_CS->>RT_SV_W_Volume: Compute
+    T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
+    BP_ROI-SV->>M_DVR-Raycasting_W: Param.
+    RT_SV_W_Volume->>M_DVR-Raycasting_W: Param.
+    M_DVR-Raycasting_W->>BP_SV_H: Render
+    rect rgb(0, 100, 255)
+      alt Variant - Save DICOM Windowed RT as Volume Texture, and use the same as Param.
+        RT_SV_W_Volume-->>T_SV_W_Volume: Save
+        T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
+        BP_ROI-SV->>M_DVR-Raycasting_W: Param.
+        T_SV_W_Volume-->>M_DVR-Raycasting_W: Param.
+        M_DVR-Raycasting_W->>BP_SV_W: Render
+      end
+    end
+  end
+```
+
+*Fig 2.3.: Sequence Diagramm, DVR Workflow - Lighting from DICOM Windowed RT, TF and ROI*
+```mermaid
+sequenceDiagram
+  rect rgb(255, 255, 200)
+    RT_SV_W_Volume->>M_SV_L_CS: Param.
+    M_SV_L_CS->>RT_SV_L_Volume: Compute
+    T_TF_ColorAtlas->>M_DVR-Raycasting_WL: Param.
+    BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
+    RT_SV_W_Volume->>M_DVR-Raycasting_WL: Param.
+    RT_SV_L_Volume->>M_DVR-Raycasting_WL: Param.
+    M_DVR-Raycasting_WL->>BP_SV_H: Render
+    rect rgb(255, 255, 100)
+      alt Variant - Save Lighting RT as Volume Texture, and use the same as Param.
+        RT_SV_L_Volume-->>T_SV_L_Volume: Save
+        T_TF_ColorAtlas->>M_DVR-Raycasting_WL: Param.
+        BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
+        T_SV_L_Volume-->>M_DVR-Raycasting_WL: Param.
+        M_DVR-Raycasting_WL->>BP_SV_WL: Render
+      end
+    end
+  end
+```
+
+*Fig 2.4.: Sequence Diagramm, MPR-3D/-2D Workflow - From DICOM Windowed RT Volume and LUT*
+```mermaid
+sequenceDiagram
+  rect rgb(200, 200, 200)
+    RT_SV_W_Volume->>M_MPR_CS: Param.
+    rect rgb(150, 150, 150)
+      alt Variant - Use Volume Texture
+        T_SV_W_Volume-->>M_MPR_CS: Param.
+      end
+    end
+    M_MPR_CS->>RT_MPR-Axial/-Coronal/-Sagittal: Compute
+    T_LUT_Array->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
+    RT_MPR-Axial/-Coronal/-Sagittal->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
+    Plane-Axial/-Coronal/-Sagittal_Location->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
+    Plane-ForwardVector/-UpVector->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
+    MI_MPR-Axial/-Coronal/-Sagittal->>BP_MPR-3D/-2D: Render
+  end
+```
+
+---
+
+*Fig 2.10.: Sequence Diagramm, Workflow Overview*
+```mermaid
+sequenceDiagram
+  opt Import Workflow
+    rect rgb(50, 200, 50)
+      activate *.dcm
+      activate Importer
+      Importer->>*.dcm: Read
+      activate T_SV_H_Volume
+      deactivate *.dcm
+      Importer->>T_SV_H_Volume: Save
+      deactivate Importer
+      deactivate T_SV_H_Volume
+    end
+  end
+
+  opt DVR Workflow - From Hounsfield Unit Volume with DICOM Window, TF and ROI
+    rect rgb(0, 200, 255)
+      T_SV_H_Volume->>M_SV_W_CS: Param.
+      DICOM_Window->>M_SV_W_CS: Param.
+      M_SV_W_CS->>RT_SV_W_Volume: Compute
+      T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
+      BP_ROI-SV->>M_DVR-Raycasting_W: Param.
+      RT_SV_W_Volume->>M_DVR-Raycasting_W: Param.
+      M_DVR-Raycasting_W->>BP_SV_H: Render
+      rect rgb(0, 100, 255)
+        alt Variant - Save DICOM Windowed RT as Volume Texture, and use the same as Param.
+          RT_SV_W_Volume-->>T_SV_W_Volume: Save
+          T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
+          BP_ROI-SV->>M_DVR-Raycasting_W: Param.
+          T_SV_W_Volume-->>M_DVR-Raycasting_W: Param.
+          M_DVR-Raycasting_W->>BP_SV_W: Render
+        end
+      end
+    end
+  end
+
+  opt DVR Workflow - Lighting from DICOM Windowed RT, TF and ROI
+    rect rgb(255, 255, 200)
+      RT_SV_W_Volume->>M_SV_L_CS: Param.
+      M_SV_L_CS->>RT_SV_L_Volume: Compute
+      T_TF_ColorAtlas->>M_DVR-Raycasting_WL: Param.
+      BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
+      RT_SV_W_Volume->>M_DVR-Raycasting_WL: Param.
+      RT_SV_L_Volume->>M_DVR-Raycasting_WL: Param.
+      M_DVR-Raycasting_WL->>BP_SV_H: Render
+      rect rgb(255, 255, 100)
+        alt Variant - Save Lighting RT as Volume Texture, and use the same as Param.
+          RT_SV_L_Volume-->>T_SV_L_Volume: Save
+          T_TF_ColorAtlas->>M_DVR-Raycasting_WL: Param.
+          BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
+          T_SV_L_Volume-->>M_DVR-Raycasting_WL: Param.
+          M_DVR-Raycasting_WL->>BP_SV_WL: Render
+        end
+      end
+    end
+  end
+
+  opt MPR-3D/-2D Workflow - From DICOM Windowed RT Volume and LUT
+    rect rgb(200, 200, 200)
+      RT_SV_W_Volume->>M_MPR_CS: Param.
+      rect rgb(150, 150, 150)
+        alt Variant - Use Volume Texture
+          T_SV_W_Volume-->>M_MPR_CS: Param.
+        end
+      end
+      M_MPR_CS->>RT_MPR-Axial/-Coronal/-Sagittal: Compute
+      T_LUT_Array->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
+      RT_MPR-Axial/-Coronal/-Sagittal->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
+      Plane-Axial/-Coronal/-Sagittal_Location->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
+      MPR-3D_Plane-ForwardVector/-UpVector->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
+      MI_MPR-Axial/-Coronal/-Sagittal->>BP_MPR-3D/-2D: Render
+    end
+  end
+```
 
 ## 3. Blueprint SV and Inheriting Actors
 
