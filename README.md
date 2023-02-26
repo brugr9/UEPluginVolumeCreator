@@ -87,13 +87,13 @@ The plugin provides rendering of image-stack based volumes, commonly known as **
 
 In this plugin, image-stack based scalar volumes are kept in `VolumeTexture` assets (suffix `_Volume`). A `VolumeTexture` may serve as voxel container of three different kind of content. The assets name suffix indicates the intended content type (cp. section *[Asset Naming Convention](#7-asset-naming-convention)*):
 
-* **_H_Volume**: CT image stack data, values in the range of [-1000, 3095] in Hounsfield Units
+* **_HU_Volume**: CT image stack data, values in the range of [-1000, 3095] in Hounsfield Units
 * **_W_Volume**: DICOM Window applied data, values in the range of [0, 255] Grayscale
 * **_L_Volume**: Lightmap from static lighting
 
 Plugin Content:
 
-* Volume Textures (Default Containers): `T_SV_H_Volume`, `T_SV_W_Volume`, `T_SV_L_Volume`
+* Volume Textures (Default Containers): `T_SV_HU_Volume`, `T_SV_W_Volume`, `T_SV_L_Volume`
 * Volume Render Textures (Shader Textures): `RT_SV_W_Volume`, `RT_SV_L_Volume`
 
 TODO: Multiplanar Rendering MPR or Direct Volume Rendering DVR
@@ -117,7 +117,7 @@ Plugin Content:
 
 #### 2.2.2. ROI-MPR-3D
 
-* Material Instance: `MI__ROI`
+* Material Instance: `MI_ROI`
 
 #### 2.2.3. ROI-Handles
 
@@ -154,11 +154,11 @@ sequenceDiagram
   activate *.dcm
   activate Importer
   Importer->>*.dcm: Read
-  activate T_SV_H_Volume
+  activate T_SV_HU_Volume
   deactivate *.dcm
-  Importer->>T_SV_H_Volume: Save
+  Importer->>T_SV_HU_Volume: Save
   deactivate Importer
-  deactivate T_SV_H_Volume
+  deactivate T_SV_HU_Volume
   end
 ```
 
@@ -166,13 +166,13 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
   rect rgb(0, 200, 255)
-    T_SV_H_Volume->>M_SV_W_CS: Param.
+    T_SV_HU_Volume->>M_SV_W_CS: Param.
     DICOM_Window->>M_SV_W_CS: Param.
     M_SV_W_CS->>RT_SV_W_Volume: Compute
     T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
     BP_ROI-SV->>M_DVR-Raycasting_W: Param.
     RT_SV_W_Volume->>M_DVR-Raycasting_W: Param.
-    M_DVR-Raycasting_W->>BP_SV_H: Render
+    M_DVR-Raycasting_W->>BP_SV_HU: Render
     rect rgb(0, 100, 255)
       alt Variant - Save DICOM Windowed RT as Volume Texture, and use the same as Param.
         RT_SV_W_Volume-->>T_SV_W_Volume: Save
@@ -195,7 +195,7 @@ sequenceDiagram
     BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
     RT_SV_W_Volume->>M_DVR-Raycasting_WL: Param.
     RT_SV_L_Volume->>M_DVR-Raycasting_WL: Param.
-    M_DVR-Raycasting_WL->>BP_SV_H: Render
+    M_DVR-Raycasting_WL->>BP_SV_HU: Render
     rect rgb(255, 255, 100)
       alt Variant - Save Lighting RT as Volume Texture, and use the same as Param.
         RT_SV_L_Volume-->>T_SV_L_Volume: Save
@@ -237,23 +237,23 @@ sequenceDiagram
       activate *.dcm
       activate Importer
       Importer->>*.dcm: Read
-      activate T_SV_H_Volume
+      activate T_SV_HU_Volume
       deactivate *.dcm
-      Importer->>T_SV_H_Volume: Save
+      Importer->>T_SV_HU_Volume: Save
       deactivate Importer
-      deactivate T_SV_H_Volume
+      deactivate T_SV_HU_Volume
     end
   end
 
   opt DVR Workflow - From Hounsfield Unit Volume with DICOM Window, TF and ROI
     rect rgb(0, 200, 255)
-      T_SV_H_Volume->>M_SV_W_CS: Param.
+      T_SV_HU_Volume->>M_SV_W_CS: Param.
       DICOM_Window->>M_SV_W_CS: Param.
       M_SV_W_CS->>RT_SV_W_Volume: Compute
       T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
       BP_ROI-SV->>M_DVR-Raycasting_W: Param.
       RT_SV_W_Volume->>M_DVR-Raycasting_W: Param.
-      M_DVR-Raycasting_W->>BP_SV_H: Render
+      M_DVR-Raycasting_W->>BP_SV_HU: Render
       rect rgb(0, 100, 255)
         alt Variant - Save DICOM Windowed RT as Volume Texture, and use the same as Param.
           RT_SV_W_Volume-->>T_SV_W_Volume: Save
@@ -274,7 +274,7 @@ sequenceDiagram
       BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
       RT_SV_W_Volume->>M_DVR-Raycasting_WL: Param.
       RT_SV_L_Volume->>M_DVR-Raycasting_WL: Param.
-      M_DVR-Raycasting_WL->>BP_SV_H: Render
+      M_DVR-Raycasting_WL->>BP_SV_HU: Render
       rect rgb(255, 255, 100)
         alt Variant - Save Lighting RT as Volume Texture, and use the same as Param.
           RT_SV_L_Volume-->>T_SV_L_Volume: Save
@@ -311,7 +311,7 @@ The scalar volume datasets are handled in actors based on an abstract Blueprint 
 
 Plugin Content:
 
-* Blueprint Actors: `BPA_SV`, `BP_SV_H`, `BP_SV_W`, `BP_SV_WL`
+* Blueprint Actors: `BPA_SV`, `BP_SV_HU`, `BP_SV_W`, `BP_SV_WL`
 
 *Fig 3.1.: Blueprint Inheritance Diagramm*
 ```mermaid
@@ -325,8 +325,8 @@ classDiagram
     +MaterialInstanceDynamic : MI_SV_Dynamic
     +RescaleSVMesh(F_PixelSpacing PixelSpacing)
   }
-  class BP_SV_H{
-    +F_SV_H : Dataset
+  class BP_SV_HU{
+    +F_SV_HU : Dataset
     -TextureRenderTargetVolume : WindowRT
     -TextureRenderTargetVolume : LightmapRT
     #ConstructionScript()
@@ -366,9 +366,9 @@ classDiagram
     #ConstructionScript()
   }
 
-  BPA_SV <|-- BP_SV_H : Inherits
+  BPA_SV <|-- BP_SV_HU : Inherits
   BPI_SV_W <|.. BPA_SV : Implements
-  BPI_SV_L <|.. BP_SV_H : Implements
+  BPI_SV_L <|.. BP_SV_HU : Implements
 
   BPI_SV_L <|.. BP_SV_WL : Implements
 
@@ -388,7 +388,7 @@ classDiagram
     +CurveLinearColor : TransferFunction
     +Float : AlphaMax
   }
-  class F_SV_H{
+  class F_SV_HU{
     +VolumeTexture : HounsfieldVolume
     +F_PixelSpacing : PixelSpacing
     +F_DicomWindow : DicomWindow
@@ -437,10 +437,10 @@ classDiagram
     +Boolean : HalfResolution
   }
 
-  F_SV_H --* F_PixelSpacing
-  F_SV_H --* F_DicomWindow
-  F_SV_H --* F_Lightmap
-  F_SV_H --* F_Phong
+  F_SV_HU --* F_PixelSpacing
+  F_SV_HU --* F_DicomWindow
+  F_SV_HU --* F_Lightmap
+  F_SV_HU --* F_Phong
 
   F_SV_W --* F_PixelSpacing
   F_SV_W --* F_DicomWindow
@@ -641,6 +641,7 @@ Not yet implmeneted features:
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
 * RAS &mdash; Right&ndash;Anterior&ndash;Superior
+* RCS &mdash; Reference Coordinate System
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
 * SV &mdash; Scalar Volume
@@ -656,24 +657,24 @@ Not yet implmeneted features:
 
 ### Glossary
 
-#### Coordinate Systems and Terms of Location
+#### Terms of Location and Coordinate Systems
 
-Anatomical Planes and Terms of Location (cp. [Sharma 2022]) on a person standing upright:
+Anatomical planes and terms of location on a person standing upright (cp. [mbbs]):
 
-* **Coronal Plane**: Frontal plane, divides in back as **Posterior (P)** and front as **Anterior (A)**
-* **Saggital Plane**: Longitudinal (median) plane, divides in **Left (L)** and **Right (R)**
-* **Axial Plane**: Horizontal plane, divides in **Inferior (I)** towards feet and **Superior (S)** towards head
+* **Coronal Plane**: Frontal plane, separates in **Posterior (P)** towards back and **Anterior (A)** towards front.
+* **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Left (L)** and **Right (R)** halves. A sagittal plane is any plane perpendicular to the median plane.
+* **Axial Plane**: Horizontal (transverse) plane, separates in **Inferior (I)** towards feet (bottom) and **Superior (S)** towards head (top).
 
 ##### DICOM
 
-DICOM images are using a Left&ndash;Posterior&ndash;Superior **LPS** System (cp. [Adaloglouon 2020], *Anatomical coordinate system*):
+DICOM images are using a **Left&ndash;Posterior&ndash;Superior LPS System** (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):
 > *"[Left&ndash;Posterior&ndash;Superior] LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use [Right&ndash;Anterior&ndash;Superior] RAS"*
 
 * **L**: X increases from R to L
 * **P**: Y increases from A to P
 * **S**: Z increases from I to S
 
-DICOM images are using a Right-handed System **RhS** of matrix or index coordinates as rows of columns of pixel values in a stack of slices (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
+DICOM images are using a **Right-handed System RhS** of matrix or index coordinates as rows of columns of pixel values in a stack of slices (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
 
 * i: Image width in columns, increases to the right
 * j: Image height in rows, increases downwards
@@ -681,15 +682,15 @@ DICOM images are using a Right-handed System **RhS** of matrix or index coordina
 
 ##### Unreal Engine
 
-Unreal Engine is using a Left-handed System **LhS** based First Person View FPV (cp. [Mower, Coordinate System]):
+Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]):
 
-* X increases from **Back** to **Front**, color code red
-* Y increases from **Left** to **Right**, color code green
-* Z increases upwards from **Bottom** to **Top**, color code blue
+* X: Increases from **Back** to **Front**, color code red
+* Y: Increases from **Left** to **Right**, color code green
+* Z: Increases upwards from **Bottom** to **Top**, color code blue
 
 ##### This Plugin
 
-The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&mdash;results in an Anterior&ndash;Right&ndash;Superior **ARS** anatomical coordinate system (cp. figure G.1.):
+The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior ARS** anatomical coordinate system (cp. figure G.1.):
 
 * **A**: X increases from Back to Front, color code red; anatomical from **Posterior (P)** to **Anterior (A)**
 * **R**: Y increases from Left to Right, color code green; anatomical from  **Left (L)** to **Right (R)**
@@ -699,9 +700,9 @@ The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&md
 
 Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
 
-* **Coronal**: Frontal **YZ-Plane**, divides in Back / Posterior (P) and Front / Anterior (A)
-* **Saggital**: Longitudinal **XZ-Plane**, divides in Left (L) and Right (R)
-* **Axial**: Horizontal **XY-Plane**, divides in Bottom / Inferior (I) and Top / Superior (S)
+* **Coronal (COR)**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow), divides in **Posterior (P)** and **Anterior (A)**
+* **Sagittal (SAG)**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow), divides in Left (L) and Right (R)
+* **Axial (AXE)**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow), divides in Bottom / Inferior (I) and Top / Superior (S)
 
 ![ROI Handles with Left Handed Location Gizmo](Docs/LhRAS.png "ROI Handles with Left Handed Location Gizmo")<br>*Fig. G.2.: ROI-Handles with Left Handed UE-Location-Gizmo*
 
@@ -729,7 +730,7 @@ The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Na
   * `SV`
 * `Descriptor`:
   * Volume Type Suffix:
-    * Hounsfield Units: `_H`
+    * Hounsfield Units: `_HU`
     * DICOM Window: `_W`
     * Lightmap: `_L`
 
@@ -740,7 +741,7 @@ Examples:
   * Scalar Volume, DICOM Window: **`BPI_SV_W`**
   * Scalar Volume, Lightmap: **`BPI_SV_L`**
 * Blueprint, Scalar Volume
-  * From Hounsfield Units Volume Texture: **`BP_SV_H`**
+  * From Hounsfield Units Volume Texture: **`BP_SV_HU`**
   * From DICOM Window Volume Texture: **`BP_SV_W`**
   * From DICOM Window and Lightmap Volume Textures: **`BP_SV_WL`**
 
@@ -754,14 +755,14 @@ Examples:
   * Templates: `Default`
 * `Descriptor`:
   * Volume Type Suffix:
-    * Hounsfield Units: `_H`
+    * Hounsfield Units: `_HU`
     * DICOM Window: `_W`
     * Lightmap: `_L`
   * Data Asset Suffix: `_Data`
 
 Examples:
 
-* Data Asset: **`F_Default_H_Data`**
+* Data Asset: **`F_Default_HU_Data`**
 * Data Asset: **`F_Default_W_Data`**
 * Data Asset: **`F_Default_WL_Data`**
 
@@ -774,7 +775,7 @@ Examples:
 * `Descriptor`:
   * Data Asset Suffix: `_Data`
   * Volume Type Suffix:
-    * Hounsfield Units: `_H`
+    * Hounsfield Units: `_HU`
     * DICOM Window: `_W`
     * Lightmap: `_L`
   * Volume Texture Suffix: `_Volume`
@@ -782,7 +783,7 @@ Examples:
 Examples:
 
 * Volume Texture
-  * Hounsfield Units: **`T_SV_H_Volume`**
+  * Hounsfield Units: **`T_SV_HU_Volume`**
   * DICOM Window: **`T_SV_W_Volume`**
   * Lightmap: **`T_SV_L_Volume`**
 
@@ -878,6 +879,8 @@ Examples:
 
 #### A.1. Medical Imaging
 
+* Anatomical Terms:
+  * [mbbs] mbbsbooks: **Anatomical Terms**. In: mbbsbooks Medical - Category Anatomy. Feb 14, 2023. Online: [https://mbbsbooks.com/anatomical-terms/](https://mbbsbooks.com/anatomical-terms/)
 * DICOM:
   * [DICOM] **The DICOM Standard**. Online: [https://www.dicomstandard.org/current](https://www.dicomstandard.org/current)
   * [DICOM, FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
@@ -903,14 +906,14 @@ Examples:
   * [Mower, Scale] Nick Mower: **Scale and Measurement Inside Unreal Engine 4**. In: TechArt-Hub. Online: [https://www.techarthub.com/scale-and-measurement-inside-unreal-engine-4/](https://www.techarthub.com/scale-and-measurement-inside-unreal-engine-4/)
   * [Mower, Coordinate System] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. In: TechArt-Hub. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
 * Naming Convention:
-  * [UEDoc, Recommended Asset Naming Conventions] Epic Games: **Recommended Asset Naming Conventions**. URL: [https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/](https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/)
+  * [UEDoc, Recommended Asset Naming Conventions] Epic Games: **Recommended Asset Naming Conventions**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/](https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/)
   * [Allar 2022] Michael Allar: **Gamemakin UE Style Guide**. Mar 7, 2022. URL: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide)
 * Textures:
-  * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
+  * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
   * [Mower, Compression] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. In: TechArt-Hub. Online: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
   * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. Jun 19, 2021 URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 * Lighting:
-  * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. URL: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
+  * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
 
 ### B. Readings
 
