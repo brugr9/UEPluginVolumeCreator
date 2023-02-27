@@ -16,17 +16,17 @@ Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Ima
 
 ## Description
 
-This plugin enables real-time multiplanar and direct volume rendering from the Blueprint Visual Scripting system.
+Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint Visual Scripting system.
 
-The delivered assets provide importing DICOM&reg; based medical imaging data and the rendering of the same by coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane and/or with a region of interest the user may shrink the rendered volume interactively. The plugin allows to create solutions that can be used in VR/AR serious games, e.g. for teaching and education.
+The delivered assets provide importing DICOM&reg; based medical imaging data and the rendering of the same by coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane and/or with a region of interest the user may shrink the rendered volume interactively. The plugin allows to create solutions that can be used in VR/AR serious games, e.g., for teaching and training in medical education.
 
 <!-- UE Marketplace : End 1/2 -->
 
 * Index Terms:
   * Medical Imaging, Computer Tomography, Magnetic Resonance
   * Direct Volume Rendering, Multiplanar Rendering
-  * Virtual Reality, Augmented Reality, Serious Games, Teaching and Education
-* Technology: DICOM, Unreal Engine, Compute Shader
+  * Virtual Reality, Augmented Reality, Serious Games for Teaching and Training
+* Technology: DICOM, Unreal Engine C++ Code Plugin, HLSL Compute Shader
 
 * Tags: DICOM, CT, MR, DVR, MPR, VR, AR, UE, CS
 
@@ -641,7 +641,7 @@ Not yet implmeneted features:
 * MPR-2D
   * Orientation Guide
   * Region of Interest
-* Rendering Method:
+* Rendering Type:
   * Indirect Volume Rendering
   * Vector Volume Rendering &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field (cp. [Piper et al., Overview]).
   * Tensor Volume Rendering &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI (cp. [Piper et al., Overview]).
