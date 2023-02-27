@@ -8,6 +8,34 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 ---
 
+<!-- UE Marketplace : Begin 1/2 -->
+
+![Featured Image](Docs/FeaturedImage894x488.png "Featured Image")
+
+Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Imaging Data.
+
+## Description
+
+This plugin enables real-time multiplanar and direct volume rendering from the Blueprint Visual Scripting system.
+
+The delivered assets provide importing DICOM&reg; based medical imaging data and the rendering of the same by coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane and/or with a region of interest the user may shrink the rendered volume interactively. The plugin allows to create solutions that can be used in VR/AR serious games, e.g. for teaching and education.
+
+<!-- UE Marketplace : End 1/2 -->
+
+* Index Terms:
+  * Medical Imaging, Computer Tomography, Magnetic Resonance
+  * Direct Volume Rendering, Multiplanar Rendering
+  * Virtual Reality, Augmented Reality, Serious Games, Teaching and Education
+* Technology: DICOM, Unreal Engine, Compute Shader
+
+* Tags: DICOM, CT, MR, DVR, MPR, VR, AR, UE, CS
+
+---
+
+<div style='page-break-after: always'></div>
+
+## Table of Contents
+
 <!-- Start Document Outline -->
 
 * [1. Setup](#1-setup)
@@ -21,7 +49,7 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
     * [2.2.3. ROI-Handles](#223-roi-handles)
   * [2.3. Clip Plane](#23-clip-plane)
   * [2.4. Spot-Light](#24-spot-light)
-  * [2.5. Rendering Workflow](#25-rendering-workflow)
+  * [2.5. Workflows](#25-workflows)
 * [3. Blueprint SV and Inheriting Actors](#3-blueprint-sv-and-inheriting-actors)
   * [3.1. Actor BP SV H](#31-actor-bp-sv-h)
     * [3.1.2. Dataset](#312-dataset)
@@ -38,9 +66,9 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
     * [4.3.2. Processing](#432-processing)
 * [6. Outlook](#6-outlook)
 * [Appendix](#appendix)
-  * [Acronyms](#acronyms)
+  * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
-    * [Coordinate Systems and Terms of Location](#coordinate-systems-and-terms-of-location)
+    * [Terms of Location and Coordinate Systems](#terms-of-location-and-coordinate-systems)
     * [Asset Naming Convention](#asset-naming-convention)
   * [A. References](#a-references)
     * [A.1. Medical Imaging](#a1-medical-imaging)
@@ -145,7 +173,7 @@ Plugin Content:
 
 ![Blueprint SpotLight BP_StaticSpotLight](Docs/BP_StaticSpotLight.png "Blueprint SpotLight BP_StaticSpotLight")<br>*Fig. 2.4.: Blueprint SpotLight BP_StaticSpotLight*
 
-### 2.5. Rendering Workflow
+### 2.5. Workflows
 
 *Fig 2.1.: Sequence Diagramm, Import Workflow*
 ```mermaid
@@ -610,48 +638,63 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 
 Not yet implmeneted features:
 
-* Indirect Volume Rendering
-* Unsupported volume type (terminology cp. [Piper et al., Overview]):
-  * *Labelmap Volume* &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.
-  * *Vector Volume* &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field.
-  * *Tensor Volume* &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI.
+* MPR-2D
+  * Orientation Guide
+  * Region of Interest
+* Rendering Method:
+  * Indirect Volume Rendering
+  * Vector Volume Rendering &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field (cp. [Piper et al., Overview]).
+  * Tensor Volume Rendering &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI (cp. [Piper et al., Overview]).
+  <!--* Labelmap Volume Rendering &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.-->
 
 <div style='page-break-after: always'></div>
 
 ## Appendix
 
-### Acronyms
+### Abbreviations and Acronyms
 
+* A &mdash; Anterior
 * ARS &mdash; Anterior&ndash;Right&ndash;Superior
+* AXE &mdash; Axial
 * BB &mdash; Bounding Box
+* COR &mdash; Coronal
 * CS &mdash; Compute Shader
 * CT &mdash; Computed Tomography (X-ray)
-* CTA &mdash; Computed Tomography Angiography
 * DICOM &mdash; Digital Imaging and Communications in Medicine
 * DVR &mdash; Direct Volume Rendering
-* FPS &mdash; Frames per Second
+* fps &mdash; Frames per Second
 * FPV &mdash; First Person View
-* HU &mdash; Hounsfield Unit
+* HU &mdash; Hounsfield Units
+* I &mdash; Inferior
+* L &mdash; Left
 * LhS &mdash; Left-handed System
 * LPS &mdash; Left&ndash;Posterior&ndash;Superior
 * LUT &mdash; Look-Up Table
 * MIP &mdash; Maximum Intensity Projection
 * MPR &mdash; Multiplanar Reconstruction
 * MR &mdash; Magnetic Resonance
-* MRI &mdash; Magnetic Resonance Imaging
-* MRT &mdash; Magnetic Resonance Tomography
-* RAS &mdash; Right&ndash;Anterior&ndash;Superior
-* RCS &mdash; Reference Coordinate System
+* OG &mdash; Orientation Guide
+* P &mdash; Posterior
+* R &mdash; Right
+* RAS &mdash; Right&ndash;Anterior&ndash;Superiors
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
+* S &mdash; Superior
+* SAG &mdash; Sagittal
 * SV &mdash; Scalar Volume
 * TF &mdash; Transfer Function
 
-<!--* AAA &mdash; Abdominal Aortic Aneurysm-->
-<!--* CRI &mdash; Colour Rendering Index-->
-<!--* IVR &mdash; Indirect Volume Rendering-->
-<!--* PET &mdash; Positron Emission Tomography-->
-<!--* VOI &mdash; Volume of Interest-->
+<!--
+* AAA &mdash; Abdominal Aortic Aneurysm
+* CRI &mdash; Colour Rendering Index
+* CTA &mdash; Computed Tomography Angiography
+* IVR &mdash; Indirect Volume Rendering
+* MRI &mdash; Magnetic Resonance Imaging
+* MRT &mdash; Magnetic Resonance Tomography
+* PET &mdash; Positron Emission Tomography
+* RCS &mdash; Reference Coordinate System
+* VOI &mdash; Volume of Interest
+-->
 
 <div style='page-break-after: always'></div>
 
@@ -696,182 +739,73 @@ The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&md
 * **R**: Y increases from Left to Right, color code green; anatomical from  **Left (L)** to **Right (R)**
 * **S**: Z increases upwards from Bottom to Top, color code blue; anatomical from **Inferior (I)** to **Superior (S)**
 
-![Orientation Guide with Left Handed Location Gizmo](Docs/LhRAS-02.png "Orientation Guide with Left Handed Location Gizmo")<br>*Fig. G.1.: Orientation Guide with Left Handed UE-Location-Gizmo*
+![DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows](Docs/LhRAS-02.png "DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows*
 
 Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
 
-* **Coronal (COR)**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow), divides in **Posterior (P)** and **Anterior (A)**
-* **Sagittal (SAG)**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow), divides in Left (L) and Right (R)
-* **Axial (AXE)**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow), divides in Bottom / Inferior (I) and Top / Superior (S)
+* **Coronal (COR)**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior (P)** to **Anterior (A)**
+* **Sagittal (SAG)**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left (L)** to **Right (R)**
+* **Axial (AXE)**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior (I)** to **Superior (S)**
 
-![ROI Handles with Left Handed Location Gizmo](Docs/LhRAS.png "ROI Handles with Left Handed Location Gizmo")<br>*Fig. G.2.: ROI-Handles with Left Handed UE-Location-Gizmo*
+![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/LhRAS.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
 
 <div style='page-break-after: always'></div>
 
 #### Asset Naming Convention
 
-The plugins assets naming is based on a scheme from [UEDoc, Recommended Asset Naming Conventions] (see also [Allar 2022]):
-> *`[AssetTypePrefix]_[AssetName]_[Descriptor]_[OptionalVariantLetterOrNumber]`*
+The plugins assets naming convention is based on a scheme from [UEDoc, Recommended Asset Naming Conventions] as well as from [Allar 2022]:
+> *`[AssetTypePrefix]_[AssetName]_[DescriptorSuffix]_[OptionalVariantLetterOrNumber]`*
 >
 >* *`AssetTypePrefix` identifies the type of Asset [...].*
 >* *`AssetName` is the Asset's name.*
->* *`Descriptor` provides additional context for the Asset, to help identify how it is used. For example, whether a texture is a normal map or an opacity map.*
+>* *`DescriptorSuffix` provides additional context for the Asset, to help identify how it is used. For example, whether a texture is a normal map or an opacity map.*
 >* *`OptionalVariantLetterOrNumber` is optionally used to differentiate between multiple versions or variations of an asset.*
 
-* In the `AssetName`, dashes "`-`" are used, no underlines "`_`".
-* In the `Descriptor`, single letter suffixes are combined without additional underlines "`_`".
+* `[AssetTypePrefix]` (UEDoc and Allar):
+  * Blueprint: `BP`
+  * Blueprint Interface: `BPI`
+  * Curve: `Curve`
+  * Enum(eration): `E`
+  * Material: `M`
+  * Material Instance: `MI`
+  * Material Instance Dynamic: `MID`
+  * Struct(ure): `F`
+  * Texture: `T`
+  * Texture Render Target: `RT`
+* `[AssetName]` (Domain Specific):
+  * Scalar Volume: `SV`
+  * Rendering Type:
+    * Direct Volume Rendering: `DVR`
+      * Rendering Method: `Raycast`, `Raymarch`
+    * Multiplanar Rendering: `MPR`
+      * Plane: `COR`, `SAG`, `AXE`
+      * Location: `P`, `A`, `L`, `R`, `I`, `S`
+  * Bounding Box: `BB`
+  * Region of Interest: `ROI`
+  * Orientation Guide: `OG`
+  * Look-Up Table: `LUT`
+  * Transfer Function: `TF`
+  * Acquisition Type:
+    * Computer Tomography: `CT`
+    * Magnetic Resonance: `MR`
+* `[DescriptorSuffix]`:
+  * Data Type (Domain Specific):
+    * Histogram: `HIS`
+    * Hounsfield Units: `HU`
+    * DICOM Window: `W`
+    * Lighting: `L`
+  * Asset Type (UEDoc and Allar):
+    * Volume Texture: `Volume`
+    * Texture Array: `Array`
+    * Curve Linear Color: `Color`
+    * Color Atlas: `ColorAtlas`
+    * Main Material: `Main`
+    * Compute Shader: `CS`
 
-##### Blueprints
+Aditional Conventions:
 
-* `AssetTypePrefix`:
-  * Blueprint: `BP_`
-  * Blueprint Interface: `BPI_`
-* `AssetName`:
-  * `SV`
-* `Descriptor`:
-  * Volume Type Suffix:
-    * Hounsfield Units: `_HU`
-    * DICOM Window: `_W`
-    * Lightmap: `_L`
-
-Examples:
-
-* Blueprint, Scalar Volume, Abstract Class: **`BP_SV`**
-* Blueprint Interface
-  * Scalar Volume, DICOM Window: **`BPI_SV_W`**
-  * Scalar Volume, Lightmap: **`BPI_SV_L`**
-* Blueprint, Scalar Volume
-  * From Hounsfield Units Volume Texture: **`BP_SV_HU`**
-  * From DICOM Window Volume Texture: **`BP_SV_W`**
-  * From DICOM Window and Lightmap Volume Textures: **`BP_SV_WL`**
-
-##### Data
-
-###### Structures
-
-* `AssetTypePrefix`
-  * Struct: `F_`
-* `AssetName`:
-  * Templates: `Default`
-* `Descriptor`:
-  * Volume Type Suffix:
-    * Hounsfield Units: `_HU`
-    * DICOM Window: `_W`
-    * Lightmap: `_L`
-  * Data Asset Suffix: `_Data`
-
-Examples:
-
-* Data Asset: **`F_Default_HU_Data`**
-* Data Asset: **`F_Default_W_Data`**
-* Data Asset: **`F_Default_WL_Data`**
-
-###### Volumes
-
-* `AssetTypePrefix`
-  * Texture: `T_`
-* `AssetName`:
-  * Templates: `Default`
-* `Descriptor`:
-  * Data Asset Suffix: `_Data`
-  * Volume Type Suffix:
-    * Hounsfield Units: `_HU`
-    * DICOM Window: `_W`
-    * Lightmap: `_L`
-  * Volume Texture Suffix: `_Volume`
-
-Examples:
-
-* Volume Texture
-  * Hounsfield Units: **`T_SV_HU_Volume`**
-  * DICOM Window: **`T_SV_W_Volume`**
-  * Lightmap: **`T_SV_L_Volume`**
-
-##### Material Library
-
-###### Material
-
-* `AssetTypePrefix`
-  * Material: `M_`
-  * Material Instance: `MI_`
-* `AssetName`:
-  * Rendering Type Prefix: `MPR-`, `DVR-`
-  * Volume Rendering Method: `Raycasting`, `Raymarching`
-* `Descriptor`:
-  * Compute Shader Suffix: `_CS`
-  * Volume Type Suffix:
-    * DICOM Window: `_W`
-    * Lightmap: `_L`
-
-Examples:
-
-* MPR: **`M_MPR_Master`**, **`MI_MPR-Coronal`**, **`MI_MPR-Sagittal`**, **`MI_MPR-Axial`**
-* Scalar Volume:
-  * Compute Shader:
-    * Compute DICOM Window: **`M_SV_CSW`**
-    * Compute Lightmap: **`M_SV_CSL`**
-  * DVR Raycasting:
-    * DICOM Window as Parameter: **`M_DVR-Raycasting_W`**
-    * DICOM Window and Lightmap as Parameter: **`M_DVR-Raycasting_WL`**
-  * DVR Raymarching:
-    * DICOM Window as Parameter: **`M_DVR-Raymarching_W`**
-    * DICOM Window and Lightmap as Parameter: **`M_DVR-Raymarching_WL`**
-
-###### Texture Render Target
-
-* `AssetTypePrefix`
-  * Texture Render Target: `RT_`
-* `AssetName`:
-  * Rendering Type Prefix: `MPR`
-  * Volume Type: `SV`
-* `Descriptor`:
-  * Volume Type Suffix:
-    * DICOM Window: `_W`
-    * Lightmap: `_L`
-  * Volume Texture Suffix: `_Volume`
-
-Examples:
-
-* Texture Render Target 2D:
-  * MPR, Coronal: **`RT_MPR-Coronal`**
-  * MPR, Sagittal: **`RT_MPR-Sagittal`**
-  * MPR, Axial: **`RT_MPR-Axial`**
-* Texture Render Target Volume:
-  * DICOM Window: **`RT_SV_W_Volume`**
-  * Lightmap: **`RT_SV_L_Volume`**
-
-###### Look-Up Table
-
-* `AssetTypePrefix`:
-  * Texture: `T_`
-* `AssetName`:
-  * Look-Up Table: `LUT-`
-* `Descriptor`:
-  * Texture Array Suffix: `_Array`
-  
-Examples:
-
-* Texture 2D, LUT: **`T_LUT-DiscreteBlue`**
-* Texture 2D Array, LUT: **`T_LUT_Array`**
-
-###### Transfer Function
-
-* `AssetTypePrefix`
-  * Curve: `Curve_`
-  * Texture: `T_`
-* `AssetName`:
-  * Transfer Function Prefix: `TF-`
-  * Acquisition Type Prefix:
-    * Computer Tomography: `CT-`
-    * Computer Tomography: `MR-`
-* `Descriptor`:
-  * Curve Linear Color Suffix: `_Color`
-  * Color Atlas Suffix: `_ColorAtlas`
-
-Examples:
-
-* Curve Linear Color, Transfer Function, CT, MIP: **`Curve_TF-CT-MIP_Color`**
-* Texture 2D Color Atlas, Transfer Function: **`T_Curve_TF_ColorAtlas`**
+* In the `[AssetName]`, dashes "`-`" are used, no underlines "`_`".
+* In the `[DescriptorSuffix]`, single letter suffixes are combined without additional underlines "`_`".
 
 <div style='page-break-after: always'></div>
 
