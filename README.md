@@ -18,17 +18,17 @@ Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Ima
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint Visual Scripting system.
 
-The delivered assets provide importing DICOM&reg; based medical imaging data and the rendering of the same by coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane and/or with a region of interest the user may shrink the rendered volume interactively. The plugin allows to create solutions that can be used in VR/AR serious games, e.g., for teaching and training in medical education.
+The delivered assets provide importing DICOM&reg; based medical imaging data, applying DICOM Window and rendering by coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane and/or with a region of interest the user may shrink the rendered volume interactively. The plugin allows to create solutions that can be used in VR/AR serious games, e.g., for teaching and training in medical education.
 
 <!-- UE Marketplace : End 1/2 -->
 
 * Index Terms:
   * Medical Imaging, Computer Tomography, Magnetic Resonance
-  * Direct Volume Rendering, Multiplanar Rendering
+  * Multiplanar Rendering, Direct Volume Rendering
   * Virtual Reality, Augmented Reality, Serious Games for Teaching and Training
 * Technology: DICOM, Unreal Engine C++ Code Plugin, HLSL Compute Shader
 
-* Tags: DICOM, CT, MR, DVR, MPR, VR, AR, UE, CS
+* Tags: DICOM, CT, MR, MPR, DVR, VR, AR, UE, CS
 
 ---
 
@@ -109,7 +109,22 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ## 2. Concept
 
-The plugin provides rendering of image-stack based volumes, commonly known as **scalar volumes** (see section 2.1.). The plugin however does not support other type of volumes, like label map volumes, vector volumes or tensor volumes. The volume geometry can be reduced with a **region of interest** (see section 2.2.) and/or with a **clip plane** (see section 2.3.). In addition, the volume can be illuminated with **static spot-lights** (see section 2.4.). The scalar volume datasets are handled in Blueprint actors &mdash; which includes, e.g., pixel spacing and DICOM Window settings (see section 3.).
+The following entities are implemented as an object or Actor resp. according to the Object Oriented Paradigm OOP:
+
+* **Scalar Volume SV**: The plugin provides rendering of image-stack based volumes, commonly known as scalar volumes *SV*. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. The scalar volume datasets are handled in Blueprint Actors &mdash; which includes handling, e.g., DICOM pixel spacing attribute values.
+* **Multi-Planar Rendering MPR**: A scalar volume SV may be rendered as Multi-Planar Rendering, available in two versions: as **MPR-2D** and as **MPR-3D**.
+  * The MPR-3D extents are shown as three perpendicular planes, i.e. coronal COR, sagittal SAG and axial AXE plane.
+  * The MPR-3D planes position can be moved in the direction of their corresponding axes interactively in real-time.
+  * The MPR-3D produces planar rendering as Render Target Texture RT.
+  * The RT are also consumed by the MPR-2D.
+* **Direct Volume Rendering DVR**: A scalar volume may be rendered as Direct Volume Rendering DVR.
+  * **Bounding Box BB**: The DVR extents are shown with a bounding box BB, its dimension derives from the scalar volume DICOM pixel spacing attribute values.
+  * **Static Spot-Light**: The DVR can be optionally illuminated with static spot-lights.
+  * **Clip Plane**: The DVR geometry can be optionally shrinked with a clip plane interactively in real-time.
+  * **Region of Interest ROI**: The DVR geometry can be optionally shrinked with a region of interest interactively in real-time.
+    * **ROI-Handles**: A ROI geometry can be optionally modified with region of interest handles interactively in real-time. The ROI-Handels can
+
+TODO: Domain Model Diagram
 
 ### 2.1. Scalar Volume
 
