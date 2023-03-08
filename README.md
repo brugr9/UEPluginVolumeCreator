@@ -669,7 +669,6 @@ Not yet implmeneted features:
 ### Abbreviations and Acronyms
 
 * A &mdash; Anterior
-* ARS &mdash; Anterior&ndash;Right&ndash;Superior
 * AXE &mdash; Axial
 * BB &mdash; Bounding Box
 * COR &mdash; Coronal
@@ -682,6 +681,7 @@ Not yet implmeneted features:
 * HU &mdash; Hounsfield Units
 * I &mdash; Inferior
 * L &mdash; Left
+* LAS &mdash; Left&ndash;Anterior&ndash;Superior
 * LhS &mdash; Left-handed System
 * LPS &mdash; Left&ndash;Posterior&ndash;Superior
 * LUT &mdash; Look-Up Table
@@ -698,9 +698,11 @@ Not yet implmeneted features:
 * SAG &mdash; Sagittal
 * SV &mdash; Scalar Volume
 * TF &mdash; Transfer Function
+* US &mdash; Ultrasound Imaging (sonography)
 
 <!--
 * AAA &mdash; Abdominal Aortic Aneurysm
+* ARS &mdash; Anterior&ndash;Right&ndash;Superior
 * CRI &mdash; Colour Rendering Index
 * CTA &mdash; Computed Tomography Angiography
 * IVR &mdash; Indirect Volume Rendering
@@ -719,13 +721,13 @@ Not yet implmeneted features:
 
 Anatomical planes and terms of location on a person standing upright (cp. [mbbs]):
 
+* **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Right (R)** and **Left (L)** halves. A sagittal plane is any plane perpendicular to the median plane.
 * **Coronal Plane**: Frontal plane, separates in **Posterior (P)** towards back and **Anterior (A)** towards front.
-* **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Left (L)** and **Right (R)** halves. A sagittal plane is any plane perpendicular to the median plane.
 * **Axial Plane**: Horizontal (transverse) plane, separates in **Inferior (I)** towards feet (bottom) and **Superior (S)** towards head (top).
 
 ##### DICOM
 
-DICOM images are using a **Left&ndash;Posterior&ndash;Superior LPS System** (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):
+DICOM images are using a **Left&ndash;Posterior&ndash;Superior LPS** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):
 > *"[Left&ndash;Posterior&ndash;Superior] LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use [Right&ndash;Anterior&ndash;Superior] RAS"*
 
 * **L**: X increases from R to L
@@ -747,14 +749,14 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 * Z: Increases upwards from **Bottom** to **Top**, color code blue
 
 ##### This Plugin
-
+<!--
 The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior ARS** anatomical coordinate system (cp. figure G.1.):
 
 * **A**: X increases from Back to Front, color code red; anatomical from **Posterior (P)** to **Anterior (A)**
 * **R**: Y increases from Left to Right, color code green; anatomical from  **Left (L)** to **Right (R)**
 * **S**: Z increases upwards from Bottom to Top, color code blue; anatomical from **Inferior (I)** to **Superior (S)**
 
-![DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows](Docs/LhRAS-02.png "DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows*
+![DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows](Docs/OrientationGuide.png "DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows*
 
 Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
 
@@ -762,7 +764,24 @@ Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
 * **Sagittal (SAG)**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left (L)** to **Right (R)**
 * **Axial (AXE)**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior (I)** to **Superior (S)**
 
-![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/LhRAS.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
+![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
+-->
+
+The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&mdash;results in an **Left&ndash;Anterior&ndash;Superior LAS** anatomical coordinate system (cp. figure G.1.):
+
+* **L**: X increases from anatomical **Right (R)** to **Left (L)**, color code red (corresponds to UE: Back / Front)
+* **A**: Y increases from anatomical **Posterior (P)** to **Anterior (A)**, color code green (corresponds to UE: Left / Right)
+* **S**: Z increases upwards from anatomical **Inferior (I)** to **Superior (S)**, color code blue (corresponds to UE: Bottom / Top)
+
+![DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows](Docs/OrientationGuide.png "DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows*
+
+Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
+
+* **Coronal (COR)**: Frontal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Posterior (P)** to **Anterior (A)**
+* **Sagittal (SAG)**: Longitudinal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Right (R)** to **Left (L)**
+* **Axial (AXE)**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior (I)** to **Superior (S)**
+
+![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
 
 <div style='page-break-after: always'></div>
 
@@ -789,20 +808,21 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture Render Target: `RT`
 * `[AssetName]` (Domain Specific):
   * Scalar Volume: `SV`
-  * Rendering Type:
-    * Direct Volume Rendering: `DVR`
-      * Rendering Method: `Raycast`, `Raymarch`
-    * Multiplanar Rendering: `MPR`
-      * Plane: `COR`, `SAG`, `AXE`
-      * Location: `P`, `A`, `L`, `R`, `I`, `S`
-  * Bounding Box: `BB`
-  * Region of Interest: `ROI`
-  * Orientation Guide: `OG`
-  * Look-Up Table: `LUT`
-  * Transfer Function: `TF`
   * Acquisition Type:
     * Computer Tomography: `CT`
     * Magnetic Resonance: `MR`
+    * Ultrasound: `US`
+  * Rendering Type:
+    * Multiplanar Rendering: `MPR`
+      * Plane: `COR`, `SAG`, `AXE`
+      * Location: `L`, `R` , `P`, `A` , `I`, `S`
+      * Look-Up Table: `LUT`
+    * Direct Volume Rendering: `DVR`
+      * Orientation Guide: `OG`
+      * Bounding Box: `BB`
+      * Region of Interest: `ROI`
+      * Transfer Function: `TF`
+      * Rendering Method: `Raycast`, `Raymarch`
 * `[DescriptorSuffix]`:
   * Data Type (Domain Specific):
     * Histogram: `HIS`
