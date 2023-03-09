@@ -655,7 +655,8 @@ Not yet implmeneted features:
 
 * MPR-2D
   * Orientation Guide
-  * Region of Interest
+  * Region of Interest visualization
+  * Plane Interaction
 * Rendering Type:
   * Indirect Volume Rendering
   * Vector Volume Rendering &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field (cp. [Piper et al., Overview]).
@@ -669,6 +670,7 @@ Not yet implmeneted features:
 ### Abbreviations and Acronyms
 
 * A &mdash; Anterior
+* ARS &mdash; Anterior&ndash;Right&ndash;Superior
 * AXE &mdash; Axial
 * BB &mdash; Bounding Box
 * COR &mdash; Coronal
@@ -691,7 +693,7 @@ Not yet implmeneted features:
 * OG &mdash; Orientation Guide
 * P &mdash; Posterior
 * R &mdash; Right
-* RAS &mdash; Right&ndash;Anterior&ndash;Superiors
+* RAS &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
 * S &mdash; Superior
@@ -702,7 +704,6 @@ Not yet implmeneted features:
 
 <!--
 * AAA &mdash; Abdominal Aortic Aneurysm
-* ARS &mdash; Anterior&ndash;Right&ndash;Superior
 * CRI &mdash; Colour Rendering Index
 * CTA &mdash; Computed Tomography Angiography
 * IVR &mdash; Indirect Volume Rendering
@@ -748,9 +749,9 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 * Y: Increases from **Left** to **Right**, color code green
 * Z: Increases upwards from **Bottom** to **Top**, color code blue
 
-##### This Plugin
-<!--
-The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior ARS** anatomical coordinate system (cp. figure G.1.):
+###### Plugin "Volume Creator"
+
+The anatomical coordinate system in plugin "Volume Creator"&mdash;with UE's use of a LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior ARS** anatomical coordinate system (cp. figure G.1.):
 
 * **A**: X increases from Back to Front, color code red; anatomical from **Posterior (P)** to **Anterior (A)**
 * **R**: Y increases from Left to Right, color code green; anatomical from  **Left (L)** to **Right (R)**
@@ -762,23 +763,6 @@ Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
 
 * **Coronal (COR)**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior (P)** to **Anterior (A)**
 * **Sagittal (SAG)**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left (L)** to **Right (R)**
-* **Axial (AXE)**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior (I)** to **Superior (S)**
-
-![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
--->
-
-The anatomical coordinate system in this plugin&mdash;with UE's use of an LhS&mdash;results in an **Left&ndash;Anterior&ndash;Superior LAS** anatomical coordinate system (cp. figure G.1.):
-
-* **L**: X increases from anatomical **Right (R)** to **Left (L)**, color code red (corresponds to UE: Back / Front)
-* **A**: Y increases from anatomical **Posterior (P)** to **Anterior (A)**, color code green (corresponds to UE: Left / Right)
-* **S**: Z increases upwards from anatomical **Inferior (I)** to **Superior (S)**, color code blue (corresponds to UE: Bottom / Top)
-
-![DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows](Docs/OrientationGuide.png "DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows*
-
-Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
-
-* **Coronal (COR)**: Frontal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Posterior (P)** to **Anterior (A)**
-* **Sagittal (SAG)**: Longitudinal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Right (R)** to **Left (L)**
 * **Axial (AXE)**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior (I)** to **Superior (S)**
 
 ![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
@@ -812,35 +796,34 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
     * Computer Tomography: `CT`
     * Magnetic Resonance: `MR`
     * Ultrasound: `US`
+  * Data Type:
+    * Histogram: `HIS`
+    * Hounsfield Units: `HU`
+    * DICOM Window: `W`
+    * Lighting: `L`
   * Rendering Type:
     * Multiplanar Rendering: `MPR`
       * Plane: `COR`, `SAG`, `AXE`
       * Location: `L`, `R` , `P`, `A` , `I`, `S`
       * Look-Up Table: `LUT`
     * Direct Volume Rendering: `DVR`
-      * Orientation Guide: `OG`
       * Bounding Box: `BB`
+      * Orientation Guide: `OG`
       * Region of Interest: `ROI`
-      * Transfer Function: `TF`
       * Rendering Method: `Raycast`, `Raymarch`
-* `[DescriptorSuffix]`:
-  * Data Type (Domain Specific):
-    * Histogram: `HIS`
-    * Hounsfield Units: `HU`
-    * DICOM Window: `W`
-    * Lighting: `L`
-  * Asset Type (UEDoc and Allar):
-    * Volume Texture: `Volume`
-    * Texture Array: `Array`
-    * Curve Linear Color: `Color`
-    * Color Atlas: `ColorAtlas`
-    * Main Material: `Main`
-    * Compute Shader: `CS`
+      * Transfer Function: `TF`
+* `[DescriptorSuffix]` (UEDoc and Allar):
+  * Volume Texture: `Volume`
+  * Texture Array: `Array`
+  * Curve Linear Color: `Color`
+  * Color Atlas: `ColorAtlas`
+  * Main Material: `Main`
+  * Compute Shader: `CS`
 
 Aditional Conventions:
 
 * In the `[AssetName]`, dashes "`-`" are used, no underlines "`_`".
-* In the `[DescriptorSuffix]`, single letter suffixes are combined without additional underlines "`_`".
+* In the `[AssetName]`, single letter suffixes are combined without additional dashes "`-`".
 
 <div style='page-break-after: always'></div>
 
