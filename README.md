@@ -813,12 +813,13 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
       * Rendering Method: `Raycast`, `Raymarch`
       * Transfer Function: `TF`
 * `[DescriptorSuffix]` (UEDoc and Allar):
-  * Volume Texture: `Volume`
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
   * Color Atlas: `ColorAtlas`
-  * Main Material: `Main`
   * Compute Shader: `CS`
+  * Main Material: `Main`
+  * Volume Texture: `Volume`
+  * Texture Drawn from 'Material to Texture Render Target': `Tex`
 
 Aditional Conventions:
 
@@ -875,6 +876,9 @@ Aditional Conventions:
 ### C. Acknowledgements
 
 * **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
+<!--
+* **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
+-->
 
 <div style='page-break-after: always'></div>
 
