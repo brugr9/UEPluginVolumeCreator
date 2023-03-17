@@ -510,7 +510,7 @@ To allow to render the lerped values only, a mask may be applied to the volume's
 
 #### 3.1.4. Volume Rendering
 
-Direct Volume Rendering DVR with Materials from Raycasting or Raymarching Shaders, unlit or with (precomputed) static lighting.
+Direct Volume Rendering DVR with Materials from Raymarching Shaders with static lighting.
 
 ##### 3.1.4.1. Region Of Interest
 
@@ -804,13 +804,12 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Rendering Type:
     * Multiplanar Rendering: `MPR`
       * Plane: `COR`, `SAG`, `AXE`
-      * Location: `L`, `R` , `P`, `A` , `I`, `S`
+      * Location: `P`, `A`, `L`, `R`, `I`, `S`
       * Look-Up Table: `LUT`
     * Direct Volume Rendering: `DVR`
       * Bounding Box: `BB`
       * Orientation Guide: `OG`
       * Region of Interest: `ROI`
-      * Rendering Method: `Raycast`, `Raymarch`
       * Transfer Function: `TF`
 * `[DescriptorSuffix]` (UEDoc and Allar):
   * Texture Array: `Array`
