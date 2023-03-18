@@ -659,7 +659,7 @@ Not yet implmeneted features:
   * Plane Interaction
 * Rendering Type:
   * Indirect Volume Rendering
-  * Vector Volume Rendering &ndash; where the voxels store multiple scalar values, e.g., LPS or RAS coordinates as components of a displacement field (cp. [Piper et al., Overview]).
+  * Vector Volume Rendering &ndash; where the voxels store multiple scalar values, e.g., L-P-S or R-A-S coordinates as components of a displacement field (cp. [Piper et al., Overview]).
   * Tensor Volume Rendering &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI (cp. [Piper et al., Overview]).
   <!--* Labelmap Volume Rendering &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.-->
 
@@ -670,7 +670,7 @@ Not yet implmeneted features:
 ### Abbreviations and Acronyms
 
 * A &mdash; Anterior
-* ARS &mdash; Anterior&ndash;Right&ndash;Superior
+* A-R-S &mdash; Anterior&ndash;Right&ndash;Superior
 * AXE &mdash; Axial
 * BB &mdash; Bounding Box
 * COR &mdash; Coronal
@@ -683,9 +683,8 @@ Not yet implmeneted features:
 * HU &mdash; Hounsfield Units
 * I &mdash; Inferior
 * L &mdash; Left
-* LAS &mdash; Left&ndash;Anterior&ndash;Superior
 * LhS &mdash; Left-handed System
-* LPS &mdash; Left&ndash;Posterior&ndash;Superior
+* L-P-S &mdash; Left&ndash;Posterior&ndash;Superior
 * LUT &mdash; Look-Up Table
 * MIP &mdash; Maximum Intensity Projection
 * MPR &mdash; Multiplanar Reconstruction
@@ -693,7 +692,7 @@ Not yet implmeneted features:
 * OG &mdash; Orientation Guide
 * P &mdash; Posterior
 * R &mdash; Right
-* RAS &mdash; Right&ndash;Anterior&ndash;Superior
+* R-A-S &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
 * S &mdash; Superior
@@ -707,6 +706,7 @@ Not yet implmeneted features:
 * CRI &mdash; Colour Rendering Index
 * CTA &mdash; Computed Tomography Angiography
 * IVR &mdash; Indirect Volume Rendering
+* L-A-S &mdash; Left&ndash;Anterior&ndash;Superior
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
 * PET &mdash; Positron Emission Tomography
@@ -728,8 +728,8 @@ Anatomical planes and terms of location on a person standing upright (cp. [mbbs]
 
 ##### DICOM
 
-DICOM images are using a **Left&ndash;Posterior&ndash;Superior LPS** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):
-> *"[Left&ndash;Posterior&ndash;Superior] LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use [Right&ndash;Anterior&ndash;Superior] RAS"*
+DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):
+> *"[Left&ndash;Posterior&ndash;Superior] L-P-S is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use [Right&ndash;Anterior&ndash;Superior] R-A-S"*
 
 * **L**: X increases from R to L
 * **P**: Y increases from A to P
@@ -751,7 +751,7 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 
 ###### Plugin "Volume Creator"
 
-The anatomical coordinate system in plugin "Volume Creator"&mdash;with UE's use of a LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior ARS** anatomical coordinate system (cp. figure G.1.):
+The anatomical coordinate system in plugin "Volume Creator"&mdash;with UE's use of a LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior A-R-S** anatomical coordinate system (cp. figure G.1.):
 
 * **A**: X increases from Back to Front, color code red; anatomical from **Posterior (P)** to **Anterior (A)**
 * **R**: Y increases from Left to Right, color code green; anatomical from  **Left (L)** to **Right (R)**
