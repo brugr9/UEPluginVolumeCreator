@@ -764,7 +764,7 @@ Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
 
 #### Asset Naming Convention
 
-The plugins assets naming convention is based on a scheme from [UEDoc, Recommended Asset Naming Conventions] as well as from [Allar 2022]:
+The plugins assets naming convention is based on a scheme from [UEDoc, Recommended Asset Naming Conventions]:
 > *`[AssetTypePrefix]_[AssetName]_[DescriptorSuffix]_[OptionalVariantLetterOrNumber]`*
 >
 >* *`AssetTypePrefix` identifies the type of Asset [...].*
@@ -772,7 +772,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 >* *`DescriptorSuffix` provides additional context for the Asset, to help identify how it is used. For example, whether a texture is a normal map or an opacity map.*
 >* *`OptionalVariantLetterOrNumber` is optionally used to differentiate between multiple versions or variations of an asset.*
 
-* `[AssetTypePrefix]` (UEDoc and Allar):
+* `[AssetTypePrefix]`:
   * Blueprint: `BP`
   * Blueprint Interface: `BPI`
   * Curve: `Curve`
@@ -781,8 +781,11 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Material Instance: `MI`
   * Material Instance Dynamic: `MID`
   * Struct(ure): `F`
+  * Static Mesh: `SM`
   * Texture: `T`
   * Texture Render Target: `RT`
+  * Widget Blueprint: `WBP`
+  * VR Editor Blueprint: `VR`
 * `[AssetName]` (Domain Specific):
   * Scalar Volume: `SV`
   * Acquisition Type:
@@ -803,13 +806,17 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
       * Orientation Guide: `OG`
       * Region of Interest: `ROI`
       * Transfer Function: `TF`
-* `[DescriptorSuffix]` (UEDoc and Allar):
+* `[DescriptorSuffix]`:
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
   * Color Atlas: `ColorAtlas`
   * Compute Shader: `CS`
   * Main Material: `Main`
   * Volume Texture: `Volume`
+  * User Widget Blueprint: `U`
+  * Editor Utility Widget Blueprint: `E`
+  * VR Editor Dockable Window Blueprint: `DW`
+* [OptionalVariantLetterOrNumber]:
   * Texture Drawn from 'Material to Texture Render Target': `Tex`
 
 Aditional Conventions:
@@ -849,11 +856,12 @@ Aditional Conventions:
   * [Mower, Coordinate System] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. In: TechArt-Hub. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
 * Naming Convention:
   * [UEDoc, Recommended Asset Naming Conventions] Epic Games: **Recommended Asset Naming Conventions**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/](https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/)
-  * [Allar 2022] Michael Allar: **Gamemakin UE Style Guide**. Mar 7, 2022. URL: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide)
+  * <!-- [Allar 2022] Michael Allar: **Gamemakin UE Style Guide**. March 7, 2022. URL: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide) -->
+  * [Amos 2021] Dylan "Tezenari" Amos: **Asset Naming Conventions**. In: Unreal Directive. October 12, 2021. URL: [https://www.unrealdirective.com/resource/asset-naming-conventions](https://www.unrealdirective.com/resource/asset-naming-conventions)
 * Textures:
   * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
   * [Mower, Compression] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. In: TechArt-Hub. Online: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
-  * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. Jun 19, 2021 URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
+  * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. June 19, 2021. URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
 
