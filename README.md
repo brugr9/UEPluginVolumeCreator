@@ -48,7 +48,7 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
   * [3.3. Data Background](#33-data-background)
 * [4. Actors](#4-actors)
   * [4.1. Scalar Volume Actor](#41-scalar-volume-actor)
-  * [4.2. DICOM Window Actor](#42-dicom-window-actor)
+  * [4.2. Dicom Window Actor](#42-dicom-window-actor)
   * [4.3. Multiplanar Rendering](#43-multiplanar-rendering)
     * [4.3.1. MPR Actor](#431-mpr-actor)
     * [4.3.2. MPR Monitor Actor](#432-mpr-monitor-actor)
@@ -110,12 +110,12 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 * **Import**: Medical images are imported from DICOM files and stored as Hounsfield Units encoded Volume Texture.
 * **Scalar Volume Actor**: A Scalar Volume Actor holds a reference to a Hounsfield Units encoded Volume Texture and stores also DICOM pixel spacing attribute values.
 * **Dicom Window Actor**: A Dicom Window Actor consumes the Volume Texture and applies DICOM Window Attributes 'Center' and 'Width'.
-* **MPR Actor**: The DICOM windowed scalar volume may be visualized by Multiplanar Rendering MPR. The MPR Actor holds three perpendicular planes, i.e. coronal COR, sagittal SAG and axial AXE plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
-  * **MPR Monitor Actor**: The MPR produces planar rendering, which is also consumed by the MPR Monitor.
+* **MPR Actor**: The DICOM windowed scalar volume may be visualized by Multiplanar Rendering MPR. The MPR Actor as a 3D representation of MPR holds three perpendicular planes, i.e. coronal, sagittal and axial plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
+  * **MPR Monitor Actor**: The MPR produces planar rendering, which is also consumed by the MPR Monitor, a 2D representation of MPR.
 * **DVR Actor**: The DICOM windowed scalar volume may be visualized by Direct Volume Rendering DVR. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
   * **Orientation Guide Actor**: The DVR Actor can be optionally attached a rotation synchronized orientation guide.
   * **ROI Actor**: The DVR geometry can be optionally shrinked with a region of interest in real-time.
-  * **ROI Handles Actor**: A ROI geometry can be optionally modified with Region of Interest Handles Actor interactively in real-time.
+  * **ROI Handles Actor**: A region of interest geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
   * **Clip Plane Actor**: The DVR geometry can be optionally shrinked with a clip plane interactively in real-time.
   * **Spot Light Actor**: The DVR can be optionally illuminated with static spot-lights.
 
@@ -154,13 +154,11 @@ The size V<sub>1</sub> becomes 67 MB. If the images are double the size (stack o
 * *V<sub>2</sub> = 512<sup>3</sup> x 4 x 8 bit = 4’294’967’296 bit = 4.295 Gigabit = 537 MB*
 * *V<sub>3</sub> = 1024<sup>3</sup> x 4 x 8 bit = 34’359’738’368 bit = 34.359 Gigabit = 4295 MB*
 
-With processing, e.g., 30 fps:
+With processing, e.g., 30 fps (cp. [Lindberg]):
 
-* *ProcessedData<sub>1</sub> = 0.537 Gigabit/frame x 30 frames/s = 16.1 Gigabit/second*
-* *ProcessedData<sub>2</sub> = 4.295 Gigabit/frame x 30 frames/s = 128.8 Gigabit/second*
-* *ProcessedData<sub>3</sub> = 34.359 Gigabit/frame x 30 frames/s = 1030.8 Gigabit/second*
-
-<!-- https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate -->
+* *ProcessedData<sub>1</sub> = 0.537 Gigabit/frame x 30 frames/s = 16.1 Gigabit/s*
+* *ProcessedData<sub>2</sub> = 4.295 Gigabit/frame x 30 frames/s = 128.8 Gigabit/s*
+* *ProcessedData<sub>3</sub> = 34.359 Gigabit/frame x 30 frames/s = 1030.8 Gigabit/s*
 
 <div style='page-break-after: always'></div>
 
@@ -174,7 +172,7 @@ Plugin Content:
 
 * Blueprint Class: `BP_SV`
 
-### 4.2. DICOM Window Actor
+### 4.2. Dicom Window Actor
 
 CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU.
 
@@ -447,7 +445,7 @@ Anatomical Planes and Terms of Location in plugin "Volume Creator" (cp. figure G
 
 #### Asset Naming Convention
 
-The plugins assets naming convention is based on a scheme from [UEDoc, Recommended Asset Naming Conventions]:
+The plugins assets naming convention is based on a scheme from [UEDoc, Recommended Asset Naming Conventions] (see also [Allar 2022] and [Amos 2021]):
 > *`[AssetTypePrefix]_[AssetName]_[DescriptorSuffix]_[OptionalVariantLetterOrNumber]`*
 >
 >* *`AssetTypePrefix` identifies the type of Asset [...].*
@@ -519,8 +517,9 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Zaharia 2013] Roni Zaharia: **Chapter 14 - Image Orientation: Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. June 6, 2013. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
 * Volume Rendering:
   * [Luecke 2005] Peter Lücke: **Volume Rendering Techniques for Medical Imaging**. Diplomarbeit. Technische Universität München, Fakultät für Informatik. April 15, 2005. In collaboration with Siemens Corporate Research Inc., Princeton, USA. Online: [https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf](https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf)
-  * [Piper et al.] Steve Piper (Isomics), Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Nicole Aucoin (SPL, BWH): **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)
-  * [Finet et al.] Julien Finet (Kitware), Alex Yarmarkovich (Isomics), Yanling Liu (SAIC-Frederick, NCI-Frederick), Andreas Freudling (SPL, BWH), Ron Kikinis (SPL, BWH): **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html); Transfer Function Presets on GitHub: [https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)
+  * [Piper et al.] Piper S., Finet J., Yarmarkovich A., Aucoin N.: **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)
+  * [Finet et al.] Finet J., Yarmarkovich A., Liu Y., Freudling A., Kikinis R.: **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html); Transfer Function Presets on GitHub: [https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)
+  * [Lindberg] Kjell Lindberg: **How can a processor handle 10 Gigabit per second or more data rate?**. In: Quora. Nov 2021. URL: [https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate](https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate)
 * Lighting:
   * [21] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: [https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)
   <!--* [22] **The Different Colors Of Operating Theatre Lights**. In: Website "Forum Theatre". September 15, 2022. Online: [https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/](https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/)-->
@@ -533,7 +532,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Mower, Coordinate System] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. In: TechArt-Hub. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
 * Naming Convention:
   * [UEDoc, Recommended Asset Naming Conventions] Epic Games: **Recommended Asset Naming Conventions**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/](https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/)
-  * <!-- [Allar 2022] Michael Allar: **Gamemakin UE Style Guide**. March 7, 2022. URL: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide) -->
+  * [Allar 2022] Michael Allar: **Gamemakin UE Style Guide**. March 7, 2022. URL: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide)
   * [Amos 2021] Dylan "Tezenari" Amos: **Asset Naming Conventions**. In: Unreal Directive. October 12, 2021. URL: [https://www.unrealdirective.com/resource/asset-naming-conventions](https://www.unrealdirective.com/resource/asset-naming-conventions)
 * Textures:
   * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
