@@ -42,28 +42,24 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
   * [1.1. Installation](#11-installation)
   * [1.2. Project Configuration](#12-project-configuration)
 * [2. Concept](#2-concept)
-  * [2.1. Scalar Volume](#21-scalar-volume)
-  * [2.2. Region of Interest](#22-region-of-interest)
-    * [2.2.1. ROI-SV](#221-roi-sv)
-    * [2.2.2. ROI-MPR-3D](#222-roi-mpr-3d)
-    * [2.2.3. ROI-Handles](#223-roi-handles)
-  * [2.3. Clip Plane](#23-clip-plane)
-  * [2.4. Spot-Light](#24-spot-light)
-  * [2.5. Workflows](#25-workflows)
-* [3. Blueprint SV and Inheriting Actors](#3-blueprint-sv-and-inheriting-actors)
-  * [3.1. Actor BP SV H](#31-actor-bp-sv-h)
-    * [3.1.2. Dataset](#312-dataset)
-    * [3.1.3. DICOM Window](#313-dicom-window)
-    * [3.1.4. Volume Rendering](#314-volume-rendering)
-    * [3.1.5. Volume Shading](#315-volume-shading)
-  * [3.2. Actor BP SV W](#32-actor-bp-sv-w)
-  * [3.3. Actor BP SV W L](#33-actor-bp-sv-w-l)
-* [4. Import](#4-import)
-  * [4.1. Import DICOM](#41-import-dicom)
-  * [4.2. Import MetaImage](#42-import-metaimage)
-  * [4.3. Data Background](#43-data-background)
-    * [4.3.1. Memory](#431-memory)
-    * [4.3.2. Processing](#432-processing)
+* [3. Import](#3-import)
+  * [3.1. Import DICOM](#31-import-dicom)
+  * [3.2. Import MetaImage](#32-import-metaimage)
+  * [3.3. Data Background](#33-data-background)
+* [4. Actors](#4-actors)
+  * [4.1. Scalar Volume Actor](#41-scalar-volume-actor)
+  * [4.2. DICOM Window Actor](#42-dicom-window-actor)
+  * [4.3. Multiplanar Rendering](#43-multiplanar-rendering)
+    * [4.3.1. MPR Actor](#431-mpr-actor)
+    * [4.3.2. MPR Monitor Actor](#432-mpr-monitor-actor)
+  * [4.4. Direct Volume Rendering](#44-direct-volume-rendering)
+    * [4.4.1. DVR Actor](#441-dvr-actor)
+    * [4.4.2. Orientation Guide Actor](#442-orientation-guide-actor)
+    * [4.4.3. ROI Actor](#443-roi-actor)
+    * [4.4.4. ROI Handles Actor](#444-roi-handles-actor)
+    * [4.4.5. Clip Plane Actor](#445-clip-plane-actor)
+    * [4.4.6. Spot Light Actor](#446-spot-light-actor)
+* [5. Widgets](#5-widgets)
 * [6. Outlook](#6-outlook)
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
@@ -109,535 +105,236 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ## 2. Concept
 
-The following entities are implemented as an object or Actor resp. according to the Object Oriented Paradigm OOP:
+The plugin provides rendering of image-stack based volumes, commonly known as scalar volumes. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. The following entities are implemented as an object or Actor resp. according to the Object Oriented Paradigm OOP:
 
-* **Scalar Volume SV**: The plugin provides rendering of image-stack based volumes, commonly known as scalar volumes *SV*. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. The scalar volume datasets are handled in Blueprint Actors &mdash; which includes handling, e.g., DICOM pixel spacing attribute values.
-* **Multi-Planar Rendering MPR**: A scalar volume SV may be rendered as Multi-Planar Rendering, available in two versions: as **MPR-2D** and as **MPR-3D**.
-  * The MPR-3D extents are shown as three perpendicular planes, i.e. coronal COR, sagittal SAG and axial AXE plane.
-  * The MPR-3D planes position can be moved in the direction of their corresponding axes interactively in real-time.
-  * The MPR-3D produces planar rendering as Render Target Texture RT.
-  * The RT are also consumed by the MPR-2D.
-* **Direct Volume Rendering DVR**: A scalar volume may be rendered as Direct Volume Rendering DVR.
-  * **Bounding Box BB**: The DVR extents are shown with a bounding box BB, its dimension derives from the scalar volume DICOM pixel spacing attribute values.
-  * **Static Spot-Light**: The DVR can be optionally illuminated with static spot-lights.
-  * **Clip Plane**: The DVR geometry can be optionally shrinked with a clip plane interactively in real-time.
-  * **Region of Interest ROI**: The DVR geometry can be optionally shrinked with a region of interest interactively in real-time.
-    * **ROI-Handles**: A ROI geometry can be optionally modified with region of interest handles interactively in real-time. The ROI-Handels can
+* **Import**: Medical images are imported from DICOM files and stored as Hounsfield Units encoded Volume Texture.
+* **Scalar Volume Actor**: A Scalar Volume Actor holds a reference to a Hounsfield Units encoded Volume Texture and stores also DICOM pixel spacing attribute values.
+* **Dicom Window Actor**: A Dicom Window Actor consumes the Volume Texture and applies DICOM Window Attributes 'Center' and 'Width'.
+* **MPR Actor**: The DICOM windowed scalar volume may be visualized by Multiplanar Rendering MPR. The MPR Actor holds three perpendicular planes, i.e. coronal COR, sagittal SAG and axial AXE plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
+  * **MPR Monitor Actor**: The MPR produces planar rendering, which is also consumed by the MPR Monitor.
+* **DVR Actor**: The DICOM windowed scalar volume may be visualized by Direct Volume Rendering DVR. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
+  * **Orientation Guide Actor**: The DVR Actor can be optionally attached a rotation synchronized orientation guide.
+  * **ROI Actor**: The DVR geometry can be optionally shrinked with a region of interest in real-time.
+  * **ROI Handles Actor**: A ROI geometry can be optionally modified with Region of Interest Handles Actor interactively in real-time.
+  * **Clip Plane Actor**: The DVR geometry can be optionally shrinked with a clip plane interactively in real-time.
+  * **Spot Light Actor**: The DVR can be optionally illuminated with static spot-lights.
 
-TODO: Domain Model Diagram
+TODO: Reference Viewer as Domain Model Diagram
 
-### 2.1. Scalar Volume
+## 3. Import
 
-In this plugin, image-stack based scalar volumes are kept in `VolumeTexture` assets (suffix `_Volume`). A `VolumeTexture` may serve as voxel container of three different kind of content. The assets name suffix indicates the intended content type (cp. section *[Asset Naming Convention](#7-asset-naming-convention)*):
 
-* **T_*-HU_Volume**: CT image stack data, values in the range of [-1000, 3095] in Hounsfield Units
-* **RT_*-W_Volume**: DICOM Window applied data, values in the range of [0, 255] Grayscale
-* **RT_Lightmap_Volume**: Lightmap from static lighting
+* Asset names derive from the file name which is imported:
+  * Underlines from a file name (`_`) are replaced by minus in asset names (`-`).
+  * Maximum asset name length is 20 signs.
+* CT image data is expected to come in Hounsfield Units HU. The data is clamped to 4096 values in a range of [-1000, 3095].
 
-Plugin Content:
+### 3.1. Import DICOM
 
-* Volume Textures (Default Containers): `T_SV-HU_Volume`
-* Volume Render Textures (Shader Textures): `RT_SV-W_Volume`, `RT_Lightmap_Volume`
+* Reads from DICOM&reg; *.dcm
+* Writes image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_HU_Volume`
+* Saves image data to a Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
+* Saves meta data to a Scalar Volume Blueprint asset `BP_MyDataName_SV` (Template: Scalar Volume Actor `BP_SV`) and assigns the just saved Volume Texture asset.
 
-TODO: Multiplanar Rendering MPR or Direct Volume Rendering DVR
+### 3.2. Import MetaImage
+
+* Reads from MetaImage&trade; *.mhds
+
+### 3.3. Data Background
+
+DICOM image data is stored as 12 bit data, sometimes you also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
+
+* A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
+* 4 channels RGBA
+* With 8 bit per channel (2<sup>8</sup> = 256, range from 0 to 255)
+
+The size V<sub>1</sub> becomes 67 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size V<sub>2</sub> increases to 0.5 GB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size V<sub>3</sub> increases to 4 GB.
+
+* *V<sub>1</sub> = 256<sup>3</sup> x 4 x 8 bit = 536’870’912 bit = 0.537 Gigabit = 67 MB*
+* *V<sub>2</sub> = 512<sup>3</sup> x 4 x 8 bit = 4’294’967’296 bit = 4.295 Gigabit = 537 MB*
+* *V<sub>3</sub> = 1024<sup>3</sup> x 4 x 8 bit = 34’359’738’368 bit = 34.359 Gigabit = 4295 MB*
+
+With processing, e.g., 30 fps:
+
+* *ProcessedData<sub>1</sub> = 0.537 Gigabit/frame x 30 frames/s = 16.1 Gigabit/second*
+* *ProcessedData<sub>2</sub> = 4.295 Gigabit/frame x 30 frames/s = 128.8 Gigabit/second*
+* *ProcessedData<sub>3</sub> = 34.359 Gigabit/frame x 30 frames/s = 1030.8 Gigabit/second*
+
+<!-- https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate -->
 
 <div style='page-break-after: always'></div>
 
-### 2.2. Region of Interest
+## 4. Actors
 
-The plugin provides with a Blueprint actor named `BP_ROI` with a `StaticMeshComponent` of type `Cube`. The material instance `MI_FramingEdges_ROI` is assigned to the mesh (see figure 2.2.).
+![Plugin Blueprint Actor Classes](Docs/VolumeCreator-Content-Classes.png "Plugin Blueprint Actor Classes")<br>*Fig. 2.1.: Plugin Blueprint Actor Classes*
 
-Plugin Content:
-
-* Blueprint, Abstract Actor: `BP_ROI`
-* Blueprint, Interface: `BPI_ROI`
-
-![Blueprint Actor BP_ROI](Docs/BP_ROI.png "Blueprint Actor BP_ROI")<br>*Fig. 2.2.: Blueprint Actor BP_ROI*
-
-#### 2.2.1. ROI-SV
-
-* Material Instance: `MI_Edges_ROI`
-
-#### 2.2.2. ROI-MPR-3D
-
-* Material Instance: `MI_ROI`
-
-#### 2.2.3. ROI-Handles
-
-### 2.3. Clip Plane
-
-The plugin provides with a Blueprint actor named `BP_ClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_FramingEdges_ClipPlane` is assigned to the mesh (see figure 2.3.).
+### 4.1. Scalar Volume Actor
 
 Plugin Content:
 
-* Blueprint Actor: `BP_ClipPlane`
-* Material Instance: `MI_FramingEdges_ClipPlane`
+* Blueprint Class: `BP_SV`
 
-![Blueprint Actor BP_ClipPlane](Docs/BP_ClipPlane.png "Blueprint Actor BP_ClipPlane")<br>*Fig. 2.3.: Blueprint Actor BP_ClipPlane*
+### 4.2. DICOM Window Actor
 
-### 2.4. Spot-Light
+CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU.
 
-The plugin provides with a Blueprint SpotLight named `BP_StaticSpotLight` whose transform mobility is set to *static* (see figure 2.4.). Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light:
+Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. This is done by linear interpolation (Lerp).
+
+If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called DICOM Window was introduced to downsize the range of Hounsfield data to map.
+
+* Values lesser than the window left border are mapped to 0, greater than the window right border are mapped to 255.
+* To render only the lerped values, a mask may be applied.
+
+Plugin Content:
+
+* Blueprint Class: `BP_DicomWindow`
+
+### 4.3. Multiplanar Rendering
+
+TODO: Reference Viewer as Domain Model Diagram
+
+#### 4.3.1. MPR Actor
+
+Plugin Content:
+
+* Blueprint Class: `BP_MPR`
+
+#### 4.3.2. MPR Monitor Actor
+
+Plugin Content:
+
+* Blueprint Class: `BP_MprMonitor`
+
+### 4.4. Direct Volume Rendering
+
+TODO: Reference Viewer as Domain Model Diagram
+
+#### 4.4.1. DVR Actor
+
+Direct Volume Rendering DVR with Materials from Raymarching Shaders with static lighting support.
+
+Plugin Content:
+
+* Blueprint Class: `BP_DVR`
+
+Parameter:
+
+##### 4.4.1.1. ROI Actor
+
+* Type: ROI Actor `BP_ROI` instance as Object Reference
+* Default Value: `none`
+* Optional, used for geometry subtraction if set
+
+##### 4.4.1.2. Clip Plane Actor
+
+* Type: Clip Plane Actor `BP_DvrClipPlane` instance as Object Reference
+* Default Value: `none`
+* Optional, used for geometry subtraction if set
+
+##### 4.4.1.3. Distance Power
+
+* Type: `float`
+* Default Value: `1.0`
+* Range: [`0.1`, `2.0`]
+
+Resampling Distance Power:
+
+* The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used.
+* With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
+* With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
+
+This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragmented Line Ray-Casting*:
+> *To lower the number of operations necessary for computing a single frame, [...] the distance between two successive resampling locations, i.e the sampling distance, could be increased, thereby decreasing the number of actual locations used for volume reconstruction.*
+> *However, it is worth mentioning, that incorporating any of these optimization approaches usually tends to result in generated images of less quality compared to an unoptimized ray-casting volume renderer.*
+
+##### 4.4.1.4. Resampling Steps
+
+* Type: `Integer`
+* Default Value: `256`
+* Range: [`1`, `1024`]
+
+Maximum Number of Resampling Steps:
+
+* A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
+* A small number may decrease rendering quality but is faster.
+
+##### 4.4.1.5. Transfer Function
+
+* Type: `Curve Linear Color`
+* Default Value: `Curve_Default_TF_Color`
+
+The transfer functions are based on color gradients from `Curve Linear Color` assets. The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
+
+##### 4.4.1.6. Alpha Max
+
+* Type: `float`
+* Default Value: `0.8`
+* Range: [`0.0`, `1.0`]
+
+Maximum Opacity Threshold for Early Ray Termination from iteratively added up Alpha Channel
+
+##### 4.4.1.7. Phong
+
+https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshiftLightParameters-DiffuseScale
+
+* Ambient: Default Value: `0.1`, Range: [`0.0`, `1.0`]
+* Diffuse: Default Value: `0.9`, Range: [`0.0`, `1.0`]
+* Specular: Default Value: `0.2`, Range: [`0.0`, `1.0`]
+* Specular Power: Default Value: `10`, Range: [`1`, `50`]
+
+##### 4.4.1.8. Lighting
+
+* Type: Array of `BP_DvrSpotLight` Object References
+* Default Value: `none`
+* Optional, used for static lighting if set
+
+#### 4.4.2. Orientation Guide Actor
+
+Plugin Content:
+
+* Blueprint Class: `BP_DvrOrientationGuide`
+
+#### 4.4.3. ROI Actor
+
+Region of Interest Actor, in Outline Hierarchy (Scene Graph) ideally subordinated to the DVR Actor for adaptive scaling.
+
+Plugin Content:
+
+* Blueprint Class: `BP_ROI`
+
+#### 4.4.4. ROI Handles Actor
+
+Plugin Content:
+
+* Blueprint Class: `BP_RoiHandles`
+
+#### 4.4.5. Clip Plane Actor
+
+The plugin provides with a Blueprint Actor named `BP_DvrClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_Edges_ClipPlane` is assigned to the mesh (see figure 4.4.3.).
+
+Plugin Content:
+
+* Blueprint Class: `BP_DvrClipPlane`
+* Material Instance: `MI_Edges_ClipPlane`
+
+![Blueprint Actor BP_DvrClipPlane](Docs/BP_ClipPlane.png "Blueprint Actor BP_DvrClipPlane")<br>*Fig. 4.4.3.: Blueprint Actor BP_DvrClipPlane*
+
+#### 4.4.6. Spot Light Actor
+
+The plugin provides with a Blueprint SpotLight named `BP_DvrSpotLight` whose transform mobility is set to *static* (see figure 2.4.). Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light:
 
 * Intensity (Brightness): 1700 Lumen (see [UEDoc, Physical Lighting Units])
 * Temperature: 5100 K (cp. [21])
 
 Plugin Content:
 
-* Blueprint Actor: `BP_StaticSpotLight`
+* Blueprint Class: `BP_DvrSpotLight`
 
-![Blueprint SpotLight BP_StaticSpotLight](Docs/BP_StaticSpotLight.png "Blueprint SpotLight BP_StaticSpotLight")<br>*Fig. 2.4.: Blueprint SpotLight BP_StaticSpotLight*
+![Blueprint SpotLight BP_DvrSpotLight](Docs/BP_StaticSpotLight.png "Blueprint SpotLight BP_DvrSpotLight")<br>*Fig. 2.4.: Blueprint SpotLight BP_DvrSpotLight*
 
-### 2.5. Workflows
+## 5. Widgets
 
-*Fig 2.1.: Sequence Diagramm, Import Workflow*
-```mermaid
-sequenceDiagram
-  rect rgb(50, 200, 50)
-  activate *.dcm
-  activate Importer
-  Importer->>*.dcm: Read
-  activate T_SV_HU_Volume
-  deactivate *.dcm
-  Importer->>T_SV_HU_Volume: Save
-  deactivate Importer
-  deactivate T_SV_HU_Volume
-  end
-```
-
-*Fig 2.2.: Sequence Diagramm, DVR Workflow - From Hounsfield Unit Volume with DICOM Window, TF and ROI*
-```mermaid
-sequenceDiagram
-  rect rgb(0, 200, 255)
-    T_SV_HU_Volume->>M_SV_W_CS: Param.
-    DICOM_Window->>M_SV_W_CS: Param.
-    M_SV_W_CS->>RT_SV_W_Volume: Compute
-    T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
-    BP_ROI-SV->>M_DVR-Raycasting_W: Param.
-    RT_SV_W_Volume->>M_DVR-Raycasting_W: Param.
-    M_DVR-Raycasting_W->>BP_SV_HU: Render
-    rect rgb(0, 100, 255)
-      alt Variant - Save DICOM Windowed RT as Volume Texture, and use the same as Param.
-        RT_SV_W_Volume-->>T_SV_W_Volume: Save
-        T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
-        BP_ROI-SV->>M_DVR-Raycasting_W: Param.
-        T_SV_W_Volume-->>M_DVR-Raycasting_W: Param.
-        M_DVR-Raycasting_W->>BP_SV_W: Render
-      end
-    end
-  end
-```
-
-*Fig 2.3.: Sequence Diagramm, DVR Workflow - Lighting from DICOM Windowed RT, TF and ROI*
-```mermaid
-sequenceDiagram
-  rect rgb(255, 255, 200)
-    RT_SV_W_Volume->>M_SV_L_CS: Param.
-    M_SV_L_CS->>RT_SV_L_Volume: Compute
-    T_TF_ColorAtlas->>M_DVR-Raycasting_WL: Param.
-    BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
-    RT_SV_W_Volume->>M_DVR-Raycasting_WL: Param.
-    RT_SV_L_Volume->>M_DVR-Raycasting_WL: Param.
-    M_DVR-Raycasting_WL->>BP_SV_HU: Render
-    rect rgb(255, 255, 100)
-      alt Variant - Save Lighting RT as Volume Texture, and use the same as Param.
-        RT_SV_L_Volume-->>T_SV_L_Volume: Save
-        T_TF_ColorAtlas->>M_DVR-Raycasting_WL: Param.
-        BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
-        T_SV_L_Volume-->>M_DVR-Raycasting_WL: Param.
-        M_DVR-Raycasting_WL->>BP_SV_WL: Render
-      end
-    end
-  end
-```
-
-*Fig 2.4.: Sequence Diagramm, MPR-3D/-2D Workflow - From DICOM Windowed RT Volume and LUT*
-```mermaid
-sequenceDiagram
-  rect rgb(200, 200, 200)
-    RT_SV_W_Volume->>M_MPR_CS: Param.
-    rect rgb(150, 150, 150)
-      alt Variant - Use Volume Texture
-        T_SV_W_Volume-->>M_MPR_CS: Param.
-      end
-    end
-    M_MPR_CS->>RT_MPR-Axial/-Coronal/-Sagittal: Compute
-    T_LUT_Array->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
-    RT_MPR-Axial/-Coronal/-Sagittal->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
-    Plane-Axial/-Coronal/-Sagittal_Location->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
-    Plane-ForwardVector/-UpVector->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
-    MI_MPR-Axial/-Coronal/-Sagittal->>BP_MPR-3D/-2D: Render
-  end
-```
-
----
-
-*Fig 2.10.: Sequence Diagramm, Workflow Overview*
-```mermaid
-sequenceDiagram
-  opt Import Workflow
-    rect rgb(50, 200, 50)
-      activate *.dcm
-      activate Importer
-      Importer->>*.dcm: Read
-      activate T_SV_HU_Volume
-      deactivate *.dcm
-      Importer->>T_SV_HU_Volume: Save
-      deactivate Importer
-      deactivate T_SV_HU_Volume
-    end
-  end
-
-  opt DVR Workflow - From Hounsfield Unit Volume with DICOM Window, TF and ROI
-    rect rgb(0, 200, 255)
-      T_SV_HU_Volume->>M_SV_W_CS: Param.
-      DICOM_Window->>M_SV_W_CS: Param.
-      M_SV_W_CS->>RT_SV_W_Volume: Compute
-      T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
-      BP_ROI-SV->>M_DVR-Raycasting_W: Param.
-      RT_SV_W_Volume->>M_DVR-Raycasting_W: Param.
-      M_DVR-Raycasting_W->>BP_SV_HU: Render
-      rect rgb(0, 100, 255)
-        alt Variant - Save DICOM Windowed RT as Volume Texture, and use the same as Param.
-          RT_SV_W_Volume-->>T_SV_W_Volume: Save
-          T_TF_ColorAtlas->>M_DVR-Raycasting_W: Param.
-          BP_ROI-SV->>M_DVR-Raycasting_W: Param.
-          T_SV_W_Volume-->>M_DVR-Raycasting_W: Param.
-          M_DVR-Raycasting_W->>BP_SV_W: Render
-        end
-      end
-    end
-  end
-
-  opt DVR Workflow - Lighting from DICOM Windowed RT, TF and ROI
-    rect rgb(255, 255, 200)
-      RT_SV_W_Volume->>M_SV_L_CS: Param.
-      M_SV_L_CS->>RT_SV_L_Volume: Compute
-      T_TF_ColorAtlas->>M_DVR-Raycasting_WL: Param.
-      BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
-      RT_SV_W_Volume->>M_DVR-Raycasting_WL: Param.
-      RT_SV_L_Volume->>M_DVR-Raycasting_WL: Param.
-      M_DVR-Raycasting_WL->>BP_SV_HU: Render
-      rect rgb(255, 255, 100)
-        alt Variant - Save Lighting RT as Volume Texture, and use the same as Param.
-          RT_SV_L_Volume-->>T_SV_L_Volume: Save
-          T_TF_ColorAtlas->>M_DVR-Raycasting_WL: Param.
-          BP_ROI-SV->>M_DVR-Raycasting_WL: Param.
-          T_SV_L_Volume-->>M_DVR-Raycasting_WL: Param.
-          M_DVR-Raycasting_WL->>BP_SV_WL: Render
-        end
-      end
-    end
-  end
-
-  opt MPR-3D/-2D Workflow - From DICOM Windowed RT Volume and LUT
-    rect rgb(200, 200, 200)
-      RT_SV_W_Volume->>M_MPR_CS: Param.
-      rect rgb(150, 150, 150)
-        alt Variant - Use Volume Texture
-          T_SV_W_Volume-->>M_MPR_CS: Param.
-        end
-      end
-      M_MPR_CS->>RT_MPR-Axial/-Coronal/-Sagittal: Compute
-      T_LUT_Array->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
-      RT_MPR-Axial/-Coronal/-Sagittal->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
-      Plane-Axial/-Coronal/-Sagittal_Location->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
-      MPR-3D_Plane-ForwardVector/-UpVector->>MI_MPR-Axial/-Coronal/-Sagittal: Param.
-      MI_MPR-Axial/-Coronal/-Sagittal->>BP_MPR-3D/-2D: Render
-    end
-  end
-```
-
-## 3. Blueprint SV and Inheriting Actors
-
-The scalar volume datasets are handled in actors based on an abstract Blueprint named `BPA_SV`, which holds a `StaticMeshComponent` of type `Cube` named `SVMesh` and another `StaticMeshComponent` of type `Cube` named `BoundingBox` (see Class Diagram in figure 3.1.).
-
-Plugin Content:
-
-* Blueprint Actors: `BPA_SV`, `BP_SV_HU`, `BP_SV_W`, `BP_SV_WL`
-
-*Fig 3.1.: Blueprint Inheritance Diagramm*
-```mermaid
-classDiagram
-  class BPA_SV{
-    <<Abstract>>
-    +StaticMeshComponent Cube : SVMesh
-    +StaticMeshComponent Cube : BoundingBox
-    +F_SV : VolumeRendering
-    +E_VolumeRenderingMethod : Method
-    +MaterialInstanceDynamic : MI_SV_Dynamic
-    +RescaleSVMesh(F_PixelSpacing PixelSpacing)
-  }
-  class BP_SV_HU{
-    +F_SV_HU : Dataset
-    -TextureRenderTargetVolume : WindowRT
-    -TextureRenderTargetVolume : LightmapRT
-    #ConstructionScript()
-    +ComputeWindowRT()
-    +ComputeLightmapRT()
-    +SaveWindowRT()
-    +SaveLightmapRT()
-    +EventDispatcher : OnChangedWindowRT()
-    +EventDispatcher : OnChangedLightmapRT()
-    +Update_WindowVolume()
-  }
-  class BPI_SV_W{
-    <<Interface>>
-    +Update_WindowVolume()
-    +Update_RegionOfInterest()
-    +Update_ClipPlane()
-    +Update_DistancePower()
-    +Update_Steps()
-    +Update_TransferFunction()
-    +Update_AlphaMax()
-  }
-  class BPI_SV_L{
-    <<Interface>>
-    +Update_LightmapVolume()
-    +Update_Ambient()
-    +Update_Diffuse()
-    +Update_Specular()
-    +Update_SpecularPower()
-  }
-  class BP_SV_W{
-    +F_SV_W : Dataset
-    #ConstructionScript()
-    +Update_WindowVolume()
-  }
-  class BP_SV_WL{
-    +F_SV_L : Shading
-    #ConstructionScript()
-  }
-
-  BPA_SV <|-- BP_SV_HU : Inherits
-  BPI_SV_W <|.. BPA_SV : Implements
-  BPI_SV_L <|.. BP_SV_HU : Implements
-
-  BPI_SV_L <|.. BP_SV_WL : Implements
-
-  BPA_SV <|-- BP_SV_W : Inherits
-  BP_SV_W <|-- BP_SV_WL : Inherits  
-
-```
-  
-*Fig 3.2.: Struct Composition Diagramm*
-```mermaid
-classDiagram
-  class F_SV{
-    +BP_ROI : RegionOfInterest
-    +BP_ClipPlane : ClipPlane
-    +Float : DistancePower
-    +Integer : ResamplingSteps
-    +CurveLinearColor : TransferFunction
-    +Float : AlphaMax
-  }
-  class F_SV_HU{
-    +VolumeTexture : HounsfieldVolume
-    +F_PixelSpacing : PixelSpacing
-    +F_DicomWindow : DicomWindow
-    +Boolean : WindowMask
-    +F_Phong : PhongShading
-    +F_Lightmap : Lightmap
-  }
-  class F_SV_W{
-    +VolumeTexture : WindowVolume
-    +F_PixelSpacing : PixelSpacing
-    +F_DicomWindow : DicomWindow
-  }
-  class F_SV_L{
-    +VolumeTexture : LightmapVolume
-    +F_Phong : PhongShading
-  }
-  class F_PixelSpacing{
-    +Integer : Columns
-    +Float : ColumnSpacing
-    +Integer : Rows
-    +Float : RowSpacing
-    +Integer : Slices
-    +Float : SliceThickness
-  }
-  class F_DicomWindow{
-    +F_WindowLocation : Location
-    +F_WindowBorder : Border
-  }
-  class F_WindowLocation{
-    +Integer : Center
-    +Integer : Width
-  }
-  class F_WindowBorder{
-    +Integer : Left
-    +Integer : Right
-  }
-  class F_Phong{
-    +Float : Ambient
-    +Float : Diffuse
-    +Float : Specular
-    +Integer : SpecularPower
-  }
-  class F_Lightmap{
-    +Boolean : EnableLighting
-    +BP_StaticSpotLight Array : SpotLights
-    +Boolean : HalfResolution
-  }
-
-  F_SV_HU --* F_PixelSpacing
-  F_SV_HU --* F_DicomWindow
-  F_SV_HU --* F_Lightmap
-  F_SV_HU --* F_Phong
-
-  F_SV_W --* F_PixelSpacing
-  F_SV_W --* F_DicomWindow
-
-  F_SV_L --* F_Phong
-
-  F_DicomWindow --* F_WindowLocation
-  F_DicomWindow --* F_WindowBorder
-```
-
-### 3.1. Actor BP SV H
-
-#### 3.1.2. Dataset
-
-An image-stack based volume&mdash;commonly known as scalar volume&mdash;is kept as Volume Texture asset in Unreal Engine.
-
-#### 3.1.3. DICOM Window
-
-CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. This is done by linear interpolation (Lerp).
-
-If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called DICOM Window was introduced to downsize the range of Hounsfield data to map.
-
-To allow to render the lerped values only, a mask may be applied to the volume's Hounsfiled data. Values lesser than the window left border are mapped to 0, greater than the window right border are mapped to 255.
-
-#### 3.1.4. Volume Rendering
-
-Direct Volume Rendering DVR with Materials from Raymarching Shaders with static lighting.
-
-##### 3.1.4.1. Region Of Interest
-
-* MeshCube: `BP_ROI` instance as Reference Object, ideally subordinated in Outline Hierarchy (Scene Graph)
-* used for geometry subtraction in the shader
-
-##### 3.1.4.2. Clip Plane
-
-* MeshPlane: `BP_ClipPlane` instance as object as Reference Object
-* used for geometry subtraction in the shader
-
-##### 3.1.4.3. Distance Power
-
-* Default Value: `1.0`
-* Range: [`0.1`, `2.0`]
-* Resampling Distance Power:
-  * The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used.
-  * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
-  * With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
-
-This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragmented Line Ray-Casting*:
-> *To lower the number of operations necessary for computing a single frame, [...] the distance between two successive resampling locations, i.e the sampling distance, could be increased, thereby decreasing the number of actual locations used for volume reconstruction.*
-> *However, it is worth mentioning, that incorporating any of these optimization approaches usually tends to result in generated images of less quality compared to an unoptimized ray-casting volume renderer.*
-
-##### 3.1.4.4. Resampling Steps
-
-* Default Value: `256`
-* Range: [`1`, `1024`]
-* Maximum Number of Resampling Steps:
-  * A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
-  * A small number may decrease rendering quality but is faster.
-
-##### 3.1.4.5. Transfer Function
-
-The transfer functions are based on color gradients from `Curve Linear Color` assets, bundled in a Texture 2D `Curve Atlas` asset as Look-Up Table LUT:
-
-* Curve Linear Color *TF* assets named `Curve_TF-[*]_Color`
-* Curve Atlas *TF-LUT* asset named `T_Curve_TF-LUT_ColorAtlas`
-
-The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
-
-##### 3.1.4.6. Alpha Max
-
-Maximum Opacity Threshold for Early Ray Termination
-
-* Maximum Value from Iteratively added up Alpha Channel
-* Default Value: `0.8`
-* Range: [`0.0`, `1.0`]
-
-<div style='page-break-after: always'></div>
-
-#### 3.1.5. Volume Shading
-
-https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshiftLightParameters-DiffuseScale
-
-##### 3.1.5.1. Phong
-
-* Ambient: Ambient Reflection Value in [`0.0`, `1.0`], Default `0.1`
-* Diffuse: Diffuse Reflection Value in [`0.0`, `1.0`], Default `0.9`
-* Specular: Specular Reflection Value in [`0.0`, `1.0`], Default `0.2`
-* Specular Power: Specular Reflection Power Value  in [`1`, `50`], Default `10`
-
-##### 3.1.5.2. Lighting
-
-* Spot Lights: Array of `BP_StaticSpotLight` Object Reference
-* Half Resolution: Default `true` (checked)
-* Lightmap Volume: Texture Render Target Volume Object Reference, Default `RT_SV_L_Volume`
-
-<div style='page-break-after: always'></div>
-
-## 4. Import
-
-CT image data is expected to come in Hounsfield Units HU as values in a range of [-1000, 3095] which are 4096 gray levels for different materials. These 4096 gray levels can be optimally represented with a twelve-digit binary number (12 bit, $2^{12} = 4096$).
-
-Naming Convention: Underlines in file names (`_`) are replaced by minus in asset names (`-`)
-
-### 4.1. Import DICOM
-
-DICOM&reg; *.dcm
-
-The results are stored in a Render Target Volume named `RT_Scalar_Volume`, R-channel.
-
-### 4.2. Import MetaImage
-
-MetaImage&trade; *.mhd
-
-<div style='page-break-after: always'></div>
-
-### 4.3. Data Background
-
-#### 4.3.1. Memory
-
-Scalar volume size $V_1$ (cp. [DICOM, FAQ]):
-
-* A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
-* 4 channels RGBA
-* With 8 bit per channel ($2^{8} = 256$, range from 0 to 255)
-
-$ V_1 = 256^3 \times 4 \times 8\ {}bit = 536’870’912\ {}bit = 0.537\ {}Gigabit = 67\ {}MB $
-
-If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size $V_2$ increases to 0.5 GB:
-
-$ V_2 = 512^3 \times 4 \times 8\ {}bit = 4’294’967’296\ {}bit = 4.295\ {}Gigabit = 537\ {}MB $
-
-If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size $V_3$ increases to 4 GB:
-
-$ V_3 = 1024^3 \times 4 \times 8\ {}bit = 34’359’738’368\ {}bit = 34.359\ {}Gigabit = 4295\ {}MB $
-
-#### 4.3.2. Processing
-
-With processing, e.g., $30 \text{ fps}$:
-
-$
-Processed\ {}Data_1 = \frac{0.537\ {}Gigabit}{frame} \times \frac{30\ {}frames}{s} = 16.1\ {} Gigabit\ {}per\ {}second
-$
-
-$
-Processed\ {}Data_2 = \frac{4.295\ {}Gigabit}{frame} \times \frac{30\ {}frames}{s} = 128.8\ {} Gigabit\ {}per\ {}second
-$
-
-$
-Processed\ {}Data_3 = \frac{34.359\ {}Gigabit}{frame} \times \frac{30\ {}frames}{s} = 1030.8\ {} Gigabit\ {}per\ {}second
-$
-
-<!-- 
-https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate
--->
+TODO: Reference Viewer as Domain Model Diagram
 
 <div style='page-break-after: always'></div>
 
@@ -687,6 +384,7 @@ Not yet implmeneted features:
 * R-A-S &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
+* RT &mdash; Render Target Texture
 * S &mdash; Superior
 * SAG &mdash; Sagittal
 * SV &mdash; Scalar Volume
@@ -694,7 +392,6 @@ Not yet implmeneted features:
 * UI &mdash; User Interface
 * US &mdash; Ultrasound Imaging (sonography)
 * VOI &mdash; Volume of Interest
-* WCS &mdash; World Coordinate System
 
 <!--
 * AAA &mdash; Abdominal Aortic Aneurysm
@@ -704,6 +401,7 @@ Not yet implmeneted features:
 * MRT &mdash; Magnetic Resonance Tomography
 * PET &mdash; Positron Emission Tomography
 * CRS &mdash; Coordinate Reference System
+* WCS &mdash; World Coordinate System
 -->
 
 <div style='page-break-after: always'></div>
