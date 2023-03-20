@@ -645,8 +645,7 @@ https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-d
 
 Not yet implmeneted features:
 
-* MPR-2D
-  * Orientation Guide
+* MPR Monitor:
   * Region of Interest visualization
   * Plane Interaction
 * Rendering Type:
@@ -676,6 +675,7 @@ Not yet implmeneted features:
 * I &mdash; Inferior
 * L &mdash; Left
 * LhS &mdash; Left-handed System
+* L-A-S &mdash; Left&ndash;Anterior&ndash;Superior
 * L-P-S &mdash; Left&ndash;Posterior&ndash;Superior
 * LUT &mdash; Look-Up Table
 * MIP &mdash; Maximum Intensity Projection
@@ -693,18 +693,17 @@ Not yet implmeneted features:
 * TF &mdash; Transfer Function
 * UI &mdash; User Interface
 * US &mdash; Ultrasound Imaging (sonography)
+* VOI &mdash; Volume of Interest
+* WCS &mdash; World Coordinate System
 
 <!--
 * AAA &mdash; Abdominal Aortic Aneurysm
 * CRI &mdash; Colour Rendering Index
 * CTA &mdash; Computed Tomography Angiography
-* IVR &mdash; Indirect Volume Rendering
-* L-A-S &mdash; Left&ndash;Anterior&ndash;Superior
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
 * PET &mdash; Positron Emission Tomography
-* RCS &mdash; Reference Coordinate System
-* VOI &mdash; Volume of Interest
+* CRS &mdash; Coordinate Reference System
 -->
 
 <div style='page-break-after: always'></div>
@@ -713,50 +712,36 @@ Not yet implmeneted features:
 
 #### Terms of Location and Coordinate Systems
 
-Anatomical planes and terms of location on a person standing upright (cp. [mbbs]):
+Patient Coordinate System: Anatomical planes and terms of location on a person standing upright (cp. [mbbs]):
 
-* **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Right (R)** and **Left (L)** halves. A sagittal plane is any plane perpendicular to the median plane.
-* **Coronal Plane**: Frontal plane, separates in **Posterior (P)** towards back and **Anterior (A)** towards front.
 * **Axial Plane**: Horizontal (transverse) plane, separates in **Inferior (I)** towards feet (bottom) and **Superior (S)** towards head (top).
+* **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Left (L)** and **Right (R)** halves. A sagittal plane is any plane perpendicular to the median plane.
+* **Coronal Plane**: Frontal plane, separates in **Posterior (P)** towards back and **Anterior (A)** towards front.
 
 ##### DICOM
 
-DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):
-> *"[Left&ndash;Posterior&ndash;Superior] L-P-S is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use [Right&ndash;Anterior&ndash;Superior] R-A-S"*
+DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):*"LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use RAS"*. DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
 
-* **L**: X increases from R to L
-* **P**: Y increases from A to P
-* **S**: Z increases from I to S
-
-DICOM images are using a **Right-handed System RhS** of matrix or index coordinates as rows of columns of pixel values in a stack of slices (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
-
-* i: Image width in columns, increases to the right
-* j: Image height in rows, increases downwards
-* k: Image stack depth in slices, increases backwards
+* The image stack Origin is located in the first slice, first column, first row
+* i: Image width in columns, increases to anatomical **Left L**
+* j: Image height in rows, increases to anatomical **Posterior P**
+* k: Image stack depth in slices, increases anatomical **Superior S**
 
 ##### Unreal Engine
 
-Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]):
+Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]). The anatomical coordinate system in plugin "Volume Creator"&mdash;with UE's use of a LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior A-R-S** anatomical coordinate system (cp. figure G.1.):
 
-* X: Increases from **Back** to **Front**, color code red
-* Y: Increases from **Left** to **Right**, color code green
-* Z: Increases upwards from **Bottom** to **Top**, color code blue
-
-###### Plugin "Volume Creator"
-
-The anatomical coordinate system in plugin "Volume Creator"&mdash;with UE's use of a LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior A-R-S** anatomical coordinate system (cp. figure G.1.):
-
-* **A**: X increases from Back to Front, color code red; anatomical from **Posterior (P)** to **Anterior (A)**
-* **R**: Y increases from Left to Right, color code green; anatomical from  **Left (L)** to **Right (R)**
-* **S**: Z increases upwards from Bottom to Top, color code blue; anatomical from **Inferior (I)** to **Superior (S)**
+* X: Increases from Back to Front, color code red; anatomical from Posterior P to **Anterior A**
+* Y: Increases from Left to Right, color code green; anatomical from Left L to **Right R**
+* Z: Increases upwards from Bottom to Top, color code blue; anatomical from Inferior I to **Superior S**
 
 ![DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows](Docs/OrientationGuide.png "DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows*
 
-Anatomical Planes and Terms of Location in this plugin (cp. figure G.2.):
+Anatomical Planes and Terms of Location in plugin "Volume Creator" (cp. figure G.2.):
 
-* **Coronal (COR)**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior (P)** to **Anterior (A)**
-* **Sagittal (SAG)**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left (L)** to **Right (R)**
-* **Axial (AXE)**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior (I)** to **Superior (S)**
+* **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
+* **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
+* **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
 
 ![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
 
@@ -772,7 +757,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 >* *`DescriptorSuffix` provides additional context for the Asset, to help identify how it is used. For example, whether a texture is a normal map or an opacity map.*
 >* *`OptionalVariantLetterOrNumber` is optionally used to differentiate between multiple versions or variations of an asset.*
 
-* `[AssetTypePrefix]`:
+* `[AssetTypePrefix]` (UEDoc):
   * Blueprint: `BP`
   * Blueprint Interface: `BPI`
   * Curve: `Curve`
@@ -785,7 +770,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture: `T`
   * Texture Render Target: `RT`
   * Widget Blueprint: `WBP`
-  * VR Editor Blueprint: `VR`
+  * VR-Editor Blueprint: `VR`
 * `[AssetName]` (Domain Specific):
   * Scalar Volume: `SV`
   * Acquisition Type:
@@ -806,23 +791,17 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
       * Orientation Guide: `OG`
       * Region of Interest: `ROI`
       * Transfer Function: `TF`
-* `[DescriptorSuffix]`:
+* `[DescriptorSuffix]` (UEDoc):
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
   * Color Atlas: `ColorAtlas`
   * Compute Shader: `CS`
   * Main Material: `Main`
   * Volume Texture: `Volume`
+  * Texture Drawn from 'Material to Texture Render Target': `Tex`
   * User Widget Blueprint: `U`
   * Editor Utility Widget Blueprint: `E`
-  * VR Editor Dockable Window Blueprint: `DW`
-* [OptionalVariantLetterOrNumber]:
-  * Texture Drawn from 'Material to Texture Render Target': `Tex`
-
-Aditional Conventions:
-
-* In the `[AssetName]`, dashes "`-`" are used, no underlines "`_`".
-* In the `[AssetName]`, single letter suffixes are combined without additional dashes "`-`".
+  * VR-Editor Dockable Window Blueprint: `DW`
 
 <div style='page-break-after: always'></div>
 
