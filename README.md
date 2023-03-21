@@ -105,54 +105,59 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ## 2. Concept
 
-The plugin provides rendering of image-stack based volumes, commonly known as scalar volumes. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. The following entities are implemented as an object or Actor resp. according to the Object Oriented Paradigm OOP:
+The plugin provides rendering of image-stack based volumes, commonly known as scalar volumes. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. Following the Object Oriented Paradigm OOP entities are implemented as an object or Actor resp.:
 
-* **Import**: Medical images are imported from DICOM files and stored as Hounsfield Units encoded Volume Texture.
-* **Scalar Volume Actor**: A Scalar Volume Actor holds a reference to a Hounsfield Units encoded Volume Texture and stores also DICOM pixel spacing attribute values.
-* **Dicom Window Actor**: A Dicom Window Actor consumes the Volume Texture and applies DICOM Window Attributes 'Center' and 'Width'.
-* **MPR Actor**: The DICOM windowed scalar volume may be visualized by Multiplanar Rendering MPR. The MPR Actor as a 3D representation of MPR holds three perpendicular planes, i.e. coronal, sagittal and axial plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
+![Plugin Blueprint Actor Classes](Docs/VolumeCreator-Content-Classes.png "Plugin Blueprint Actor Classes")<br>*Fig. 2.1.: Plugin Blueprint Actor Classes*
+
+* **Scalar Volume Actor**: Medical images are imported, e.g., from DICOM files and stored as Hounsfield Units encoded Volume Texture. A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
+* **Dicom Window Actor**: A Dicom Window Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
+* **MPR Actor**: The DICOM windowed scalar volume may be visualized by multiplanar rendering in a MPR Actor. The MPR Actor as a 3D representation of MPR holds three perpendicular planes, i.e. coronal, sagittal and axial plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
   * **MPR Monitor Actor**: The MPR produces planar rendering, which is also consumed by the MPR Monitor, a 2D representation of MPR.
-* **DVR Actor**: The DICOM windowed scalar volume may be visualized by Direct Volume Rendering DVR. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
+* **DVR Actor**: The DICOM windowed scalar volume may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
   * **Orientation Guide Actor**: The DVR Actor can be optionally attached a rotation synchronized orientation guide.
-  * **ROI Actor**: The DVR geometry can be optionally shrinked with a region of interest in real-time.
-  * **ROI Handles Actor**: A region of interest geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
+  * **ROI Actor**: The DVR geometry can be optionally shrinked with a region of interest from a ROI Actor in real-time.
+    * **ROI Handles Actor**: A ROI geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
   * **Clip Plane Actor**: The DVR geometry can be optionally shrinked with a clip plane interactively in real-time.
   * **Spot Light Actor**: The DVR can be optionally illuminated with static spot-lights.
 
-TODO: Reference Viewer as Domain Model Diagram
+![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV](Docs/DMD-SV.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV")<br>*Fig. 4.2.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV*
+
+![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR](Docs/DMD-DVR.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR")<br>*Fig. 4.3.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR*
 
 ## 3. Import
 
-
 * Asset names derive from the file name which is imported:
-  * Underlines from a file name (`_`) are replaced by minus in asset names (`-`).
+  * Underlines (`_`) from a file name are replaced by minus (`-`) in asset names.
   * Maximum asset name length is 20 signs.
 * CT image data is expected to come in Hounsfield Units HU. The data is clamped to 4096 values in a range of [-1000, 3095].
 
 ### 3.1. Import DICOM
 
-* Reads from DICOM&reg; *.dcm
+Workflow:
+
+* Reads from DICOM&reg; files, file name extension `*.dcm`
 * Writes image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_HU_Volume`
-* Saves image data to a Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
-* Saves meta data to a Scalar Volume Blueprint asset `BP_MyDataName_SV` (Template: Scalar Volume Actor `BP_SV`) and assigns the just saved Volume Texture asset.
+* Saves image data to a new Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
+* Saves meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a new Blueprint asset `BP_MyDataName_SV` based on Scalar Volume Actor `BP_SV` and assigns the just saved Volume Texture asset.
 
 ### 3.2. Import MetaImage
 
-* Reads from MetaImage&trade; *.mhds
+Workflow:
+
+* Reads from MetaImage&trade;, file name extension `*.mhds`
 
 ### 3.3. Data Background
 
 DICOM image data is stored as 12 bit data, sometimes you also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
 
 * A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
-* 4 channels RGBA
-* With 8 bit per channel (2<sup>8</sup> = 256, range from 0 to 255)
+* 4 channels RGBA with 8 bit per channel (2<sup>8</sup> = 256, range from 0 to 255)
 
-The size V<sub>1</sub> becomes 67 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size V<sub>2</sub> increases to 0.5 GB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size V<sub>3</sub> increases to 4 GB.
+The size of Volume<sub>1</sub> becomes 67 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size of Volume<sub>2</sub> increases to 0.5 GB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of Volume<sub>3</sub> increases to 4 GB.
 
-* *V<sub>1</sub> = 256<sup>3</sup> x 4 x 8 bit = 536’870’912 bit = 0.537 Gigabit = 67 MB*
-* *V<sub>2</sub> = 512<sup>3</sup> x 4 x 8 bit = 4’294’967’296 bit = 4.295 Gigabit = 537 MB*
-* *V<sub>3</sub> = 1024<sup>3</sup> x 4 x 8 bit = 34’359’738’368 bit = 34.359 Gigabit = 4295 MB*
+* *Volume<sub>1</sub> = 256<sup>3</sup> x 4 x 8 bit = 536’870’912 bit = 0.537 Gigabit = 67 MB*
+* *Volume<sub>2</sub> = 512<sup>3</sup> x 4 x 8 bit = 4’294’967’296 bit = 4.295 Gigabit = 537 MB*
+* *Volume<sub>3</sub> = 1024<sup>3</sup> x 4 x 8 bit = 34’359’738’368 bit = 34.359 Gigabit = 4295 MB*
 
 With processing, e.g., 30 fps (cp. [Lindberg]):
 
@@ -163,8 +168,6 @@ With processing, e.g., 30 fps (cp. [Lindberg]):
 <div style='page-break-after: always'></div>
 
 ## 4. Actors
-
-![Plugin Blueprint Actor Classes](Docs/VolumeCreator-Content-Classes.png "Plugin Blueprint Actor Classes")<br>*Fig. 2.1.: Plugin Blueprint Actor Classes*
 
 ### 4.1. Scalar Volume Actor
 
@@ -271,7 +274,7 @@ The transfer functions are based on color gradients from `Curve Linear Color` as
 
 Maximum Opacity Threshold for Early Ray Termination from iteratively added up Alpha Channel
 
-##### 4.4.1.7. Phong
+##### 4.4.1.7. Phong Shading
 
 https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshiftLightParameters-DiffuseScale
 
@@ -345,7 +348,7 @@ Not yet implmeneted features:
   * Plane Interaction
 * Rendering Type:
   * Indirect Volume Rendering
-  * Vector Volume Rendering &ndash; where the voxels store multiple scalar values, e.g., L-P-S or R-A-S coordinates as components of a displacement field (cp. [Piper et al., Overview]).
+  * Vector Volume Rendering &ndash; where the voxels store multiple scalar values&mdash;e.g., L-P-S or R-A-S coordinates&mdash;as components of a displacement field (cp. [Piper et al., Overview]).
   * Tensor Volume Rendering &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI (cp. [Piper et al., Overview]).
   <!--* Labelmap Volume Rendering &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.-->
 
@@ -416,7 +419,7 @@ Patient Coordinate System: Anatomical planes and terms of location on a person s
 
 ##### DICOM
 
-DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):*"LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use RAS"*. DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cp. [Adaloglouon 2020], *Medical Image coordinate system (Voxel space)*):
+DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):*"LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use RAS"*. DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cp. [Adaloglouon 2020, Medical Image coordinate system (Voxel space)]):
 
 * The image stack Origin is located in the first slice, first column, first row
 * i: Image width in columns, increases to anatomical **Left L**
@@ -466,7 +469,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture: `T`
   * Texture Render Target: `RT`
   * Widget Blueprint: `WBP`
-  * VR-Editor Blueprint: `VR`
+  <!--* VR-Editor Blueprint: `VR`-->
 * `[AssetName]` (Domain Specific):
   * Scalar Volume: `SV`
   * Acquisition Type:
@@ -497,7 +500,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture Drawn from 'Material to Texture Render Target': `Tex`
   * User Widget Blueprint: `U`
   * Editor Utility Widget Blueprint: `E`
-  * VR-Editor Dockable Window Blueprint: `DW`
+  <!--* VR-Editor Dockable Window Blueprint: `DW`-->
 
 <div style='page-break-after: always'></div>
 
@@ -543,17 +546,15 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 ### B. Readings
 
-* Engel K., Hadwiger M., Kniss J., Rezk Salama C., Weiskopf D. (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/) <!--[Engel et al. 06] -->
-* Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering) <!-- [Hadwiger et al. 18] -->
-* Ikits M., Kniss J., Lefohn A., Hansen C.: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques) <!-- [Ikits et al. 2007] -->
+* Engel K., Hadwiger M., Kniss J., Rezk Salama C., Weiskopf D. (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/) <!--[Engel et al. 06]-->
+* Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering) <!--[Hadwiger et al. 18]-->
+* Ikits M., Kniss J., Lefohn A., Hansen C.: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques) <!--[Ikits et al. 2007]-->
 * Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.
 
 ### C. Acknowledgements
 
-* Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
-<!--
+* **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
 * **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
--->
 
 <div style='page-break-after: always'></div>
 
@@ -563,7 +564,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * The word mark *DICOM&mdash;Digital Imaging and Communication in Medicine* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
 * The word mark *MetaImage* is a trademark or registered trademark of Kitware, Inc.
 * The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc.
-* The word mark *3D Slicer* and the logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission.
+* The word mark *3D Slicer* and its logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission.
 
 ### E. Disclaimer
 
