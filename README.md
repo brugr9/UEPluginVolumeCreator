@@ -115,14 +115,16 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
   * **MPR Monitor Actor**: The MPR produces planar rendering, which is also consumed by the MPR Monitor, a 2D representation of MPR.
 * **DVR Actor**: The DICOM windowed scalar volume may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
   * **Orientation Guide Actor**: The DVR Actor can be optionally attached a rotation synchronized orientation guide.
-  * **ROI Actor**: The DVR geometry can be optionally shrinked with a region of interest from a ROI Actor in real-time.
+  * **ROI Actor**: Using a region of interest ROI Actor the DVR geometry can be optionally shrinked to a volume of interest in real-time.
     * **ROI Handles Actor**: A ROI geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
-  * **Clip Plane Actor**: The DVR geometry can be optionally shrinked with a clip plane interactively in real-time.
+  * **Clip Plane Actor**: Using a Clip Plane Actor the DVR geometry can be optionally shrinked  to a volume of interest interactively in real-time.
   * **Spot Light Actor**: The DVR can be optionally illuminated with static spot-lights.
 
-![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV](Docs/DMD-SV.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV")<br>*Fig. 4.2.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV*
+![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV](Docs/DMD-SV.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV")<br>*Fig. 2.2.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV*
 
-![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR](Docs/DMD-DVR.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR")<br>*Fig. 4.3.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR*
+![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR](Docs/DMD-DVR.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR")<br>*Fig. 2.3.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR*
+
+<div style='page-break-after: always'></div>
 
 ## 3. Import
 
@@ -145,6 +147,8 @@ Workflow:
 Workflow:
 
 * Reads from MetaImage&trade;, file name extension `*.mhds`
+
+<div style='page-break-after: always'></div>
 
 ### 3.3. Data Background
 
@@ -175,6 +179,12 @@ Plugin Content:
 
 * Blueprint Class: `BP_SV`
 
+![Details Panel &ndash; Blueprint Actor BP_SV](Docs/DetailsPanel-BP_SV.png "Details Panel &ndash; Blueprint Actor BP_SV")<br>*Fig. 4.1.: Details Panel &ndash; Blueprint Actor BP_SV*
+
+Parameter:
+
+<div style='page-break-after: always'></div>
+
 ### 4.2. Dicom Window Actor
 
 CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU.
@@ -190,9 +200,13 @@ Plugin Content:
 
 * Blueprint Class: `BP_DicomWindow`
 
-### 4.3. Multiplanar Rendering
+![Details Panel &ndash; Blueprint Actor BP_DicomWindow](Docs/DetailsPanel-BP_DicomWindow.png "Details Panel &ndash; Blueprint Actor BP_DicomWindow")<br>*Fig. 4.2.: Details Panel &ndash; Blueprint Actor BP_DicomWindow*
 
-TODO: Reference Viewer as Domain Model Diagram
+Parameter:
+
+<div style='page-break-after: always'></div>
+
+### 4.3. Multiplanar Rendering
 
 #### 4.3.1. MPR Actor
 
@@ -200,15 +214,25 @@ Plugin Content:
 
 * Blueprint Class: `BP_MPR`
 
+![Details Panel &ndash; Blueprint Actor BP_MPR](Docs/DetailsPanel-BP_MPR.png "Details Panel &ndash; Blueprint Actor BP_MPR")<br>*Fig. 4.3.1.: Details Panel &ndash; Blueprint Actor BP_MPR*
+
+Parameter:
+
+<div style='page-break-after: always'></div>
+
 #### 4.3.2. MPR Monitor Actor
 
 Plugin Content:
 
 * Blueprint Class: `BP_MprMonitor`
 
-### 4.4. Direct Volume Rendering
+![Details Panel &ndash; Blueprint Actor BP_MprMonitor](Docs/DetailsPanel-BP_MprMonitor.png "Details Panel &ndash; Blueprint Actor BP_MprMonitor")<br>*Fig. 4.3.2.: Details Panel &ndash; Blueprint Actor BP_MprMonitor*
 
-TODO: Reference Viewer as Domain Model Diagram
+Parameter:
+
+<div style='page-break-after: always'></div>
+
+### 4.4. Direct Volume Rendering
 
 #### 4.4.1. DVR Actor
 
@@ -218,21 +242,23 @@ Plugin Content:
 
 * Blueprint Class: `BP_DVR`
 
+![Details Panel &ndash; Blueprint Actor BP_DVR](Docs/DetailsPanel-BP_DVR.png "Details Panel &ndash; Blueprint Actor BP_DVR")<br>*Fig. 4.4.1.: Details Panel &ndash; Blueprint Actor BP_DVR*
+
 Parameter:
 
-##### 4.4.1.1. ROI Actor
+##### ROI Actor
 
 * Type: ROI Actor `BP_ROI` instance as Object Reference
 * Default Value: `none`
 * Optional, used for geometry subtraction if set
 
-##### 4.4.1.2. Clip Plane Actor
+##### Clip Plane Actor
 
 * Type: Clip Plane Actor `BP_DvrClipPlane` instance as Object Reference
 * Default Value: `none`
 * Optional, used for geometry subtraction if set
 
-##### 4.4.1.3. Distance Power
+##### Distance Power
 
 * Type: `float`
 * Default Value: `1.0`
@@ -248,7 +274,7 @@ This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragme
 > *To lower the number of operations necessary for computing a single frame, [...] the distance between two successive resampling locations, i.e the sampling distance, could be increased, thereby decreasing the number of actual locations used for volume reconstruction.*
 > *However, it is worth mentioning, that incorporating any of these optimization approaches usually tends to result in generated images of less quality compared to an unoptimized ray-casting volume renderer.*
 
-##### 4.4.1.4. Resampling Steps
+##### Resampling Steps
 
 * Type: `Integer`
 * Default Value: `256`
@@ -259,14 +285,14 @@ Maximum Number of Resampling Steps:
 * A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
 * A small number may decrease rendering quality but is faster.
 
-##### 4.4.1.5. Transfer Function
+##### Transfer Function
 
 * Type: `Curve Linear Color`
 * Default Value: `Curve_Default_TF_Color`
 
 The transfer functions are based on color gradients from `Curve Linear Color` assets. The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
 
-##### 4.4.1.6. Alpha Max
+##### Alpha Max
 
 * Type: `float`
 * Default Value: `0.8`
@@ -274,7 +300,7 @@ The transfer functions are based on color gradients from `Curve Linear Color` as
 
 Maximum Opacity Threshold for Early Ray Termination from iteratively added up Alpha Channel
 
-##### 4.4.1.7. Phong Shading
+##### Phong Shading
 
 https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshiftLightParameters-DiffuseScale
 
@@ -283,17 +309,25 @@ https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshi
 * Specular: Default Value: `0.2`, Range: [`0.0`, `1.0`]
 * Specular Power: Default Value: `10`, Range: [`1`, `50`]
 
-##### 4.4.1.8. Lighting
+##### Lighting
 
 * Type: Array of `BP_DvrSpotLight` Object References
 * Default Value: `none`
 * Optional, used for static lighting if set
+
+<div style='page-break-after: always'></div>
 
 #### 4.4.2. Orientation Guide Actor
 
 Plugin Content:
 
 * Blueprint Class: `BP_DvrOrientationGuide`
+
+![Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide](Docs/DetailsPanel-BP_DvrOrientationGuide.png "Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide")<br>*Fig. 4.4.2.: Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide*
+
+Parameter:
+
+<div style='page-break-after: always'></div>
 
 #### 4.4.3. ROI Actor
 
@@ -303,11 +337,23 @@ Plugin Content:
 
 * Blueprint Class: `BP_ROI`
 
+![Details Panel &ndash; Blueprint Actor BP_ROI](Docs/DetailsPanel-BP_ROI.png "Details Panel &ndash; Blueprint Actor BP_ROI")<br>*Fig. 4.4.3.: Details Panel &ndash; Blueprint Actor BP_ROI*
+
+Parameter:
+
+<div style='page-break-after: always'></div>
+
 #### 4.4.4. ROI Handles Actor
 
 Plugin Content:
 
 * Blueprint Class: `BP_RoiHandles`
+
+![Details Panel &ndash; Blueprint Actor BP_RoiHandles](Docs/DetailsPanel-BP_RoiHandles.png "Details Panel &ndash; Blueprint Actor BP_RoiHandles")<br>*Fig. 4.4.4.: Details Panel &ndash; Blueprint Actor BP_RoiHandles*
+
+Parameter:
+
+<div style='page-break-after: always'></div>
 
 #### 4.4.5. Clip Plane Actor
 
@@ -318,24 +364,87 @@ Plugin Content:
 * Blueprint Class: `BP_DvrClipPlane`
 * Material Instance: `MI_Edges_ClipPlane`
 
-![Blueprint Actor BP_DvrClipPlane](Docs/BP_ClipPlane.png "Blueprint Actor BP_DvrClipPlane")<br>*Fig. 4.4.3.: Blueprint Actor BP_DvrClipPlane*
+![Details Panel &ndash; Blueprint Actor BP_DvrClipPlane](Docs/DetailsPanel-BP_DvrClipPlane.png "Details Panel &ndash; Blueprint Actor BP_DvrClipPlane")<br>*Fig. 4.4.5.: Details Panel &ndash; Blueprint Actor BP_DvrClipPlane*
+
+Parameter:
+
+<div style='page-break-after: always'></div>
 
 #### 4.4.6. Spot Light Actor
 
-The plugin provides with a Blueprint SpotLight named `BP_DvrSpotLight` whose transform mobility is set to *static* (see figure 2.4.). Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light:
-
-* Intensity (Brightness): 1700 Lumen (see [UEDoc, Physical Lighting Units])
-* Temperature: 5100 K (cp. [21])
+The plugin provides with a Blueprint SpotLight named `BP_DvrSpotLight` whose transform mobility is set to *static*.
 
 Plugin Content:
 
 * Blueprint Class: `BP_DvrSpotLight`
 
-![Blueprint SpotLight BP_DvrSpotLight](Docs/BP_StaticSpotLight.png "Blueprint SpotLight BP_DvrSpotLight")<br>*Fig. 2.4.: Blueprint SpotLight BP_DvrSpotLight*
+![Details Panel &ndash; Blueprint Actor BP_DvrSpotLight](Docs/DetailsPanel-BP_DvrSpotLight.png "Details Panel &ndash; Blueprint Actor BP_DvrSpotLight")<br>*Fig. 4.4.6.: Details Panel &ndash; Blueprint Actor BP_DvrSpotLight*
+
+Parameter:
+
+Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light:
+
+* Intensity (Brightness): 1700 Lumen (see [UEDoc, Physical Lighting Units])
+* Temperature: 5100 K (cp. [21])
+
+<div style='page-break-after: always'></div>
 
 ## 5. Widgets
 
-TODO: Reference Viewer as Domain Model Diagram
+### 5.1. File User Widget
+
+File User Widget Blueprint.
+
+Plugin Content:
+
+* Blueprint Class: `WBP_File_U`
+
+![PIE Screenshot &ndash; User Widget Blueprint WBP_File_U](Docs/UserWidget-WBP_File_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_File_U")<br>*Fig. 5.1.: PIE Screenshot &ndash; User Widget Blueprint WBP_File_U*
+
+Menu Entries:
+
+* Import... (Dialog)
+* Open... (Dialog)
+* Save
+* Save As... (Dialog)
+
+<div style='page-break-after: always'></div>
+
+### 5.2. LUT User Widget
+
+Look-Up Table User Widget Blueprint.
+
+Plugin Content:
+
+* Blueprint Class: `WBP_LUT_U`
+
+![PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U](Docs/UserWidget-WBP_LUT_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U")<br>*Fig. 5.2.: PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U*
+
+Menu Entries:
+
+* Undo
+* MPR Actor (Select)
+* LUT (Select)
+* Save
+
+<div style='page-break-after: always'></div>
+
+### 5.3. TF User Widget
+
+Transfer Function User Widget Blueprint.
+
+Plugin Content:
+
+* Blueprint Class: `WBP_TF_U`
+
+![PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U](Docs/UserWidget-WBP_TF_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U")<br>*Fig. 5.3.: PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U*
+
+Menu Entries:
+
+* Undo
+* DVR Actor (Select)
+* TF (Select)
+* Save
 
 <div style='page-break-after: always'></div>
 
@@ -381,6 +490,7 @@ Not yet implmeneted features:
 * MR &mdash; Magnetic Resonance
 * OG &mdash; Orientation Guide
 * P &mdash; Posterior
+* PIE &mdash; Play in Editor
 * R &mdash; Right
 * R-A-S &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
@@ -428,7 +538,7 @@ DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (c
 
 ##### Unreal Engine
 
-Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]). The anatomical coordinate system in plugin "Volume Creator"&mdash;with UE's use of a LhS&mdash;results in an **Anterior&ndash;Right&ndash;Superior A-R-S** anatomical coordinate system (cp. figure G.1.):
+Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in a **Anterior&ndash;Right&ndash;Superior A-R-S** system (cp. figure G.1.):
 
 * X: Increases from Back to Front, color code red; anatomical from Posterior P to **Anterior A**
 * Y: Increases from Left to Right, color code green; anatomical from Left L to **Right R**
@@ -490,6 +600,9 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
       * Orientation Guide: `OG`
       * Region of Interest: `ROI`
       * Transfer Function: `TF`
+
+<div style='page-break-after: always'></div>
+
 * `[DescriptorSuffix]` (UEDoc):
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
@@ -543,6 +656,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. June 19, 2021. URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
+
+<div style='page-break-after: always'></div>
 
 ### B. Readings
 
