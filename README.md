@@ -61,9 +61,9 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
   * [4.10. Spot Light Actor](#410-spot-light-actor)
 * [5. Widgets](#5-widgets)
   * [5.1. Scalar Volume User Widget](#51-scalar-volume-user-widget)
-  * [5.2. Values Of Interest User Widget](#52-values-of-interest-user-widget)
-  * [5.3. LUT User Widget](#53-lut-user-widget)
-  * [5.4. TF User Widget](#54-tf-user-widget)
+  * [5.2. VOI User Widget](#52-voi-user-widget)
+  * [5.3. MPR User Widget](#53-mpr-user-widget)
+  * [5.4. DVR User Widget](#54-dvr-user-widget)
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
@@ -229,11 +229,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 ### 4.2. Values Of Interest Actor
 
-CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU.
-
-Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. This is done by linear interpolation (Lerp).
-
-If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and its width.
+CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp). If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and its width. Plugin "Volume Creator" provides with a VOI Actor to handle a DICOM window.
 
 Plugin Content:
 
@@ -467,17 +463,21 @@ Parameter (cp. figure 'Details Panel'):
 
 <div style='page-break-after: always'></div>
 
-## 5. Widgets
+## 5. User Widgets
+
+Volume Creator UI elements are available as User Widget Blueprint.
+
+![Plugin User Widget Blueprints](Docs/VolumeCreator-Content-Widget.png "Plugin User Widget Blueprints")<br>*Fig. 5.: Plugin User Widget Blueprints*
 
 ### 5.1. Scalar Volume User Widget
 
-Scalar Volume User Widget Blueprint.
+Scalar Volume User Widget.
 
 Plugin Content:
 
-* Blueprint Class: `WBP_SV_U`
+* Blueprint Class: User Widget Blueprint `WBP_SV`
 
-![PIE Screenshot &ndash; User Widget Blueprint WBP_SV_U](Docs/UserWidget-WBP_SV_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_SV_U")<br>*Fig. 5.1.: PIE Screenshot &ndash; User Widget Blueprint WBP_SV_U*
+![User Widget Blueprint WBP_SV](Docs/UserWidget-WBP_SV.png "User Widget Blueprint WBP_SV")<br>*Fig. 5.1.: User Widget Blueprint WBP_SV*
 
 Widget Entries:
 
@@ -488,15 +488,15 @@ Widget Entries:
 
 <div style='page-break-after: always'></div>
 
-### 5.2. Values Of Interest User Widget
+### 5.2. VOI User Widget
 
-Values Of Interest User Widget Blueprint.
+Values Of Interest User Widget.
 
 Plugin Content:
 
-* Blueprint Class: `WBP_VOI_U`
+* Blueprint Class: User Widget Blueprint `WBP_VOI`
 
-![PIE Screenshot &ndash; User Widget Blueprint WBP_VOI_U](Docs/UserWidget-WBP_VOI_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_VOI_U")<br>*Fig. 5.2.: PIE Screenshot &ndash; User Widget Blueprint WBP_VOI_U*
+![User Widget Blueprint WBP_VOI](Docs/UserWidget-WBP_VOI.png "User Widget Blueprint WBP_VOI")<br>*Fig. 5.2.: User Widget Blueprint WBP_VOI*
 
 Widget Entries:
 
@@ -507,15 +507,15 @@ Widget Entries:
 
 <div style='page-break-after: always'></div>
 
-### 5.3. LUT User Widget
+### 5.3. MPR User Widget
 
-Look-Up Table User Widget Blueprint.
+Multiplanar Rendering User Widget.
 
 Plugin Content:
 
-* Blueprint Class: `WBP_LUT_U`
+* Blueprint Class: User Widget Blueprint `WBP_MPR`
 
-![PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U](Docs/UserWidget-WBP_LUT_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U")<br>*Fig. 5.3.: PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U*
+![User Widget Blueprint WBP_MPR](Docs/UserWidget-WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 5.3.: User Widget Blueprint WBP_MPR*
 
 Widget Entries:
 
@@ -524,20 +524,75 @@ Widget Entries:
 
 <div style='page-break-after: always'></div>
 
-### 5.4. TF User Widget
+### 5.4. DVR User Widget
 
-Transfer Function User Widget Blueprint.
+Direct Volume Rendering User Widget.
 
 Plugin Content:
 
-* Blueprint Class: `WBP_TF_U`
+* Blueprint Class: User Widget Blueprint `WBP_DVR`
 
-![PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U](Docs/UserWidget-WBP_TF_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U")<br>*Fig. 5.4.: PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U*
+![User Widget Blueprint WBP_DVR](Docs/UserWidget-WBP_DVR.png "User Widget Blueprint WBP_DVR")<br>*Fig. 5.4.: User Widget Blueprint WBP_DVR*
 
 Widget Entries:
 
 * DVR Actor (Select)
 * TF (Select)
+
+## 6. User Interface Actors
+
+The Volume Creator UI elements are also available as Blueprint Actor for the use in 3D.
+
+![Plugin User Interface Blueprint Actors](Docs/VolumeCreator-Content-UI.png "Plugin User Interface Blueprint Actors")<br>*Fig. 6.: Plugin User Interface Blueprint Actors*
+
+### 6.1. MPR UI Actor
+
+Multiplanar Rendering User Interface Blueprint Actor.
+
+Plugin Content:
+
+* Blueprint Class: Blueprint Actor `BP_MPR_UI` (inherits from `BP_SvVoi_UI`)
+
+![User Interface Blueprint Actor BP_MPR_UI](Docs/BlueprintActor-BP_MPR_UI.png "User Interface Blueprint Actor BP_MPR_UI")<br>*Fig. 6.1.: User Interface Blueprint Actor BP_MPR_UI*
+
+Widget Components:
+
+* Widget Component `WidgetSV`, Scalar Volume User Widget `WBP_SV` (Inherited)
+* Widget Component `WidgetVOI`, VOI User Widget `WBP_VOI` (Inherited)
+* Widget Component `WidgetMPR`, MPR User Widget `WBP_MPR`
+
+### 6.2. DVR UI Actor
+
+Direct Volume Rendering User Interface Blueprint Actor.
+
+Plugin Content:
+
+* Blueprint Class: Blueprint Actor `BP_DVR_UI` (inherits from `BP_SvVoi_UI`)
+
+![User Interface Blueprint Actor BP_DVR_UI](Docs/BlueprintActor-BP_DVR_UI.png "User Interface Blueprint Actor BP_DVR_UI")<br>*Fig. 6.2.: User Interface Blueprint Actor BP_DVR_UI*
+
+Widget Components:
+
+* Widget Component `WidgetSV`, Scalar Volume User Widget `WBP_SV` (Inherited)
+* Widget Component `WidgetVOI`, VOI User Widget `WBP_VOI` (Inherited)
+* Widget Component `WidgetDVR`, DVR User Widget `WBP_DVR`
+
+### 6.3. MPR and DVR UI Actor
+
+Direct Volume Rendering User Interface Blueprint Actor.
+
+Plugin Content:
+
+* Blueprint Class: Blueprint Actor `BP_MprDvr_UI` (inherits from `BP_MPR_UI`)
+
+![User Interface Blueprint Actor BP_MprDvr_UI](Docs/BlueprintActor-BP_MprDvr_UI.png "User Interface Blueprint Actor BP_MprDvr_UI")<br>*Fig. 6.23: User Interface Blueprint Actor BP_MprDvr_UI*
+
+Widget Components:
+
+* Widget Component `WidgetSV`, Scalar Volume User Widget `WBP_SV` (Inherited)
+* Widget Component `WidgetVOI`, VOI User Widget `WBP_VOI` (Inherited)
+* Widget Component `WidgetMPR`, MPR User Widget `WBP_MPR` (Inherited)
+* Widget Component `WidgetDVR`, DVR User Widget `WBP_DVR`
 
 <div style='page-break-after: always'></div>
 
@@ -578,6 +633,7 @@ Widget Entries:
 * SAG &mdash; Sagittal
 * SV &mdash; Scalar Volume
 * TF &mdash; Transfer Function
+* UE &mdash; Unreal Engine
 * UI &mdash; User Interface
 * US &mdash; Ultrasound Imaging (sonography)
 * VOI &mdash; Values of Interest
@@ -644,7 +700,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 >* *`DescriptorSuffix` provides additional context for the Asset, to help identify how it is used. For example, whether a texture is a normal map or an opacity map.*
 >* *`OptionalVariantLetterOrNumber` is optionally used to differentiate between multiple versions or variations of an asset.*
 
-* `[AssetTypePrefix]` (UEDoc):
+* `[AssetTypePrefix]`:
   * Blueprint: `BP`
   * Blueprint Interface: `BPI`
   * Curve: `Curve`
@@ -657,7 +713,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture: `T`
   * Texture Render Target: `RT`
   * Widget Blueprint: `WBP`
-  <!--* VR-Editor Blueprint: `VR`-->
 * `[AssetName]` (Domain Specific):
   * Scalar Volume: `SV`
   * Acquisition Type:
@@ -681,7 +736,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 <div style='page-break-after: always'></div>
 
-* `[DescriptorSuffix]` (UEDoc):
+* `[DescriptorSuffix]`:
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
   * Color Atlas: `ColorAtlas`
@@ -689,9 +744,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Main Material: `Main`
   * Volume Texture: `Volume`
   * Texture Drawn from 'Material to Texture Render Target': `Tex`
-  * User Widget Blueprint: `U`
-  * Editor Utility Widget Blueprint: `E`
-  <!--* VR-Editor Dockable Window Blueprint: `DW`-->
+  * User Widget Blueprint Actor: `UI`
 
 <div style='page-break-after: always'></div>
 
