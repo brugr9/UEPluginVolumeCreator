@@ -14,6 +14,8 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Imaging Data.
 
+<div style='page-break-after: always'></div>
+
 ## Description
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint Visual Scripting system.
@@ -48,19 +50,20 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
   * [3.3. Data Background](#33-data-background)
 * [4. Actors](#4-actors)
   * [4.1. Scalar Volume Actor](#41-scalar-volume-actor)
-  * [4.2. Dicom Window Actor](#42-dicom-window-actor)
-  * [4.3. Multiplanar Rendering](#43-multiplanar-rendering)
-    * [4.3.1. MPR Actor](#431-mpr-actor)
-    * [4.3.2. MPR Monitor Actor](#432-mpr-monitor-actor)
-  * [4.4. Direct Volume Rendering](#44-direct-volume-rendering)
-    * [4.4.1. DVR Actor](#441-dvr-actor)
-    * [4.4.2. Orientation Guide Actor](#442-orientation-guide-actor)
-    * [4.4.3. ROI Actor](#443-roi-actor)
-    * [4.4.4. ROI Handles Actor](#444-roi-handles-actor)
-    * [4.4.5. Clip Plane Actor](#445-clip-plane-actor)
-    * [4.4.6. Spot Light Actor](#446-spot-light-actor)
+  * [4.2. Values Of Interest Actor](#42-values-of-interest-actor)
+  * [4.3. Multiplanar Rendering Actor](#43-multiplanar-rendering-actor)
+  * [4.4. MPR Monitor Actor](#44-mpr-monitor-actor)
+  * [4.5. Direct Volume Rendering Actor](#45-direct-volume-rendering-actor)
+  * [4.6. Orientation Guide Actor](#46-orientation-guide-actor)
+  * [4.7. Region Of Interest Actor](#47-region-of-interest-actor)
+  * [4.8. ROI Handles Actor](#48-roi-handles-actor)
+  * [4.9. Clip Plane Actor](#49-clip-plane-actor)
+  * [4.10. Spot Light Actor](#410-spot-light-actor)
 * [5. Widgets](#5-widgets)
-* [6. Outlook](#6-outlook)
+  * [5.1. Scalar Volume User Widget](#51-scalar-volume-user-widget)
+  * [5.2. Values Of Interest User Widget](#52-values-of-interest-user-widget)
+  * [5.3. LUT User Widget](#53-lut-user-widget)
+  * [5.4. TF User Widget](#54-tf-user-widget)
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
@@ -110,14 +113,14 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 ![Plugin Blueprint Actor Classes](Docs/VolumeCreator-Content-Classes.png "Plugin Blueprint Actor Classes")<br>*Fig. 2.1.: Plugin Blueprint Actor Classes*
 
 * **Scalar Volume Actor**: Medical images are imported, e.g., from DICOM files and stored as Hounsfield Units encoded Volume Texture. A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
-* **Dicom Window Actor**: A Dicom Window Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
-* **MPR Actor**: The DICOM windowed scalar volume may be visualized by multiplanar rendering in a MPR Actor. The MPR Actor as a 3D representation of MPR holds three perpendicular planes, i.e. coronal, sagittal and axial plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
+* **Values Of Interest Actor**: A Values Of Interest Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
+* **Multiplanar Rendering Actor**: The DICOM windowed scalar volume may be visualized by multiplanar rendering in a MPR Actor. The MPR Actor as a 3D representation of MPR holds three perpendicular planes, i.e. coronal, sagittal and axial plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
   * **MPR Monitor Actor**: The MPR produces planar rendering, which is also consumed by the MPR Monitor, a 2D representation of MPR.
-* **DVR Actor**: The DICOM windowed scalar volume may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
+* **Direct Volume Rendering Actor**: The DICOM windowed scalar volume may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
   * **Orientation Guide Actor**: The DVR Actor can be optionally attached a rotation synchronized orientation guide.
-  * **ROI Actor**: Using a region of interest ROI Actor the DVR geometry can be optionally shrinked to a volume of interest in real-time.
+  * **Region Of Interest Actor**: Using a region of interest ROI Actor the DVR geometry can be optionally shrinked in real-time.
     * **ROI Handles Actor**: A ROI geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
-  * **Clip Plane Actor**: Using a Clip Plane Actor the DVR geometry can be optionally shrinked  to a volume of interest interactively in real-time.
+  * **Clip Plane Actor**: Using a Clip Plane Actor the DVR geometry can be optionally shrinked interactively in real-time.
   * **Spot Light Actor**: The DVR can be optionally illuminated with static spot-lights.
 
 ![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV](Docs/DMD-SV.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV")<br>*Fig. 2.2.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV*
@@ -138,9 +141,9 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 Workflow:
 
 * Reads from DICOM&reg; files, file name extension `*.dcm`
-* Writes image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_HU_Volume`
+* Writes image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_HU_Volume`
 * Saves image data to a new Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
-* Saves meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a new Blueprint asset `BP_MyDataName_SV` based on Scalar Volume Actor `BP_SV` and assigns the just saved Volume Texture asset.
+* Saves meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a new Blueprint asset `BP_MyDataName` based on Scalar Volume Actor `BP_SV` and assigns the just saved Volume Texture asset.
 
 ### 3.2. Import MetaImage
 
@@ -181,60 +184,93 @@ Plugin Content:
 
 ![Details Panel &ndash; Blueprint Actor BP_SV](Docs/DetailsPanel-BP_SV.png "Details Panel &ndash; Blueprint Actor BP_SV")<br>*Fig. 4.1.: Details Panel &ndash; Blueprint Actor BP_SV*
 
-Parameter:
+Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+
+* Scalar Volume Texture
+* Origin
+* Columns
+* Columns Spacing
+* Rows
+* Rows Spacing
+* Slices
+* Slices Spacing
 
 <div style='page-break-after: always'></div>
 
-### 4.2. Dicom Window Actor
+### 4.2. Values Of Interest Actor
 
 CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU.
 
 Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. This is done by linear interpolation (Lerp).
 
-If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called DICOM Window was introduced to downsize the range of Hounsfield data to map.
-
-* Values lesser than the window left border are mapped to 0, greater than the window right border are mapped to 255.
-* To render only the lerped values, a mask may be applied.
+If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and its width.
 
 Plugin Content:
 
-* Blueprint Class: `BP_DicomWindow`
+* Blueprint Class: `BP_VOI`
 
-![Details Panel &ndash; Blueprint Actor BP_DicomWindow](Docs/DetailsPanel-BP_DicomWindow.png "Details Panel &ndash; Blueprint Actor BP_DicomWindow")<br>*Fig. 4.2.: Details Panel &ndash; Blueprint Actor BP_DicomWindow*
+![Details Panel &ndash; Blueprint Actor BP_VOI](Docs/DetailsPanel-BP_VOI.png "Details Panel &ndash; Blueprint Actor BP_VOI")<br>*Fig. 4.2.: Details Panel &ndash; Blueprint Actor BP_VOI*
 
-Parameter:
+Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+
+* Scalar Volume Actor
+  * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
+  * Default Value: `none`
+  * Mandatory, Hounsfield Units data source
+* Window Center
+  * Type: `Integer`
+  * Default Value: `1048`
+  * Range: [`-1000`, `1048`]
+  * Info: DICOM Window Center in Hounsfield Units (aka level or brightness)
+* Window Width
+  * Type: `Integer`
+  * Default Value: `4096`
+  * Range: [`1`, `4096`]
+  * Info: DICOM Window Width in Hounsfield Units (aka range or contrast)
+* Window Range
+  * Window Left and Right Border which are calculated, not editable, for information only.
+  * Info: Values between the window left and right border are linear interpolated (lerped) between 0 and 255 by default. Values lesser than the window left border are mapped to 0, values greater than the window right border are mapped to 255 by default.
+* Window Mask
+  * Type: `Boolean`
+  * Default Value: `true`
+  * Info: Values lesser than the window left border are mapped to 0, values greater than the window right border are mapped to 255 by default. To render the lerped values only, a window mask may be applied.
 
 <div style='page-break-after: always'></div>
 
-### 4.3. Multiplanar Rendering
-
-#### 4.3.1. MPR Actor
+### 4.3. Multiplanar Rendering Actor
 
 Plugin Content:
 
 * Blueprint Class: `BP_MPR`
 
-![Details Panel &ndash; Blueprint Actor BP_MPR](Docs/DetailsPanel-BP_MPR.png "Details Panel &ndash; Blueprint Actor BP_MPR")<br>*Fig. 4.3.1.: Details Panel &ndash; Blueprint Actor BP_MPR*
+![Details Panel &ndash; Blueprint Actor BP_MPR](Docs/DetailsPanel-BP_MPR.png "Details Panel &ndash; Blueprint Actor BP_MPR")<br>*Fig. 4.3.: Details Panel &ndash; Blueprint Actor BP_MPR*
 
-Parameter:
+Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+
+* Volume Of Interest Actor
+* Planes Location:
+  * Type: `Vector`
+  * Info: Anatomical Planes Location (X: COR, Y: SAG, Z: AXE)
+* LUT Index
+* Brightness
 
 <div style='page-break-after: always'></div>
 
-#### 4.3.2. MPR Monitor Actor
+### 4.4. MPR Monitor Actor
 
 Plugin Content:
 
 * Blueprint Class: `BP_MprMonitor`
 
-![Details Panel &ndash; Blueprint Actor BP_MprMonitor](Docs/DetailsPanel-BP_MprMonitor.png "Details Panel &ndash; Blueprint Actor BP_MprMonitor")<br>*Fig. 4.3.2.: Details Panel &ndash; Blueprint Actor BP_MprMonitor*
+![Details Panel &ndash; Blueprint Actor BP_MprMonitor](Docs/DetailsPanel-BP_MprMonitor.png "Details Panel &ndash; Blueprint Actor BP_MprMonitor")<br>*Fig. 4.4.: Details Panel &ndash; Blueprint Actor BP_MprMonitor*
 
-Parameter:
+Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+
+* MPR Actor
 
 <div style='page-break-after: always'></div>
 
-### 4.4. Direct Volume Rendering
-
-#### 4.4.1. DVR Actor
+### 4.5. Direct Volume Rendering Actor
 
 Direct Volume Rendering DVR with Materials from Raymarching Shaders with static lighting support.
 
@@ -242,166 +278,158 @@ Plugin Content:
 
 * Blueprint Class: `BP_DVR`
 
-![Details Panel &ndash; Blueprint Actor BP_DVR](Docs/DetailsPanel-BP_DVR.png "Details Panel &ndash; Blueprint Actor BP_DVR")<br>*Fig. 4.4.1.: Details Panel &ndash; Blueprint Actor BP_DVR*
+![Details Panel &ndash; Blueprint Actor BP_DVR](Docs/DetailsPanel-BP_DVR.png "Details Panel &ndash; Blueprint Actor BP_DVR")<br>*Fig. 4.5.: Details Panel &ndash; Blueprint Actor BP_DVR*
 
-Parameter:
+Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
-##### ROI Actor
-
-* Type: ROI Actor `BP_ROI` instance as Object Reference
-* Default Value: `none`
-* Optional, used for geometry subtraction if set
-
-##### Clip Plane Actor
-
-* Type: Clip Plane Actor `BP_DvrClipPlane` instance as Object Reference
-* Default Value: `none`
-* Optional, used for geometry subtraction if set
-
-##### Distance Power
-
-* Type: `float`
-* Default Value: `1.0`
-* Range: [`0.1`, `2.0`]
-
-Resampling Distance Power:
-
-* The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used.
-* With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
-* With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
-
-This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragmented Line Ray-Casting*:
-> *To lower the number of operations necessary for computing a single frame, [...] the distance between two successive resampling locations, i.e the sampling distance, could be increased, thereby decreasing the number of actual locations used for volume reconstruction.*
-> *However, it is worth mentioning, that incorporating any of these optimization approaches usually tends to result in generated images of less quality compared to an unoptimized ray-casting volume renderer.*
-
-##### Resampling Steps
-
-* Type: `Integer`
-* Default Value: `256`
-* Range: [`1`, `1024`]
-
-Maximum Number of Resampling Steps:
-
-* A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
-* A small number may decrease rendering quality but is faster.
-
-##### Transfer Function
-
-* Type: `Curve Linear Color`
-* Default Value: `Curve_Default_TF_Color`
-
-The transfer functions are based on color gradients from `Curve Linear Color` assets. The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
-
-##### Alpha Max
-
-* Type: `float`
-* Default Value: `0.8`
-* Range: [`0.0`, `1.0`]
-
-Maximum Opacity Threshold for Early Ray Termination from iteratively added up Alpha Channel
-
-##### Phong Shading
-
-https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshiftLightParameters-DiffuseScale
-
-* Ambient: Default Value: `0.1`, Range: [`0.0`, `1.0`]
-* Diffuse: Default Value: `0.9`, Range: [`0.0`, `1.0`]
-* Specular: Default Value: `0.2`, Range: [`0.0`, `1.0`]
-* Specular Power: Default Value: `10`, Range: [`1`, `50`]
-
-##### Lighting
-
-* Type: Array of `BP_DvrSpotLight` Object References
-* Default Value: `none`
-* Optional, used for static lighting if set
+* Values Of Interest Actor
+  * Type: VOI Actor `BP_VOI` instance as Object Reference
+  * Default Value: `none`
+  * Mandatory, used for TF LUT application
+* Region Of Interest Actor
+  * Type: ROI Actor `BP_ROI` instance as Object Reference
+  * Default Value: `none`
+  * Optional, used for geometry subtraction if set
+* Clip Plane Actor
+  * Type: Clip Plane Actor `BP_DvrClipPlane` instance as Object Reference
+  * Default Value: `none`
+  * Optional, used for geometry subtraction if set
+* Distance Power
+  * Type: `float`
+  * Default Value: `1.0`
+  * Range: [`0.1`, `2.0`]
+  * Info: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragmented Line Ray-Casting*:
+    > *To lower the number of operations necessary for computing a single frame, [...] the distance between two successive resampling locations, i.e the sampling distance, could be increased, thereby decreasing the number of actual locations used for volume reconstruction.*
+    > *However, it is worth mentioning, that incorporating any of these optimization approaches usually tends to result in generated images of less quality compared to an unoptimized ray-casting volume renderer.*
+    * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
+    * With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
+* Resampling Steps
+  * Type: `Integer`
+  * Default Value: `256`
+  * Range: [`1`, `1024`]
+  * Info: Maximum Number of Resampling Steps:
+    * A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
+    * A small number may decrease rendering quality but is faster.
+* Transfer Function
+  * Type: `Curve Linear Color`
+  * Default Value: `Curve_Default_TF_Color`
+  * Info: The transfer functions are based on color gradients from `Curve Linear Color` assets. The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
+* Alpha Threshold
+  * Type: `float`
+  * Default Value: `0.8`
+  * Range: [`0.0`, `1.0`]
+  * Info: Maximum Opacity Threshold for Early Ray Termination from iteratively added up Alpha Channel
+* Phong Shading
+  * Ambient: Default Value: `0.1`, Range: [`0.0`, `1.0`]
+  * Diffuse: Default Value: `0.9`, Range: [`0.0`, `1.0`]
+  * Specular: Default Value: `0.2`, Range: [`0.0`, `1.0`]
+  * Specular Power: Default Value: `10`, Range: [`1`, `50`]
+  <!--https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshiftLightParameters-DiffuseScale-->
+* Light Source
+  * Type: Array of `BP_DvrSpotLight` Object References
+  * Default Value: `none`
+  * Optional, used for static lighting if set
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.2. Orientation Guide Actor
+### 4.6. Orientation Guide Actor
 
 Plugin Content:
 
 * Blueprint Class: `BP_DvrOrientationGuide`
 
-![Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide](Docs/DetailsPanel-BP_DvrOrientationGuide.png "Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide")<br>*Fig. 4.4.2.: Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide*
+![Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide](Docs/DetailsPanel-BP_DvrOrientationGuide.png "Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide")<br>*Fig. 4.6.: Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide*
 
-Parameter:
+Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+
+* DVR Actor
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.3. ROI Actor
+### 4.7. Region Of Interest Actor
 
-Region of Interest Actor, in Outline Hierarchy (Scene Graph) ideally subordinated to the DVR Actor for adaptive scaling.
+Region Of Interest Actor, in Outline Hierarchy (Scene Graph) ideally subordinated to the corresponding DVR Actor for adaptive scaling.
 
 Plugin Content:
 
 * Blueprint Class: `BP_ROI`
 
-![Details Panel &ndash; Blueprint Actor BP_ROI](Docs/DetailsPanel-BP_ROI.png "Details Panel &ndash; Blueprint Actor BP_ROI")<br>*Fig. 4.4.3.: Details Panel &ndash; Blueprint Actor BP_ROI*
+Parameter, Category 'Volume Creator':
 
-Parameter:
+* none
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.4. ROI Handles Actor
+### 4.8. ROI Handles Actor
 
 Plugin Content:
 
 * Blueprint Class: `BP_RoiHandles`
 
-![Details Panel &ndash; Blueprint Actor BP_RoiHandles](Docs/DetailsPanel-BP_RoiHandles.png "Details Panel &ndash; Blueprint Actor BP_RoiHandles")<br>*Fig. 4.4.4.: Details Panel &ndash; Blueprint Actor BP_RoiHandles*
+![Details Panel &ndash; Blueprint Actor BP_RoiHandles](Docs/DetailsPanel-BP_RoiHandles.png "Details Panel &ndash; Blueprint Actor BP_RoiHandles")<br>*Fig. 4.8.: Details Panel &ndash; Blueprint Actor BP_RoiHandles*
 
-Parameter:
+Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+
+* Region Of Interest
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.5. Clip Plane Actor
+### 4.9. Clip Plane Actor
 
-The plugin provides with a Blueprint Actor named `BP_DvrClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_Edges_ClipPlane` is assigned to the mesh (see figure 4.4.3.).
+The plugin provides with a Blueprint Actor named `BP_DvrClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_Edges_ClipPlane` is assigned to the mesh (see figure 4.7.).
 
 Plugin Content:
 
 * Blueprint Class: `BP_DvrClipPlane`
 * Material Instance: `MI_Edges_ClipPlane`
 
-![Details Panel &ndash; Blueprint Actor BP_DvrClipPlane](Docs/DetailsPanel-BP_DvrClipPlane.png "Details Panel &ndash; Blueprint Actor BP_DvrClipPlane")<br>*Fig. 4.4.5.: Details Panel &ndash; Blueprint Actor BP_DvrClipPlane*
+Parameter, Category 'Volume Creator':
 
-Parameter:
+* none
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.6. Spot Light Actor
+### 4.10. Spot Light Actor
 
-The plugin provides with a Blueprint SpotLight named `BP_DvrSpotLight` whose transform mobility is set to *static*.
+The plugin provides with a Blueprint SpotLight named `BP_DvrSpotLight` whose transform mobility is set to *static*. Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light.
 
 Plugin Content:
 
 * Blueprint Class: `BP_DvrSpotLight`
 
-![Details Panel &ndash; Blueprint Actor BP_DvrSpotLight](Docs/DetailsPanel-BP_DvrSpotLight.png "Details Panel &ndash; Blueprint Actor BP_DvrSpotLight")<br>*Fig. 4.4.6.: Details Panel &ndash; Blueprint Actor BP_DvrSpotLight*
+![Details Panel &ndash; Blueprint Actor BP_DvrSpotLight](Docs/DetailsPanel-BP_DvrSpotLight.png "Details Panel &ndash; Blueprint Actor BP_DvrSpotLight")<br>*Fig. 4.10.: Details Panel &ndash; Blueprint Actor BP_DvrSpotLight*
 
-Parameter:
+Parameter (cp. figure 'Details Panel'):
 
-Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light:
-
-* Intensity (Brightness): 1700 Lumen (see [UEDoc, Physical Lighting Units])
-* Temperature: 5100 K (cp. [21])
+* Transform:
+  * Mobility: Static
+* Light:
+  * Intensity (Brightness): `1700.0` lm
+  * Attenuation Radius: `250.0`
+  * Outer Cone Angle: `10.0`
+  * Temperature: `5100.0` K (cp. [21])
+  * User Temperature: `true`
+  * Affects World: `false`
+  * Intensity Units: `Lumen` (see [UEDoc, Physical Lighting Units])
+  * Cast Ray Tracing Shadows: `false`
+  * Affect Ray Tracing Reflections: `false`
+  * Affect Ray Tracing Global Illumination: `false`
 
 <div style='page-break-after: always'></div>
 
 ## 5. Widgets
 
-### 5.1. File User Widget
+### 5.1. Scalar Volume User Widget
 
-File User Widget Blueprint.
+Scalar Volume User Widget Blueprint.
 
 Plugin Content:
 
-* Blueprint Class: `WBP_File_U`
+* Blueprint Class: `WBP_SV_U`
 
-![PIE Screenshot &ndash; User Widget Blueprint WBP_File_U](Docs/UserWidget-WBP_File_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_File_U")<br>*Fig. 5.1.: PIE Screenshot &ndash; User Widget Blueprint WBP_File_U*
+![PIE Screenshot &ndash; User Widget Blueprint WBP_SV_U](Docs/UserWidget-WBP_SV_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_SV_U")<br>*Fig. 5.1.: PIE Screenshot &ndash; User Widget Blueprint WBP_SV_U*
 
-Menu Entries:
+Widget Entries:
 
 * Import... (Dialog)
 * Open... (Dialog)
@@ -410,7 +438,26 @@ Menu Entries:
 
 <div style='page-break-after: always'></div>
 
-### 5.2. LUT User Widget
+### 5.2. Values Of Interest User Widget
+
+Values Of Interest User Widget Blueprint.
+
+Plugin Content:
+
+* Blueprint Class: `WBP_VOI_U`
+
+![PIE Screenshot &ndash; User Widget Blueprint WBP_VOI_U](Docs/UserWidget-WBP_VOI_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_VOI_U")<br>*Fig. 5.2.: PIE Screenshot &ndash; User Widget Blueprint WBP_VOI_U*
+
+Widget Entries:
+
+* VOI Actor (Select)
+* Window Center
+* Window Width
+* Window Mask
+
+<div style='page-break-after: always'></div>
+
+### 5.3. LUT User Widget
 
 Look-Up Table User Widget Blueprint.
 
@@ -418,18 +465,16 @@ Plugin Content:
 
 * Blueprint Class: `WBP_LUT_U`
 
-![PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U](Docs/UserWidget-WBP_LUT_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U")<br>*Fig. 5.2.: PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U*
+![PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U](Docs/UserWidget-WBP_LUT_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U")<br>*Fig. 5.3.: PIE Screenshot &ndash; User Widget Blueprint WBP_LUT_U*
 
-Menu Entries:
+Widget Entries:
 
-* Undo
 * MPR Actor (Select)
 * LUT (Select)
-* Save
 
 <div style='page-break-after: always'></div>
 
-### 5.3. TF User Widget
+### 5.4. TF User Widget
 
 Transfer Function User Widget Blueprint.
 
@@ -437,29 +482,12 @@ Plugin Content:
 
 * Blueprint Class: `WBP_TF_U`
 
-![PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U](Docs/UserWidget-WBP_TF_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U")<br>*Fig. 5.3.: PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U*
+![PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U](Docs/UserWidget-WBP_TF_U.png "PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U")<br>*Fig. 5.4.: PIE Screenshot &ndash; User Widget Blueprint WBP_TF_U*
 
-Menu Entries:
+Widget Entries:
 
-* Undo
 * DVR Actor (Select)
 * TF (Select)
-* Save
-
-<div style='page-break-after: always'></div>
-
-## 6. Outlook
-
-Not yet implmeneted features:
-
-* MPR Monitor:
-  * Region of Interest visualization
-  * Plane Interaction
-* Rendering Type:
-  * Indirect Volume Rendering
-  * Vector Volume Rendering &ndash; where the voxels store multiple scalar values&mdash;e.g., L-P-S or R-A-S coordinates&mdash;as components of a displacement field (cp. [Piper et al., Overview]).
-  * Tensor Volume Rendering &ndash; where the voxels store a tensor, e.g., used for MRI diffusion tensor imaging DTI (cp. [Piper et al., Overview]).
-  <!--* Labelmap Volume Rendering &ndash; where the voxels store a discrete value, such as an index or a label; e.g., used for segmentation.-->
 
 <div style='page-break-after: always'></div>
 
@@ -502,7 +530,7 @@ Not yet implmeneted features:
 * TF &mdash; Transfer Function
 * UI &mdash; User Interface
 * US &mdash; Ultrasound Imaging (sonography)
-* VOI &mdash; Volume of Interest
+* VOI &mdash; Values of Interest
 
 <!--
 * AAA &mdash; Abdominal Aortic Aneurysm
@@ -588,7 +616,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
     * Ultrasound: `US`
   * Data Type:
     * Hounsfield Units: `HU`
-    * DICOM Window: `W`
+    * Values Of Interest: `VOI`
     * Lighting: `L`
   * Rendering Type:
     * Multiplanar Rendering: `MPR`
@@ -598,7 +626,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
     * Direct Volume Rendering: `DVR`
       * Bounding Box: `BB`
       * Orientation Guide: `OG`
-      * Region of Interest: `ROI`
+      * Region Of Interest: `ROI`
       * Transfer Function: `TF`
 
 <div style='page-break-after: always'></div>
@@ -671,8 +699,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
 * **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
 
-<div style='page-break-after: always'></div>
-
 ### D. Attribution
 
 * The word mark *Unreal* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, URL: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
@@ -680,6 +706,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * The word mark *MetaImage* is a trademark or registered trademark of Kitware, Inc.
 * The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc.
 * The word mark *3D Slicer* and its logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission.
+
+<div style='page-break-after: always'></div>
 
 ### E. Disclaimer
 
