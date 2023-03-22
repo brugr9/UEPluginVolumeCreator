@@ -187,13 +187,43 @@ Plugin Content:
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 * Scalar Volume Texture
+  * Type: `Volume Texture`
+  * Default Value: `T_HU_Volume_Tex`
+  * Info: Hounsfield Units encoded Volume Texture
 * Origin
+  * Type: `Vector`
+  * Default Value: `X 0.0, Y 0.0, Z 0.0`
+  * Info: Position of the first Voxel in the Anatomical Coordinate System
 * Columns
+  * Type: `Integer`
+  * Default Value: `512`
+  * Range: [`1`, `n`]
+  * Info: DICOM Columns Attribute: Number of pixel columns in the image; results in Width (UE: Y)
 * Columns Spacing
+  * Type: `Float`
+  * Default Value: `0.3`
+  * Range: [`0`, `10`]
+  * Info: DICOM Pixel Spacing Attribute: Physical distance in the patient between the center of each pixel - adjacent column spacing (delimiter)
 * Rows
+  * Type: `Integer`
+  * Default Value: `512`
+  * Range: [`1`, `n`]
+  * Info: DICOM Rows Attribute: Number of pixel rows in the image; results in Height (UE: Z)
 * Rows Spacing
+  * Type: `Float`
+  * Default Value: `0.3`
+  * Range: [`0`, `10`]
+  * Info: DICOM Pixel Spacing Attribute: Physical distance in the patient between the center of each pixel - adjacent row spacing (delimiter)
 * Slices
+  * Type: `Integer`
+  * Default Value: `256`
+  * Range: [`1`, `n`]
+  * Info: Number of Slices or Images respectively; results in Depth (UE: X)
 * Slices Spacing
+  * Type: `Float`
+  * Default Value: `0.5`
+  * Range: [`0`, `10`]
+  * Info: DICOM Spacing Between Slices Attribute: Spacing between slices. The spacing is measured from the center-to-center of each slice
 
 <div style='page-break-after: always'></div>
 
@@ -216,7 +246,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * Scalar Volume Actor
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
-  * Mandatory, Hounsfield Units data source
+  * Info: Mandatory, Hounsfield Units data source
 * Window Center
   * Type: `Integer`
   * Default Value: `1048`
@@ -247,12 +277,23 @@ Plugin Content:
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
-* Volume Of Interest Actor
+* Values Of Interest Actor
+  * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory
 * Planes Location:
   * Type: `Vector`
+  * Default Value: `X 0.0, Y 0.0, Z 0.0`
+  * Ranges: [`-50.0`, `50.0`]
   * Info: Anatomical Planes Location (X: COR, Y: SAG, Z: AXE)
 * LUT Index
+  * Type: `Integer`
+  * Default Value: `0`
+  * Range: [`0`, `50`]
 * Brightness
+  * Type: `Float`
+  * Default Value: `0.5`
+  * Range: [`0`, `10`]
 
 <div style='page-break-after: always'></div>
 
@@ -266,7 +307,10 @@ Plugin Content:
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
-* MPR Actor
+* Multiplanar Rendering Actor
+  * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, Assign an MPR Actor Instance to get the rendered COR/SAG/AXE images from
 
 <div style='page-break-after: always'></div>
 
@@ -285,7 +329,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * Values Of Interest Actor
   * Type: VOI Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Mandatory, used for TF LUT application
+  * Info: Mandatory, used for TF LUT application
 * Region Of Interest Actor
   * Type: ROI Actor `BP_ROI` instance as Object Reference
   * Default Value: `none`
@@ -295,7 +339,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `none`
   * Optional, used for geometry subtraction if set
 * Distance Power
-  * Type: `float`
+  * Type: `Float`
   * Default Value: `1.0`
   * Range: [`0.1`, `2.0`]
   * Info: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cp. [Luecke 2005], *Fragmented Line Ray-Casting*:
@@ -315,7 +359,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `Curve_Default_TF_Color`
   * Info: The transfer functions are based on color gradients from `Curve Linear Color` assets. The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
 * Alpha Threshold
-  * Type: `float`
+  * Type: `Float`
   * Default Value: `0.8`
   * Range: [`0.0`, `1.0`]
   * Info: Maximum Opacity Threshold for Early Ray Termination from iteratively added up Alpha Channel
@@ -343,6 +387,9 @@ Plugin Content:
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 * DVR Actor
+  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, DVR Actor Instance to synchronize rotation from
 
 <div style='page-break-after: always'></div>
 
@@ -371,6 +418,9 @@ Plugin Content:
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 * Region Of Interest
+  * Type: Array of ROI Actor `BP_ROI` instances as Object References
+  * Default Value: `none`
+  * Info: Mandatory, Region(s) of Interest to Manage
 
 <div style='page-break-after: always'></div>
 
