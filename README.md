@@ -24,13 +24,10 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
 
 <!-- UE Marketplace : End 1/2 -->
 
-* Index Terms:
-  * Medical Imaging, Computer Tomography, Magnetic Resonance
-  * Multiplanar Rendering, Direct Volume Rendering
-  * Virtual Reality, Augmented Reality, Serious Games for Teaching and Training
-* Technology: DICOM, Unreal Engine C++ Code Plugin, HLSL Compute Shader
+* Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
+* Technology: DICOM, Unreal Engine, C++ Code Plugin, HLSL Compute Shader
 
-* Tags: DICOM, CT, MR, MPR, DVR, VR, AR, UE, CS
+Tags: DICOM, MPR, DVR, VR, AR, UE, CS
 
 ---
 
@@ -59,11 +56,15 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
   * [4.8. ROI Handles Actor](#48-roi-handles-actor)
   * [4.9. Clip Plane Actor](#49-clip-plane-actor)
   * [4.10. Spot Light Actor](#410-spot-light-actor)
-* [5. Widgets](#5-widgets)
-  * [5.1. Scalar Volume User Widget](#51-scalar-volume-user-widget)
+* [5. User Widgets](#5-user-widgets)
+  * [5.1. SV User Widget](#51-sv-user-widget)
   * [5.2. VOI User Widget](#52-voi-user-widget)
   * [5.3. MPR User Widget](#53-mpr-user-widget)
   * [5.4. DVR User Widget](#54-dvr-user-widget)
+* [6. User Interface Actors](#6-user-interface-actors)
+  * [6.1. MPR UI Actor](#61-mpr-ui-actor)
+  * [6.2. DVR UI Actor](#62-dvr-ui-actor)
+  * [6.3. MPR and DVR UI Actor](#63-mpr-and-dvr-ui-actor)
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
@@ -469,7 +470,9 @@ Volume Creator UI elements are available as User Widget Blueprint.
 
 ![Plugin User Widget Blueprints](Docs/VolumeCreator-Content-Widget.png "Plugin User Widget Blueprints")<br>*Fig. 5.: Plugin User Widget Blueprints*
 
-### 5.1. Scalar Volume User Widget
+<div style='page-break-after: always'></div>
+
+### 5.1. SV User Widget
 
 Scalar Volume User Widget.
 
@@ -501,9 +504,9 @@ Plugin Content:
 Widget Entries:
 
 * VOI Actor (Select)
-* Window Center
-* Window Width
-* Window Mask
+* Window Center (Slider)
+* Window Width (Slider)
+* Window Mask (Check)
 
 <div style='page-break-after: always'></div>
 
@@ -539,11 +542,15 @@ Widget Entries:
 * DVR Actor (Select)
 * TF (Select)
 
+<div style='page-break-after: always'></div>
+
 ## 6. User Interface Actors
 
 The Volume Creator UI elements are also available as Blueprint Actor for the use in 3D.
 
 ![Plugin User Interface Blueprint Actors](Docs/VolumeCreator-Content-UI.png "Plugin User Interface Blueprint Actors")<br>*Fig. 6.: Plugin User Interface Blueprint Actors*
+
+<div style='page-break-after: always'></div>
 
 ### 6.1. MPR UI Actor
 
@@ -561,6 +568,8 @@ Widget Components:
 * Widget Component `WidgetVOI`, VOI User Widget `WBP_VOI` (Inherited)
 * Widget Component `WidgetMPR`, MPR User Widget `WBP_MPR`
 
+<div style='page-break-after: always'></div>
+
 ### 6.2. DVR UI Actor
 
 Direct Volume Rendering User Interface Blueprint Actor.
@@ -576,6 +585,8 @@ Widget Components:
 * Widget Component `WidgetSV`, Scalar Volume User Widget `WBP_SV` (Inherited)
 * Widget Component `WidgetVOI`, VOI User Widget `WBP_VOI` (Inherited)
 * Widget Component `WidgetDVR`, DVR User Widget `WBP_DVR`
+
+<div style='page-break-after: always'></div>
 
 ### 6.3. MPR and DVR UI Actor
 
@@ -682,9 +693,9 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 
 Anatomical Planes and Terms of Location in plugin "Volume Creator" (cp. figure G.2.):
 
-* **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
-* **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
-* **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
+* **Coronal COR**: <br>Frontal **YZ-Plane** (green/blue arrows) <br>with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
+* **Sagittal SAG**: <br>Longitudinal **XZ-Plane** (red/blue arrows) <br>with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
+* **Axial AXE**: <br>Horizontal **XY-Plane** (red/green arrows) <br>with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
 
 ![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
 
