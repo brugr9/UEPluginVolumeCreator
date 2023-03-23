@@ -226,7 +226,9 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 ### 4.2. Values Of Interest Actor
 
-CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp). If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and its width. Plugin "Volume Creator" provides with a VOI Actor to handle a DICOM window.
+CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp).
+
+If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and its width. Plugin "Volume Creator" provides with a VOI Actor to handle a DICOM window.
 
 Plugin Content:
 
@@ -250,13 +252,30 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `4096`
   * Range: [`1`, `4096`]
   * Info: DICOM Window Width in Hounsfield Units (aka range or contrast)
+
+<div style='page-break-after: always'></div>
+
 * Window Range
   * Window Left and Right Border which are calculated, not editable, for information only.
   * Info: Values between the window left and right border are linear interpolated (lerped) between 0 and 255 by default. Values lesser than the window left border are mapped to 0, values greater than the window right border are mapped to 255 by default.
 * Window Mask
   * Type: `Boolean`
   * Default Value: `true`
-  * Info: Values lesser than the window left border are mapped to 0, values greater than the window right border are mapped to 255 by default. To render the lerped values only, a window mask may be applied.
+  * Info: To render the lerped values only, a window mask may be applied.
+
+The VOI Range Buttons set Window Center and Width as well as Left and Right Border values:
+
+| VOI Name | Left | Right |
+|---|---|---|
+| Default | `-1000` | `3095`
+| Air| `-1000`| `-1000`
+| Lung| `-600`| `-400`
+| Fat| `-100`| `-60`
+| Water| `0`| `0`
+| Soft Tissue| `40`| `80`
+| Bone| `400`| `1000`
+| Mediastinum| `50`| `500`
+| PE| `100`| `700`
 
 <div style='page-break-after: always'></div>
 
@@ -661,6 +680,7 @@ Widget Components:
 * AAA &mdash; Abdominal Aortic Aneurysm
 * CRI &mdash; Colour Rendering Index
 * CTA &mdash; Computed Tomography Angiography
+* dGEMRIC &mdash; delayed gadolinium-enhanced MRI of cartilage
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
 * PET &mdash; Positron Emission Tomography
