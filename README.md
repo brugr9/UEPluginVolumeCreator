@@ -44,16 +44,15 @@ Tags: DICOM, MPR, DVR, VR, AR, UE, CS
 * [3. Import](#3-import)
   * [3.1. Import DICOM](#31-import-dicom)
   * [3.2. Import MetaImage](#32-import-metaimage)
-  * [3.3. Data Background](#33-data-background)
 * [4. Actors](#4-actors)
   * [4.1. Scalar Volume Actor](#41-scalar-volume-actor)
   * [4.2. Values Of Interest Actor](#42-values-of-interest-actor)
   * [4.3. Multiplanar Rendering Actor](#43-multiplanar-rendering-actor)
-  * [4.4. MPR Monitor Actor](#44-mpr-monitor-actor)
+  * [4.4. Multiplanar Rendering Monitor Actor](#44-multiplanar-rendering-monitor-actor)
   * [4.5. Direct Volume Rendering Actor](#45-direct-volume-rendering-actor)
   * [4.6. Orientation Guide Actor](#46-orientation-guide-actor)
   * [4.7. Region Of Interest Actor](#47-region-of-interest-actor)
-  * [4.8. ROI Handles Actor](#48-roi-handles-actor)
+  * [4.8. Region Of Interest Handles Actor](#48-region-of-interest-handles-actor)
   * [4.9. Clip Plane Actor](#49-clip-plane-actor)
   * [4.10. Spot Light Actor](#410-spot-light-actor)
 * [5. User Widgets](#5-user-widgets)
@@ -62,9 +61,10 @@ Tags: DICOM, MPR, DVR, VR, AR, UE, CS
   * [5.3. MPR User Widget](#53-mpr-user-widget)
   * [5.4. DVR User Widget](#54-dvr-user-widget)
 * [6. User Interface Actors](#6-user-interface-actors)
-  * [6.1. MPR UI Actor](#61-mpr-ui-actor)
-  * [6.2. DVR UI Actor](#62-dvr-ui-actor)
-  * [6.3. MPR and DVR UI Actor](#63-mpr-and-dvr-ui-actor)
+  * [6.1. SV and VOI UI Abstract Actor](#61-sv-and-voi-ui-abstract-actor)
+  * [6.2. MPR UI Actor](#62-mpr-ui-actor)
+  * [6.3. DVR UI Actor](#63-dvr-ui-actor)
+  * [6.4. MPR and DVR UI Actor](#64-mpr-and-dvr-ui-actor)
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
@@ -132,34 +132,10 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 
 ## 3. Import
 
-* Asset names derive from the file name which is imported:
-  * Underlines (`_`) from a file name are replaced by minus (`-`) in asset names.
-  * Maximum asset name length is 20 signs.
-* CT image data is expected to come in Hounsfield Units HU. The data is clamped to 4096 values in a range of [-1000, 3095].
-
-### 3.1. Import DICOM
-
-Workflow:
-
-* Reads from DICOM&reg; files, file name extension `*.dcm`
-* Writes image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_HU_Volume`
-* Saves image data to a new Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
-* Saves meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a new Blueprint asset `BP_MyDataName` based on Scalar Volume Actor `BP_SV` and assigns the just saved Volume Texture asset.
-
-### 3.2. Import MetaImage
-
-Workflow:
-
-* Reads from MetaImage&trade;, file name extension `*.mhds`
-
-<div style='page-break-after: always'></div>
-
-### 3.3. Data Background
-
-DICOM image data is stored as 12 bit data, sometimes you also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
+CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes you also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3095]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
 
 * A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
-* 4 channels RGBA with 8 bit per channel (2<sup>8</sup> = 256, range from 0 to 255)
+* 4 channels RGBA with 8 bit per channel (2<sup>8</sup> = 256, range from 0 to 255) TODO: Update channels and bit per channel
 
 The size of Volume<sub>1</sub> becomes 67 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size of Volume<sub>2</sub> increases to 0.5 GB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of Volume<sub>3</sub> increases to 4 GB.
 
@@ -172,6 +148,26 @@ With processing, e.g., 30 fps (cp. [Lindberg]):
 * *ProcessedData<sub>1</sub> = 0.537 Gigabit/frame x 30 frames/s = 16.1 Gigabit/s*
 * *ProcessedData<sub>2</sub> = 4.295 Gigabit/frame x 30 frames/s = 128.8 Gigabit/s*
 * *ProcessedData<sub>3</sub> = 34.359 Gigabit/frame x 30 frames/s = 1030.8 Gigabit/s*
+
+The created asset name derives from the file name which is imported:
+
+* Underlines (`_`) from a file name are replaced by minus (`-`) in asset names.
+* Maximum asset name length: 20 signs
+
+### 3.1. Import DICOM
+
+Workflow:
+
+* Reads from DICOM&reg; files, file name extension `*.dcm`
+* Writes image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_HU_Volume`
+* Saves image data to a new Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
+* Writes meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a new created Blueprint asset `BP_MyDataName` based on Scalar Volume Actor `BP_SV` and assigns the just created Volume Texture asset `T_MyDataName_HU_Volume`.
+
+### 3.2. Import MetaImage
+
+Workflow:
+
+* Reads from MetaImage&trade;, file name extension `*.mhds`
 
 <div style='page-break-after: always'></div>
 
@@ -291,10 +287,11 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Type: `Float`
   * Default Value: `0.5`
   * Range: [`0`, `10`]
+  * Info: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
 
 <div style='page-break-after: always'></div>
 
-### 4.4. MPR Monitor Actor
+### 4.4. Multiplanar Rendering Monitor Actor
 
 Plugin Content:
 
@@ -354,7 +351,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * Transfer Function
   * Type: `Curve Linear Color`
   * Default Value: `Curve_Default_TF_Color`
-  * Info: The transfer functions are based on color gradients from `Curve Linear Color` assets. The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).
+  * Info: The transfer functions are based on color gradients from `Curve Linear Color` assets. <!--The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).-->
 * Alpha Threshold
   * Type: `Float`
   * Default Value: `0.8`
@@ -388,11 +385,9 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `none`
   * Info: Mandatory, DVR Actor Instance to synchronize rotation from
 
-<div style='page-break-after: always'></div>
-
 ### 4.7. Region Of Interest Actor
 
-Region Of Interest Actor, in Outline Hierarchy (Scene Graph) ideally subordinated to the corresponding DVR Actor for adaptive scaling.
+Region Of Interest Actor, in Outline Hierarchy (Scene Graph) ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
 
 Plugin Content:
 
@@ -404,7 +399,7 @@ Parameter, Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-### 4.8. ROI Handles Actor
+### 4.8. Region Of Interest Handles Actor
 
 Plugin Content:
 
@@ -418,8 +413,6 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Type: Array of ROI Actor `BP_ROI` instances as Object References
   * Default Value: `none`
   * Info: Mandatory, Region(s) of Interest to Manage
-
-<div style='page-break-after: always'></div>
 
 ### 4.9. Clip Plane Actor
 
@@ -550,9 +543,24 @@ The Volume Creator UI elements are also available as Blueprint Actor for the use
 
 ![Plugin User Interface Blueprint Actors](Docs/VolumeCreator-Content-UI.png "Plugin User Interface Blueprint Actors")<br>*Fig. 6.: Plugin User Interface Blueprint Actors*
 
+### 6.1. SV and VOI UI Abstract Actor
+
+Scalar Volume and Values Of Interest Blueprint Actor, Abstract Class.
+
+Plugin Content:
+
+* Blueprint Class: Blueprint Actor `BP_SvVoi_UI`, Abstract Class
+
+![User Interface Blueprint Actor BP_SvVoi_UI](Docs/BlueprintActor-BP_MPR_UI.png "User Interface Blueprint Actor BP_SvVoi_UI")<br>*Fig. 6.1.: User Interface Blueprint Actor BP_SvVoi_UI*
+
+Widget Components:
+
+* Widget Component `WidgetSV`, Scalar Volume User Widget `WBP_SV`
+* Widget Component `WidgetVOI`, VOI User Widget `WBP_VOI`
+
 <div style='page-break-after: always'></div>
 
-### 6.1. MPR UI Actor
+### 6.2. MPR UI Actor
 
 Multiplanar Rendering User Interface Blueprint Actor.
 
@@ -560,7 +568,7 @@ Plugin Content:
 
 * Blueprint Class: Blueprint Actor `BP_MPR_UI` (inherits from `BP_SvVoi_UI`)
 
-![User Interface Blueprint Actor BP_MPR_UI](Docs/BlueprintActor-BP_MPR_UI.png "User Interface Blueprint Actor BP_MPR_UI")<br>*Fig. 6.1.: User Interface Blueprint Actor BP_MPR_UI*
+![User Interface Blueprint Actor BP_MPR_UI](Docs/BlueprintActor-BP_MPR_UI.png "User Interface Blueprint Actor BP_MPR_UI")<br>*Fig. 6.2.: User Interface Blueprint Actor BP_MPR_UI*
 
 Widget Components:
 
@@ -570,7 +578,7 @@ Widget Components:
 
 <div style='page-break-after: always'></div>
 
-### 6.2. DVR UI Actor
+### 6.3. DVR UI Actor
 
 Direct Volume Rendering User Interface Blueprint Actor.
 
@@ -578,7 +586,7 @@ Plugin Content:
 
 * Blueprint Class: Blueprint Actor `BP_DVR_UI` (inherits from `BP_SvVoi_UI`)
 
-![User Interface Blueprint Actor BP_DVR_UI](Docs/BlueprintActor-BP_DVR_UI.png "User Interface Blueprint Actor BP_DVR_UI")<br>*Fig. 6.2.: User Interface Blueprint Actor BP_DVR_UI*
+![User Interface Blueprint Actor BP_DVR_UI](Docs/BlueprintActor-BP_DVR_UI.png "User Interface Blueprint Actor BP_DVR_UI")<br>*Fig. 6.3.: User Interface Blueprint Actor BP_DVR_UI*
 
 Widget Components:
 
@@ -588,7 +596,7 @@ Widget Components:
 
 <div style='page-break-after: always'></div>
 
-### 6.3. MPR and DVR UI Actor
+### 6.4. MPR and DVR UI Actor
 
 Direct Volume Rendering User Interface Blueprint Actor.
 
@@ -596,7 +604,7 @@ Plugin Content:
 
 * Blueprint Class: Blueprint Actor `BP_MprDvr_UI` (inherits from `BP_MPR_UI`)
 
-![User Interface Blueprint Actor BP_MprDvr_UI](Docs/BlueprintActor-BP_MprDvr_UI.png "User Interface Blueprint Actor BP_MprDvr_UI")<br>*Fig. 6.23: User Interface Blueprint Actor BP_MprDvr_UI*
+![User Interface Blueprint Actor BP_MprDvr_UI](Docs/BlueprintActor-BP_MprDvr_UI.png "User Interface Blueprint Actor BP_MprDvr_UI")<br>*Fig. 6.4.: User Interface Blueprint Actor BP_MprDvr_UI*
 
 Widget Components:
 
@@ -668,13 +676,13 @@ Widget Components:
 
 Patient Coordinate System: Anatomical planes and terms of location on a person standing upright (cp. [mbbs]):
 
-* **Axial Plane**: Horizontal (transverse) plane, separates in **Inferior (I)** towards feet (bottom) and **Superior (S)** towards head (top).
+* **Axial Plane**: Horizontal plane, separates in **Inferior (I)** towards feet and **Superior (S)** towards head.
 * **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Left (L)** and **Right (R)** halves. A sagittal plane is any plane perpendicular to the median plane.
 * **Coronal Plane**: Frontal plane, separates in **Posterior (P)** towards back and **Anterior (A)** towards front.
 
 ##### DICOM
 
-DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*):*"LPS is used by DICOM images and by the ITK toolkit, while 3D Slicer and other medical software use RAS"*. DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cp. [Adaloglouon 2020, Medical Image coordinate system (Voxel space)]):
+DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*). DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cp. [Adaloglouon 2020, Medical Image coordinate system (Voxel space)]):
 
 * The image stack Origin is located in the first slice, first column, first row
 * i: Image width in columns, increases to anatomical **Left L**
@@ -689,17 +697,17 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 * Y: Increases from Left to Right, color code green; anatomical from Left L to **Right R**
 * Z: Increases upwards from Bottom to Top, color code blue; anatomical from Inferior I to **Superior S**
 
-![DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows](Docs/OrientationGuide.png "DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with Left Handed UE-Location-Gizmo Arrows*
+![DVR Orientation Guide Actor with UE Left Handed Location-Gizmo Arrows](Docs/OrientationGuide.png "DVR Orientation Guide Actor with UE Left Handed Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with UE Left Handed Location-Gizmo Arrows*
+
+<div style='page-break-after: always'></div>
 
 Anatomical Planes and Terms of Location in plugin "Volume Creator" (cp. figure G.2.):
 
-* **Coronal COR**: <br>Frontal **YZ-Plane** (green/blue arrows) <br>with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
-* **Sagittal SAG**: <br>Longitudinal **XZ-Plane** (red/blue arrows) <br>with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
-* **Axial AXE**: <br>Horizontal **XY-Plane** (red/green arrows) <br>with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
+* **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) <br>with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
+* **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) <br>with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
+* **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) <br>with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
 
-![ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with Left Handed UE-Location-Gizmo Arrows*
-
-<div style='page-break-after: always'></div>
+![ROI-Handles Actor with UE Left Handed Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with UE Left Handed Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with UE Left Handed Location-Gizmo Arrows*
 
 #### Asset Naming Convention
 
@@ -724,16 +732,14 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture: `T`
   * Texture Render Target: `RT`
   * Widget Blueprint: `WBP`
+
+<div style='page-break-after: always'></div>
+
 * `[AssetName]` (Domain Specific):
   * Scalar Volume: `SV`
-  * Acquisition Type:
-    * Computer Tomography: `CT`
-    * Magnetic Resonance: `MR`
-    * Ultrasound: `US`
   * Data Type:
     * Hounsfield Units: `HU`
     * Values Of Interest: `VOI`
-    * Lighting: `L`
   * Rendering Type:
     * Multiplanar Rendering: `MPR`
       * Plane: `COR`, `SAG`, `AXE`
@@ -744,9 +750,10 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
       * Orientation Guide: `OG`
       * Region Of Interest: `ROI`
       * Transfer Function: `TF`
-
-<div style='page-break-after: always'></div>
-
+  * Acquisition Type:
+    * Computer Tomography: `CT`
+    * Magnetic Resonance: `MR`
+    * Ultrasound: `US`
 * `[DescriptorSuffix]`:
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
@@ -775,8 +782,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Zaharia 2013] Roni Zaharia: **Chapter 14 - Image Orientation: Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. June 6, 2013. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
 * Volume Rendering:
   * [Luecke 2005] Peter Lücke: **Volume Rendering Techniques for Medical Imaging**. Diplomarbeit. Technische Universität München, Fakultät für Informatik. April 15, 2005. In collaboration with Siemens Corporate Research Inc., Princeton, USA. Online: [https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf](https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf)
-  * [Piper et al.] Piper S., Finet J., Yarmarkovich A., Aucoin N.: **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)
-  * [Finet et al.] Finet J., Yarmarkovich A., Liu Y., Freudling A., Kikinis R.: **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html); Transfer Function Presets on GitHub: [https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)
+  <!--* [Piper et al.] Piper S., Finet J., Yarmarkovich A., Aucoin N.: **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)-->
+  <!--* [Finet et al.] Finet J., Yarmarkovich A., Liu Y., Freudling A., Kikinis R.: **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html); Transfer Function Presets on GitHub: [https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)-->
   * [Lindberg] Kjell Lindberg: **How can a processor handle 10 Gigabit per second or more data rate?**. In: Quora. Nov 2021. URL: [https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate](https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate)
 * Lighting:
   * [21] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: [https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)
@@ -799,29 +806,27 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
 
-<div style='page-break-after: always'></div>
-
 ### B. Readings
 
 * Engel K., Hadwiger M., Kniss J., Rezk Salama C., Weiskopf D. (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/) <!--[Engel et al. 06]-->
-* Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering) <!--[Hadwiger et al. 18]-->
+<!--* Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)--> <!--[Hadwiger et al. 18]-->
 * Ikits M., Kniss J., Lefohn A., Hansen C.: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques) <!--[Ikits et al. 2007]-->
-* Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.
+<!--* Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.-->
 
 ### C. Acknowledgements
 
 * **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
 * **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
 
+<div style='page-break-after: always'></div>
+
 ### D. Attribution
 
 * The word mark *Unreal* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, URL: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
 * The word mark *DICOM&mdash;Digital Imaging and Communication in Medicine* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
 * The word mark *MetaImage* is a trademark or registered trademark of Kitware, Inc.
-* The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc.
-* The word mark *3D Slicer* and its logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission.
-
-<div style='page-break-after: always'></div>
+<!--* The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc.-->
+<!--* The word mark *3D Slicer* and its logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission.-->
 
 ### E. Disclaimer
 
