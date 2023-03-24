@@ -111,8 +111,8 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 
 * **Scalar Volume Actor**: Medical images are imported, e.g., from DICOM files and stored as Hounsfield Units encoded Volume Texture. A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
 * **Values Of Interest Actor**: A Values Of Interest Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
-* **Multiplanar Rendering Actor**: The DICOM windowed scalar volume may be visualized by multiplanar rendering in a MPR Actor. The MPR Actor as a 3D representation of MPR holds three perpendicular planes, i.e. coronal, sagittal and axial plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
-  * **MPR Monitor Actor**: The MPR produces planar rendering, which is also consumed by the MPR Monitor, a 2D representation of MPR.
+* **Multiplanar Rendering Actor**: The DICOM windowed scalar volume may be visualized by multiplanar rendering in a MPR Actor. The MPR Actor as a 3D representation of MPR holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
+  * **MPR Monitor Actor**: The MPR Actor produces planar rendering, which is also consumed by the MPR Monitor, a 2D representation of MPR.
 * **Direct Volume Rendering Actor**: The DICOM windowed scalar volume may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
   * **Region Of Interest Actor**: Using a region of interest ROI Actor the DVR geometry can be optionally shrinked in real-time.
     * **ROI Handles Actor**: A ROI geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
@@ -120,15 +120,15 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
   * **Orientation Guide Actor**: The DVR Actor can be optionally attached a rotation synchronized orientation guide.
   * **Spot Light Actor**: The DVR can be optionally illuminated with static spot-lights.
 
-![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV](Docs/DMD-SV.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV")<br>*Fig. 2.2.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV*
+![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on MPR](Docs/DMD-MPR.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on MPR")<br>*Fig. 2.2.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on MPR*
 
-![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR](Docs/DMD-DVR.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR")<br>*Fig. 2.3.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_DVR*
+![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on DVR](Docs/DMD-DVR.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on DVR")<br>*Fig. 2.3.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on DVR*
 
 <div style='page-break-after: always'></div>
 
 ## 3. Import
 
-CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes you also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3095]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
+CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes you also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3096]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
 
 * A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
 * 4 channels RGBA with 8 bit per channel (2<sup>8</sup> = 256, range from 0 to 255) TODO: Update channels and bit per channel
@@ -156,8 +156,8 @@ Workflow:
 
 * Reads from DICOM&reg; files, file name extension `*.dcm`
 * Writes image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_HU_Volume`
-* Saves image data to a new Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
-* Writes meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a new created Blueprint asset `BP_MyDataName` based on Scalar Volume Actor `BP_SV` and assigns the just created Volume Texture asset `T_MyDataName_HU_Volume`.
+* Saves image data to a newly created Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
+* Writes meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a newly created Blueprint asset `BP_MyDataName` based on Scalar Volume Actor `BP_SV` and assigns the Volume Texture asset `T_MyDataName_HU_Volume` just created.
 
 ### 3.2. Import MetaImage
 
@@ -171,11 +171,11 @@ Workflow:
 
 ### 4.1. Scalar Volume Actor
 
-Plugin Content:
+Plugin "Volume Creator" provides with an SV Actor (Blueprint Class: `BP_SV`) to handle a Hounsfield Units encoded Volume Texture and its pixel spacing. The SV Actor is an empty Actor and has no mesh.
 
-* Blueprint Class: `BP_SV`
+![Blueprint Actor BP_SV](Docs/BP_SV.png "Blueprint Actor BP_SV")<br>*Fig. 4.1.1.: Blueprint Actor BP_SV*
 
-![Details Panel &ndash; Blueprint Actor BP_SV](Docs/DetailsPanel-BP_SV.png "Details Panel &ndash; Blueprint Actor BP_SV")<br>*Fig. 4.1.: Details Panel &ndash; Blueprint Actor BP_SV*
+![Blueprint Actor BP_SV Details Panel](Docs/DetailsPanel-BP_SV.png "Blueprint Actor BP_SV Details Panel")<br>*Fig. 4.1.2.: Blueprint Actor BP_SV &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
@@ -222,15 +222,15 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 ### 4.2. Values Of Interest Actor
 
-CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp).
+CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3096] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp).
 
-If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and its width. Plugin "Volume Creator" provides with a VOI Actor to handle a DICOM window.
+If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and width.
 
-Plugin Content:
+Plugin "Volume Creator" provides with a Values Of Interest VOI Actor (Blueprint Class: `BP_VOI`) to handle a DICOM window. The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from a Scalar Volume SV Actor and applies a DICOM window. In the background, the result is hold in a VOI Volume Texture.
 
-* Blueprint Class: `BP_VOI`
+![Blueprint Actor BP_SV](Docs/BP_VOI.png "Blueprint Actor BP_VOI")<br>*Fig. 4.2.1.: Blueprint Actor BP_VOI*
 
-![Details Panel &ndash; Blueprint Actor BP_VOI](Docs/DetailsPanel-BP_VOI.png "Details Panel &ndash; Blueprint Actor BP_VOI")<br>*Fig. 4.2.: Details Panel &ndash; Blueprint Actor BP_VOI*
+![Blueprint Actor BP_VOI Details Panel](Docs/DetailsPanel-BP_VOI.png "Blueprint Actor BP_VOI Details Panel")<br>*Fig. 4.2.2.: Blueprint Actor BP_VOI &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
@@ -239,49 +239,56 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `none`
   * Info: Mandatory, Hounsfield Units data source
 * Window Center
-  * Type: `Integer`
-  * Default Value: `1048`
-  * Range: [`-1000`, `1048`]
+  * Type: `Float`
+  * Default Value: `1048.0`
+  * Range: [`-1000.0`, `3096.0`]
   * Info: Window Center in Hounsfield Units (aka level or brightness)
 * Window Width
-  * Type: `Integer`
-  * Default Value: `4096`
-  * Range: [`1`, `4096`]
+  * Type: `Float`
+  * Default Value: `4096.0`
+  * Range: [`1.0`, `4096.0`]
   * Info: Window Width in Hounsfield Units (aka range or contrast)
-
-<div style='page-break-after: always'></div>
-
 * Window Range
-  * Window Left and Right Border which are calculated, not editable, for information only.
-  * Info: Values between the window left and right border are linear interpolated (lerped) between 0 and 255 by default. Values lesser than the window left border are mapped to 0, values greater than the window right border are mapped to 255 by default.
+  * Left
+    * Type: `Float`
+    * Default Value: `-1000.0`
+    * Range: [`-1000.0`, `3096.0`]
+  * Right
+    * Type: `Float`
+    * Default Value: `3096.0`
+    * Range: [`-1000.0`, `3096.0`]
+  * Info: Window Left and Right Border which are calculated, not editable, for information only.
 * Window Mask
   * Type: `Boolean`
   * Default Value: `true`
-  * Info: To render the lerped values only, a window mask may be applied.
+  * Info: With calculating the VOI Volume Texture, values between the window left and right border are linear interpolated (lerped) in a range of [`0`, `255`] by default. Values equal and lesser than the window left border are mapped to `0`, values equal and greater than the window right border are mapped to `255`. To render the lerped values only, a window mask is applied if parameter 'Window Mask' is set to `true`.
 
-The VOI Range Buttons set Left and Right Border values, Window Center and Width are calculated well:
+If a parameter from above is changed in a VOI Actor instance from the Editor Details Panel, the VOI Volume Texture is not automatically recalculated. Clicking the `Compute Voi Volume Texture` button will trigger this (see figure 4.2.).
 
-| VOI Name    | Window Center  | Window Width  | Left Border | Right Border |
-|-------------|--------:|-------:|--------:|--------:|
-| Default     |  `1048` | `4096` | `-1000` |  `3095` |
-| Air         | `-1000` |    `1` | `-1000` | `-1000` |
-| Lung        |  `-500` |  `201` |  `-600` |  `-400` |
-| Fat         |   `-80` |   `41` |  `-100` |   `-60` |
-| Water       |     `0` |    `1` |     `0` |     `0` |
-| Soft Tissue |    `60` |   `41` |    `40` |    `80` |
-| Bone        |   `700` |  `601` |   `400` |  `1000` |
-| Mediastinum |   `275` |  `451` |    `50` |   `500` |
-| PE          |   `400` |  `601` |   `100` |   `700` |
+The VOI range can also be set by clicking one of the VOI range buttons (see figure 4.2.). The window center and width are calculated from the specified left and right border values (see table 4.2.). Here the VOI Volume Texture is automatically recalculated.
+
+*Table 4.2.: VOI Ranges*<br>
+| VOI Range Name | Left Border | Right Border | Window Center | Window Width |
+|-------------|--------:|--------:|--------:|-------:|
+| Default     | `-1000` |  `3096` |  `1048` | `4096` |
+| Air         | `-1000` | `-1000` | `-1000` |    `1` |
+| Lung        |  `-600` |  `-400` |  `-500` |  `200` |
+| Fat         |  `-100` |   `-60` |   `-80` |   `40` |
+| Water       |     `0` |     `0` |     `0` |    `1` |
+| Soft Tissue |    `40` |    `80` |    `60` |   `40` |
+| Bone        |   `400` |  `1000` |   `700` |  `600` |
+| Mediastinum |    `50` |   `500` |   `275` |  `450` |
+| PE          |   `100` |   `700` |   `400` |  `600` |
 
 <div style='page-break-after: always'></div>
 
 ### 4.3. Multiplanar Rendering Actor
 
-Plugin Content:
+Plugin "Volume Creator" provides with an Multiplanar Rendering MPR Actor (Blueprint Class: `BP_MPR`) to visualize a 3D representation of a DICOM windowed and scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
 
-* Blueprint Class: `BP_MPR`
+![Blueprint Actor BP_MPR](Docs/BP_MPR.png "Blueprint Actor BP_MPR")<br>*Fig. 4.3.1.: Blueprint Actor BP_MPR*
 
-![Details Panel &ndash; Blueprint Actor BP_MPR](Docs/DetailsPanel-BP_MPR.png "Details Panel &ndash; Blueprint Actor BP_MPR")<br>*Fig. 4.3.: Details Panel &ndash; Blueprint Actor BP_MPR*
+![Blueprint Actor BP_MPR Details Panel](Docs/DetailsPanel-BP_MPR.png "Blueprint Actor BP_MPR Details Panel")<br>*Fig. 4.3.2.: Blueprint Actor BP_MPR &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
@@ -308,11 +315,11 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 ### 4.4. Multiplanar Rendering Monitor Actor
 
-Plugin Content:
+Plugin "Volume Creator" provides with a Multiplanar Rendering MPR Monitor Actor (Blueprint Class: `BP_MprMonitor`) to visualize a 2D representation of Coronal, Sagittal and Axial planes consumed from an MPR Actor instance and arranged side by side.
 
-* Blueprint Class: `BP_MprMonitor`
+![Blueprint Actor BP_MprMonitor](Docs/BP_MprMonitor.png "Blueprint Actor BP_MprMonitor")<br>*Fig. 4.4.1.: Blueprint Actor BP_MprMonitor*
 
-![Details Panel &ndash; Blueprint Actor BP_MprMonitor](Docs/DetailsPanel-BP_MprMonitor.png "Details Panel &ndash; Blueprint Actor BP_MprMonitor")<br>*Fig. 4.4.: Details Panel &ndash; Blueprint Actor BP_MprMonitor*
+![Blueprint Actor BP_MprMonitor Details Panel](Docs/DetailsPanel-BP_MprMonitor.png "Blueprint Actor BP_MprMonitor Details Panel")<br>*Fig. 4.4.2.: Blueprint Actor BP_MprMonitor &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
@@ -325,13 +332,11 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 ### 4.5. Direct Volume Rendering Actor
 
-Direct Volume Rendering DVR with Materials from Raymarching Shaders with static lighting support.
+Plugin "Volume Creator" provides with a Direct Volume Rendering DVR Actor (Blueprint Class: `BP_DVR`) to visualize a 3D representation of a DICOM windowed and direct volume rendered scalar volume. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
 
-Plugin Content:
+![Blueprint Actor BP_DVR](Docs/BP_DVR.png "Blueprint Actor BP_DVR")<br>*Fig. 4.5.1.: Blueprint Actor BP_DVR*
 
-* Blueprint Class: `BP_DVR`
-
-![Details Panel &ndash; Blueprint Actor BP_DVR](Docs/DetailsPanel-BP_DVR.png "Details Panel &ndash; Blueprint Actor BP_DVR")<br>*Fig. 4.5.: Details Panel &ndash; Blueprint Actor BP_DVR*
+![Blueprint Actor BP_DVR Details Panel](Docs/DetailsPanel-BP_DVR.png "Blueprint Actor BP_DVR Details Panel")<br>*Fig. 4.5.2.: Blueprint Actor BP_DVR &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
@@ -386,11 +391,9 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 ### 4.6. Region Of Interest Actor
 
-Region Of Interest Actor, in Outline Hierarchy (Scene Graph) ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
+Plugin "Volume Creator" provides with a Region Of Interest ROI Actor (Blueprint Class: `BP_ROI`), with which a DVR Actor geometry can be shrinked in real-time. A ROI Actor instance can be assigned as a parameter in a DVR Actor instance. In the Unreal Editor Outline Hierarchy a ROI Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
 
-Plugin Content:
-
-* Blueprint Class: `BP_ROI`
+![Blueprint Actor BP_ROI](Docs/BP_ROI.png "DetailsBlueprint Actor BP_ROI")<br>*Fig. 4.6.1.: Blueprint Actor BP_ROI*
 
 Parameter, Category 'Volume Creator':
 
@@ -398,11 +401,11 @@ Parameter, Category 'Volume Creator':
 
 ### 4.7. Region Of Interest Handles Actor
 
-Plugin Content:
+Plugin "Volume Creator" provides with a Region Of Interest ROI Handles Actor (Blueprint Class: `BP_RoiHandles`), with which a ROI Actor geometry can be modified interactively in real-time.
 
-* Blueprint Class: `BP_RoiHandles`
+![Blueprint Actor BP_RoiHandles](Docs/BP_RoiHandles.png "DetailsBlueprint Actor BP_RoiHandles")<br>*Fig. 4.7.1.: Blueprint Actor BP_RoiHandles*
 
-![Details Panel &ndash; Blueprint Actor BP_RoiHandles](Docs/DetailsPanel-BP_RoiHandles.png "Details Panel &ndash; Blueprint Actor BP_RoiHandles")<br>*Fig. 4.7.: Details Panel &ndash; Blueprint Actor BP_RoiHandles*
+![Blueprint Actor BP_RoiHandles &ndash; Details Panel](Docs/DetailsPanel-BP_RoiHandles.png "Blueprint Actor BP_RoiHandles &ndash; Details Panel")<br>*Fig. 4.7.2.: Blueprint Actor BP_RoiHandles &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
@@ -415,12 +418,9 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 ### 4.8. Clip Plane Actor
 
-The plugin provides with a Blueprint Actor named `BP_DvrClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_Edges_ClipPlane` is assigned to the mesh (see figure 4.6.).
+Plugin "Volume Creator" provides with a Clip Plane Actor (Blueprint Class: `BP_DvrClipPlane`), with which a DVR Actor geometry can be shrinked in real-time.
 
-Plugin Content:
-
-* Blueprint Class: `BP_DvrClipPlane`
-* Material Instance: `MI_Edges_ClipPlane`
+![Blueprint Actor BP_DvrClipPlane](Docs/BP_DvrClipPlane.png "DetailsBlueprint Actor BP_DvrClipPlane")<br>*Fig. 4.8.1.: Blueprint Actor BP_DvrClipPlane*
 
 Parameter, Category 'Volume Creator':
 
@@ -428,11 +428,11 @@ Parameter, Category 'Volume Creator':
 
 ### 4.9. Orientation Guide Actor
 
-Plugin Content:
+Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class: `BP_DvrOrientationGuide`), which can be attached to a DVR Actor and serves as rotation synchronized orientation guide.
 
-* Blueprint Class: `BP_DvrOrientationGuide`
+![Blueprint Actor BP_DvrOrientationGuide](Docs/BP_DvrOrientationGuide.png "Blueprint Actor BP_DvrOrientationGuide")<br>*Fig. 4.9.1.: Blueprint Actor BP_DvrOrientationGuide*
 
-![Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide](Docs/DetailsPanel-BP_DvrOrientationGuide.png "Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide")<br>*Fig. 4.9.: Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide*
+![Blueprint Actor BP_DvrOrientationGuide Details Panel](Docs/DetailsPanel-BP_DvrOrientationGuide.png "Blueprint Actor BP_DvrOrientationGuide Details Panel")<br>*Fig. 4.9.2.: Blueprint Actor BP_DvrOrientationGuide &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
@@ -445,13 +445,11 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 ### 4.10. Spot Light Actor
 
-The plugin provides with a Blueprint SpotLight named `BP_DvrSpotLight` whose transform mobility is set to *static*. Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light.
+Plugin "Volume Creator" provides with a Spot Light Actor (Blueprint Class: `BP_DvrSpotLight`), which can be optionally attached to a DVR Actor. The Spot Light Actor will serve as static lighting source to illuminate the direct volume rendering. Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light (see figure 4.10.). By default, the lighting is intended only for the DVR. It is up to the developer whether the light should also affect the world and ray tracing.
 
-Plugin Content:
+![Blueprint Actor BP_DvrSpotLight](Docs/BP_DvrSpotLight.png "Blueprint Actor BP_DvrSpotLight")<br>*Fig. 4.10.1.: Blueprint Actor BP_DvrSpotLight*
 
-* Blueprint Class: `BP_DvrSpotLight`
-
-![Details Panel &ndash; Blueprint Actor BP_DvrSpotLight](Docs/DetailsPanel-BP_DvrSpotLight.png "Details Panel &ndash; Blueprint Actor BP_DvrSpotLight")<br>*Fig. 4.10.: Details Panel &ndash; Blueprint Actor BP_DvrSpotLight*
+![Blueprint Actor BP_DvrSpotLight Details Panel](Docs/DetailsPanel-BP_DvrSpotLight.png "Blueprint Actor BP_DvrSpotLight Details Panel")<br>*Fig. 4.10.2.: Blueprint Actor BP_DvrSpotLight &ndash; Details Panel*
 
 Parameter (cp. figure 'Details Panel'):
 
@@ -481,11 +479,7 @@ The plugin "Volume Creator" elements SV, VOI, MPR and DVR are available as User 
 
 ### 5.1. SV User Widget
 
-Scalar Volume User Widget.
-
-Plugin Content:
-
-* Blueprint Class: User Widget Blueprint `WBP_SV`
+Plugin "Volume Creator" provides with a Scalar Volume SV User Widget Blueprint (Blueprint Class: `WBP_SV`).
 
 ![User Widget Blueprint WBP_SV](Docs/UserWidget-WBP_SV.png "User Widget Blueprint WBP_SV")<br>*Fig. 5.1.: User Widget Blueprint WBP_SV*
 
@@ -500,11 +494,7 @@ Widget Entries:
 
 ### 5.2. VOI User Widget
 
-Values Of Interest User Widget.
-
-Plugin Content:
-
-* Blueprint Class: User Widget Blueprint `WBP_VOI`
+Plugin "Volume Creator" provides with a Values Of Interest VOI User Widget Blueprint (Blueprint Class: `WBP_VOI`).
 
 ![User Widget Blueprint WBP_VOI](Docs/UserWidget-WBP_VOI.png "User Widget Blueprint WBP_VOI")<br>*Fig. 5.2.: User Widget Blueprint WBP_VOI*
 
@@ -519,11 +509,7 @@ Widget Entries:
 
 ### 5.3. MPR User Widget
 
-Multiplanar Rendering User Widget.
-
-Plugin Content:
-
-* Blueprint Class: User Widget Blueprint `WBP_MPR`
+Plugin "Volume Creator" provides with a Multiplanar Rendering MPR User Widget Blueprint (Blueprint Class: `WBP_MPR`).
 
 ![User Widget Blueprint WBP_MPR](Docs/UserWidget-WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 5.3.: User Widget Blueprint WBP_MPR*
 
@@ -536,11 +522,7 @@ Widget Entries:
 
 ### 5.4. DVR User Widget
 
-Direct Volume Rendering User Widget.
-
-Plugin Content:
-
-* Blueprint Class: User Widget Blueprint `WBP_DVR`
+Plugin "Volume Creator" provides with a Direct Volume Rendering DVR User Widget Blueprint (Blueprint Class: `WBP_DVR`).
 
 ![User Widget Blueprint WBP_DVR](Docs/UserWidget-WBP_DVR.png "User Widget Blueprint WBP_DVR")<br>*Fig. 5.4.: User Widget Blueprint WBP_DVR*
 
@@ -559,11 +541,7 @@ The plugin "Volume Creator" User Widget Blueprints SV, VOI, MPR and DVR are also
 
 ### 6.1. SV and VOI UI Abstract Actor
 
-Scalar Volume and Values Of Interest Blueprint Actor, Abstract Class.
-
-Plugin Content:
-
-* Blueprint Class: Blueprint Actor `BP_SvVoi_UI`, Abstract Class
+Scalar Volume and Values Of Interest Blueprint Actor (Blueprint Class: `BP_SvVoi_UI`), Abstract Class.
 
 ![User Interface Blueprint Actor BP_SvVoi_UI](Docs/BlueprintActor-BP_MPR_UI.png "User Interface Blueprint Actor BP_SvVoi_UI")<br>*Fig. 6.1.: User Interface Blueprint Actor BP_SvVoi_UI*
 
@@ -576,11 +554,7 @@ Widget Components:
 
 ### 6.2. MPR UI Actor
 
-Multiplanar Rendering User Interface Blueprint Actor.
-
-Plugin Content:
-
-* Blueprint Class: Blueprint Actor `BP_MPR_UI` (inherits from `BP_SvVoi_UI`)
+Multiplanar Rendering User Interface Blueprint Actor (Blueprint Class: `BP_MPR_UI`, inherits from `BP_SvVoi_UI`).
 
 ![User Interface Blueprint Actor BP_MPR_UI](Docs/BlueprintActor-BP_MPR_UI.png "User Interface Blueprint Actor BP_MPR_UI")<br>*Fig. 6.2.: User Interface Blueprint Actor BP_MPR_UI*
 
@@ -594,11 +568,7 @@ Widget Components:
 
 ### 6.3. DVR UI Actor
 
-Direct Volume Rendering User Interface Blueprint Actor.
-
-Plugin Content:
-
-* Blueprint Class: Blueprint Actor `BP_DVR_UI` (inherits from `BP_SvVoi_UI`)
+Direct Volume Rendering User Interface Blueprint Actor (Blueprint Class: `BP_DVR_UI`, inherits from `BP_SvVoi_UI`).
 
 ![User Interface Blueprint Actor BP_DVR_UI](Docs/BlueprintActor-BP_DVR_UI.png "User Interface Blueprint Actor BP_DVR_UI")<br>*Fig. 6.3.: User Interface Blueprint Actor BP_DVR_UI*
 
@@ -612,11 +582,7 @@ Widget Components:
 
 ### 6.4. MPR and DVR UI Actor
 
-Direct Volume Rendering User Interface Blueprint Actor.
-
-Plugin Content:
-
-* Blueprint Class: Blueprint Actor `BP_MprDvr_UI` (inherits from `BP_MPR_UI`)
+Direct Volume Rendering User Interface Blueprint Actor (Blueprint Class: `BP_MprDvr_UI`, inherits from `BP_MPR_UI`).
 
 ![User Interface Blueprint Actor BP_MprDvr_UI](Docs/BlueprintActor-BP_MprDvr_UI.png "User Interface Blueprint Actor BP_MprDvr_UI")<br>*Fig. 6.4.: User Interface Blueprint Actor BP_MprDvr_UI*
 
