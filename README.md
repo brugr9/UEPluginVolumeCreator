@@ -14,8 +14,6 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Imaging Data.
 
-<div style='page-break-after: always'></div>
-
 ## Description
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint Visual Scripting system.
@@ -26,8 +24,6 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
 
 * Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
 * Technology: DICOM, Unreal Engine, C++ Code Plugin, HLSL Compute Shader
-
-Tags: DICOM, MPR, DVR, VR, AR, UE, CS
 
 ---
 
@@ -50,10 +46,10 @@ Tags: DICOM, MPR, DVR, VR, AR, UE, CS
   * [4.3. Multiplanar Rendering Actor](#43-multiplanar-rendering-actor)
   * [4.4. Multiplanar Rendering Monitor Actor](#44-multiplanar-rendering-monitor-actor)
   * [4.5. Direct Volume Rendering Actor](#45-direct-volume-rendering-actor)
-  * [4.6. Orientation Guide Actor](#46-orientation-guide-actor)
-  * [4.7. Region Of Interest Actor](#47-region-of-interest-actor)
-  * [4.8. Region Of Interest Handles Actor](#48-region-of-interest-handles-actor)
-  * [4.9. Clip Plane Actor](#49-clip-plane-actor)
+  * [4.6. Region Of Interest Actor](#46-region-of-interest-actor)
+  * [4.7. Region Of Interest Handles Actor](#47-region-of-interest-handles-actor)
+  * [4.8. Clip Plane Actor](#48-clip-plane-actor)
+  * [4.9. Orientation Guide Actor](#49-orientation-guide-actor)
   * [4.10. Spot Light Actor](#410-spot-light-actor)
 * [5. User Widgets](#5-user-widgets)
   * [5.1. SV User Widget](#51-sv-user-widget)
@@ -118,10 +114,10 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 * **Multiplanar Rendering Actor**: The DICOM windowed scalar volume may be visualized by multiplanar rendering in a MPR Actor. The MPR Actor as a 3D representation of MPR holds three perpendicular planes, i.e. coronal, sagittal and axial plane. Its dimensions derive from the scalar volume pixel spacing. The planes can be moved in the direction of their corresponding axes interactively in real-time.
   * **MPR Monitor Actor**: The MPR produces planar rendering, which is also consumed by the MPR Monitor, a 2D representation of MPR.
 * **Direct Volume Rendering Actor**: The DICOM windowed scalar volume may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
-  * **Orientation Guide Actor**: The DVR Actor can be optionally attached a rotation synchronized orientation guide.
   * **Region Of Interest Actor**: Using a region of interest ROI Actor the DVR geometry can be optionally shrinked in real-time.
     * **ROI Handles Actor**: A ROI geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
   * **Clip Plane Actor**: Using a Clip Plane Actor the DVR geometry can be optionally shrinked interactively in real-time.
+  * **Orientation Guide Actor**: The DVR Actor can be optionally attached a rotation synchronized orientation guide.
   * **Spot Light Actor**: The DVR can be optionally illuminated with static spot-lights.
 
 ![Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV](Docs/DMD-SV.png "Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV")<br>*Fig. 2.2.: Domain Model Diagram &mdash; Blueprint Actor Classes in Reference Viewer with Focus on BP_SV*
@@ -246,12 +242,12 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Type: `Integer`
   * Default Value: `1048`
   * Range: [`-1000`, `1048`]
-  * Info: DICOM Window Center in Hounsfield Units (aka level or brightness)
+  * Info: Window Center in Hounsfield Units (aka level or brightness)
 * Window Width
   * Type: `Integer`
   * Default Value: `4096`
   * Range: [`1`, `4096`]
-  * Info: DICOM Window Width in Hounsfield Units (aka range or contrast)
+  * Info: Window Width in Hounsfield Units (aka range or contrast)
 
 <div style='page-break-after: always'></div>
 
@@ -263,19 +259,19 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `true`
   * Info: To render the lerped values only, a window mask may be applied.
 
-The VOI Range Buttons set Window Center and Width as well as Left and Right Border values:
+The VOI Range Buttons set Left and Right Border values, Window Center and Width are calculated well:
 
-| VOI Name | Left | Right |
-|---|---|---|
-| Default | `-1000` | `3095`
-| Air| `-1000`| `-1000`
-| Lung| `-600`| `-400`
-| Fat| `-100`| `-60`
-| Water| `0`| `0`
-| Soft Tissue| `40`| `80`
-| Bone| `400`| `1000`
-| Mediastinum| `50`| `500`
-| PE| `100`| `700`
+| VOI Name    | Window Center  | Window Width  | Left Border | Right Border |
+|-------------|--------:|-------:|--------:|--------:|
+| Default     |  `1048` | `4096` | `-1000` |  `3095` |
+| Air         | `-1000` |    `1` | `-1000` | `-1000` |
+| Lung        |  `-500` |  `201` |  `-600` |  `-400` |
+| Fat         |   `-80` |   `41` |  `-100` |   `-60` |
+| Water       |     `0` |    `1` |     `0` |     `0` |
+| Soft Tissue |    `60` |   `41` |    `40` |    `80` |
+| Bone        |   `700` |  `601` |   `400` |  `1000` |
+| Mediastinum |   `275` |  `451` |    `50` |   `500` |
+| PE          |   `400` |  `601` |   `100` |   `700` |
 
 <div style='page-break-after: always'></div>
 
@@ -370,7 +366,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * Transfer Function
   * Type: `Curve Linear Color`
   * Default Value: `Curve_Default_TF_Color`
-  * Info: The transfer functions are based on color gradients from `Curve Linear Color` assets. <!--The gradients represent values as found in 3D-Slicer&trade; Module "Volume Rendering" (cp. [Finet et al.]).-->
+  * Info: The transfer functions are based on color gradients from `Curve Linear Color` assets.
 * Alpha Threshold
   * Type: `Float`
   * Default Value: `0.8`
@@ -381,7 +377,6 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Diffuse: Default Value: `0.9`, Range: [`0.0`, `1.0`]
   * Specular: Default Value: `0.2`, Range: [`0.0`, `1.0`]
   * Specular Power: Default Value: `10`, Range: [`1`, `50`]
-  <!--https://help.maxon.net/r3d/katana/en-us/Content/html/IES+Light.html#CommonRedshiftLightParameters-DiffuseScale-->
 * Light Source
   * Type: Array of `BP_DvrSpotLight` Object References
   * Default Value: `none`
@@ -389,22 +384,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 <div style='page-break-after: always'></div>
 
-### 4.6. Orientation Guide Actor
-
-Plugin Content:
-
-* Blueprint Class: `BP_DvrOrientationGuide`
-
-![Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide](Docs/DetailsPanel-BP_DvrOrientationGuide.png "Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide")<br>*Fig. 4.6.: Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide*
-
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
-
-* DVR Actor
-  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
-  * Default Value: `none`
-  * Info: Mandatory, DVR Actor Instance to synchronize rotation from
-
-### 4.7. Region Of Interest Actor
+### 4.6. Region Of Interest Actor
 
 Region Of Interest Actor, in Outline Hierarchy (Scene Graph) ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
 
@@ -416,15 +396,13 @@ Parameter, Category 'Volume Creator':
 
 * none
 
-<div style='page-break-after: always'></div>
-
-### 4.8. Region Of Interest Handles Actor
+### 4.7. Region Of Interest Handles Actor
 
 Plugin Content:
 
 * Blueprint Class: `BP_RoiHandles`
 
-![Details Panel &ndash; Blueprint Actor BP_RoiHandles](Docs/DetailsPanel-BP_RoiHandles.png "Details Panel &ndash; Blueprint Actor BP_RoiHandles")<br>*Fig. 4.8.: Details Panel &ndash; Blueprint Actor BP_RoiHandles*
+![Details Panel &ndash; Blueprint Actor BP_RoiHandles](Docs/DetailsPanel-BP_RoiHandles.png "Details Panel &ndash; Blueprint Actor BP_RoiHandles")<br>*Fig. 4.7.: Details Panel &ndash; Blueprint Actor BP_RoiHandles*
 
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
@@ -433,9 +411,11 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `none`
   * Info: Mandatory, Region(s) of Interest to Manage
 
-### 4.9. Clip Plane Actor
+<div style='page-break-after: always'></div>
 
-The plugin provides with a Blueprint Actor named `BP_DvrClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_Edges_ClipPlane` is assigned to the mesh (see figure 4.7.).
+### 4.8. Clip Plane Actor
+
+The plugin provides with a Blueprint Actor named `BP_DvrClipPlane` with a `StaticMeshComponent` of type `Plane`. The material instance `MI_Edges_ClipPlane` is assigned to the mesh (see figure 4.6.).
 
 Plugin Content:
 
@@ -445,6 +425,21 @@ Plugin Content:
 Parameter, Category 'Volume Creator':
 
 * none
+
+### 4.9. Orientation Guide Actor
+
+Plugin Content:
+
+* Blueprint Class: `BP_DvrOrientationGuide`
+
+![Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide](Docs/DetailsPanel-BP_DvrOrientationGuide.png "Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide")<br>*Fig. 4.9.: Details Panel &ndash; Blueprint Actor BP_DvrOrientationGuide*
+
+Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+
+* DVR Actor
+  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, DVR Actor Instance to synchronize rotation from
 
 <div style='page-break-after: always'></div>
 
@@ -478,7 +473,7 @@ Parameter (cp. figure 'Details Panel'):
 
 ## 5. User Widgets
 
-Volume Creator UI elements are available as User Widget Blueprint.
+The plugin "Volume Creator" elements SV, VOI, MPR and DVR are available as User Widget Blueprint (see figure 5.).
 
 ![Plugin User Widget Blueprints](Docs/VolumeCreator-Content-Widget.png "Plugin User Widget Blueprints")<br>*Fig. 5.: Plugin User Widget Blueprints*
 
@@ -558,7 +553,7 @@ Widget Entries:
 
 ## 6. User Interface Actors
 
-The Volume Creator UI elements are also available as Blueprint Actor for the use in 3D.
+The plugin "Volume Creator" User Widget Blueprints SV, VOI, MPR and DVR are also available as User Interface Blueprint Actor for the use in 3D (see figure 6.).
 
 ![Plugin User Interface Blueprint Actors](Docs/VolumeCreator-Content-UI.png "Plugin User Interface Blueprint Actors")<br>*Fig. 6.: Plugin User Interface Blueprint Actors*
 
@@ -828,9 +823,9 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 ### B. Readings
 
-* Engel K., Hadwiger M., Kniss J., Rezk Salama C., Weiskopf D. (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/) <!--[Engel et al. 06]-->
-<!--* Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)--> <!--[Hadwiger et al. 18]-->
-* Ikits M., Kniss J., Lefohn A., Hansen C.: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques) <!--[Ikits et al. 2007]-->
+* Ikits M., Kniss J., Lefohn A., Hansen C.: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques)
+* Engel K., Hadwiger M., Kniss J., Rezk Salama C., Weiskopf D. (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
+<!--* [Hadwiger et al. 18] Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)-->
 <!--* Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.-->
 
 ### C. Acknowledgements
