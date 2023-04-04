@@ -155,9 +155,9 @@ The created asset name derives from the file name which is imported:
 Workflow:
 
 * Reads from DICOM&reg; files, file name extension `*.dcm`
-* Writes image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_HU_Volume`
-* Saves image data to a newly created Houndsfield Units encoded Volume Texture asset `T_MyDataName_HU_Volume`
-* Writes meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a newly created Blueprint asset `BP_MyDataName` based on Scalar Volume Actor `BP_SV` and assigns the Volume Texture asset `T_MyDataName_HU_Volume` just created.
+* Writes Scalar Volume image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_Volume`
+* Saves Scalar Volume image data to a newly created Houndsfield Units encoded Volume Texture asset `T_MyDataName_SV_Volume`
+* Writes meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a newly created Blueprint asset `BP_MyDataName` based on Scalar Volume Actor `BP_SV` and assigns the Volume Texture asset `T_MyDataName_SV_Volume` just created.
 
 ### 3.2. Import MetaImage
 
@@ -181,8 +181,8 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 * Scalar Volume Texture
   * Type: `Volume Texture`
-  * Default Value: `T_HU_Volume_Tex`
-  * Info: Hounsfield Units encoded Volume Texture
+  * Default Value: `T_SV_Volume_Tex`
+  * Info: Scalar Volume, Hounsfield Units encoded Volume Texture
 * Origin
   * Type: `Vector`
   * Default Value: `X 0.0, Y 0.0, Z 0.0`
@@ -612,6 +612,7 @@ Widget Components:
 * FPV &mdash; First Person View
 * HU &mdash; Hounsfield Units
 * I &mdash; Inferior
+* IES &mdash; Illuminating Engineering Society, Lighting Profile File Extension
 * L &mdash; Left
 * LhS &mdash; Left-handed System
 * L-A-S &mdash; Left&ndash;Anterior&ndash;Superior
@@ -717,9 +718,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 <div style='page-break-after: always'></div>
 
 * `[AssetName]` (Domain Specific):
-  * Scalar Volume: `SV`
   * Data Type:
-    * Hounsfield Units: `HU`
+    * Scalar Volume: `SV`
     * Values Of Interest: `VOI`
   * Rendering Type:
     * Multiplanar Rendering: `MPR`
