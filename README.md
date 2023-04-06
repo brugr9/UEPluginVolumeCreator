@@ -103,9 +103,9 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ## 2. Concept
 
-The plugin provides rendering of image-stack based volumes, commonly known as scalar volumes. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. Following the Object Oriented Paradigm OOP the following entities are implemented as objects or Actors respectively:
+The plugin provides rendering of image-stack based volumes, commonly known as scalar volumes. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. Following the Object Oriented Paradigm OOP the domain specific entities are implemented as Blueprint Classes or Actors respectively:
 
-![Plugin Blueprint Actor Classes](Docs/VolumeCreator-Content-Classes.png "Plugin Blueprint Actor Classes")<br>*Fig. 2.1.: Plugin Blueprint Actor Classes*
+![Volume Creator Blueprint Classes](Docs/VolumeCreator-Content-Classes.png "Volume Creator Blueprint Classes")<br>*Fig. 2.1.: Volume Creator Blueprint Classes*
 
 * **Scalar Volume SV**:
   * **SV Actor**: Medical images are imported, e.g., from DICOM files and stored as Hounsfield Units encoded Volume Texture. A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
@@ -495,14 +495,14 @@ Plugin "Volume Creator" provides with a DVR User Widget Actor (Blueprint Class: 
 
 ![Blueprint Actor BP_DVR_UI](Docs/BP_DVR_UI.png "Blueprint Actor BP_DVR_UI")<br>*Fig. 4.4.2.1.: Blueprint Actor BP_DVR_UI*
 
+![Blueprint Actor BP_DVR_UI Details Panel](Docs/DetailsPanel-BP_DVR_UI.png "Blueprint Actor BP_VOIBP_DVR_UIUI Details Panel")<br>*Fig. 4.4.2.2.: Blueprint Actor BP_DVR_UI &ndash; Details Panel*
+
 Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, Assign a DVR Actor Instance to manage
-
-![Blueprint Actor BP_DVR_UI Details Panel](Docs/DetailsPanel-BP_DVR_UI.png "Blueprint Actor BP_VOIBP_DVR_UIUI Details Panel")<br>*Fig. 4.4.2.2.: Blueprint Actor BP_DVR_UI &ndash; Details Panel*
 
 The Actor holds a Direct Volume Rendering DVR User Widget Blueprint (Blueprint Class: `WBP_DVR`).
 
@@ -837,4 +837,4 @@ Read also:
 
 [![Creative Commons Attribution-ShareAlike 4.0 International License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-*"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by [Roland Bruggmann](https://dev.epicgames.com/community/profile/PQBq/brugr9), licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+*"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by Roland Bruggmann, licensed under Creative Commons Attribution-ShareAlike 4.0 International
