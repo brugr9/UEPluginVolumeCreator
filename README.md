@@ -373,6 +373,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Type: `Integer`
   * Default Value: `0`
   * Range: [`0`, `50`]
+  * Info: Select Look-Up Table by Index
 * Brightness:
   * Type: `Float`
   * Default Value: `0.5`
