@@ -160,6 +160,10 @@ The created asset name derives from the file name which is imported (cp. appendi
 
 Example: A file named `My_0123456789_ImageFile.*` becomes `My-0123456789-ImageF`
 
+Project Settings > Plugins > Volume Creator
+
+![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.: Screenshot of Project Settings > Plugin > Volume Creator*
+
 ### 3.1. Import DICOM
 
 Workflow:
