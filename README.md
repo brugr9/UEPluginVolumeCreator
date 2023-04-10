@@ -16,14 +16,14 @@ Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Ima
 
 ## Description
 
-Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint Visual Scripting system.
+Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system.
 
-The delivered assets provide importing DICOM&reg; based medical imaging data, applying DICOM Window and rendering by coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane and/or with a region of interest the user may shrink the rendered volume interactively. The plugin allows to create solutions that can be used in VR/AR serious games, e.g., for teaching and training in medical education.
+The delivered assets provide importing DICOM&reg; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring the same from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may shrink the rendered volume interactively. The plugin allows to create solutions that can be used in VR/AR serious games, e.g., for teaching and training in medical education.
 
 <!-- UE Marketplace : End 1/2 -->
 
 * Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
-* Technology: DICOM, Unreal Engine, C++ Code Plugin, HLSL Compute Shader
+* Technology: DICOM, Unreal Engine, Blueprint visual scripting system, C++ Code Plugin, HLSL Compute Shader
 
 ---
 
@@ -109,21 +109,21 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 
 * **Scalar Volume SV**:
   * **SV Actor**: Medical images are imported, e.g., from DICOM files and stored as Hounsfield Units encoded Volume Texture. A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
-  * **SV User Widget Actor**: TODO:
+  * **SV User Widget Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget Actor.
 * **Values Of Interest VOI**
   * **VOI Actor**: A Values Of Interest VOI Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
-  * **VOI User Widget Actor**: TODO:
+  * **VOI User Widget Actor**: To access and change parameters of a VOI Actor in runtime, the plugin provides with a VOI User Widget Actor.
 * **Multiplanar Rendering MPR**
   * **MPR Actor**: The Values Of Interest may be visualized by multiplanar rendering in an MPR Actor. The MPR Actor&mdash;as a 3D representation of MPR&mdash;holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane.
   * **MPR User Widget Actor**: The MPR Actor produces planar rendering, which is also consumed by the MPR User Widget Actor, a 2D representation of MPR. The planes can be moved in the direction of their corresponding axes interactively in real-time.
 * **Direct Volume Rendering DVR**
   * **DVR Actor**: The Values Of Interest may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
-  * **DVR User Widget Actor**: TODO:
+  * **DVR User Widget Actor**: To access and change parameters of a DVR Actor in runtime, the plugin provides with a DVR User Widget Actor.
   * **Region Of Interest ROI**
-    * **ROI Actor**: Using a region of interest ROI Actor the volume rendering geometry can be optionally shrinked in real-time.
+    * **ROI Actor**: The DVR Actor geometry can be optionally shrinked in real-time using a region of interest ROI Actor.
     * **ROI Handles Actor**: A ROI geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
-  * **Clip Plane Actor**: Using a Clip Plane Actor the volume rendering geometry can be optionally shrinked interactively in real-time.
-  * **Light Source Actor**: The volume rendering can be optionally illuminated with static spot-lights.
+  * **Clip Plane Actor**: The DVR Actor geometry can be optionally shrinked in real-time using a Clip Plane Actor.
+  * **Light Source Actor**: The DVR can be optionally illuminated with static light source from Light Source Actors.
   * **Orientation Guide Actor**: The volume rendering actor can be optionally attached a rotation synchronized orientation guide.
 
 ![Domain Model Diagram &mdash; Multiplanar Rendering MPR](Docs/DMD-MPR.png "Domain Model Diagram &mdash; Multiplanar Rendering MPR")<br>*Fig. 2.2.: Domain Model Diagram &mdash; Multiplanar Rendering MPR*
@@ -151,19 +151,25 @@ With processing, e.g., 30 fps (cp. [Lindberg]):
 * *ProcessedData<sub>2</sub> = 4.295 Gigabit/frame x 30 frames/s = 128.8 Gigabit/s*
 * *ProcessedData<sub>3</sub> = 34.359 Gigabit/frame x 30 frames/s = 1030.8 Gigabit/s*
 
-The created asset name derives from the file name which is imported:
+The created asset name derives from the file name which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)):
 
-* Underlines (`_`) from a file name are replaced by minus (`-`) in asset names.
-* Maximum asset name length: 20 signs
+* `AssetName`:
+  * The same as the imported file
+  * Underlines (`_`) from the imported file name are replaced by minus (`-`) in asset names
+  * Maximum length: 20 signs
+
+Example: A file named `My_0123456789_ImageFile.*` becomes `My-0123456789-ImageF`
 
 ### 3.1. Import DICOM
 
 Workflow:
 
-* Reads from DICOM&reg; files, file name extension `*.dcm`
-* Writes Scalar Volume image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_Volume`
-* Saves Scalar Volume image data to a newly created Houndsfield Units encoded Volume Texture asset `T_MyDataName_SV_Volume`
-* Writes meta data&mdash;e.g., DICOM Pixel Spacing&mdash;to a newly created Blueprint asset `BP_MyDataName` based on Scalar Volume Actor `BP_SV` and assigns the Volume Texture asset `T_MyDataName_SV_Volume` just created.
+* Reads from DICOM&reg; files, file name extension `*.dcm` and
+  * Writes Scalar Volume image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_Volume`
+  * Saves the Volume Texture Render Target `RT_SV_Volume` as newly created Scalar Volume Volume Texture asset `T_MyDataName_SV_Volume`
+* Creates a Blueprint asset `BP_MyDataName` deriving from Scalar Volume Actor `BP_SV` and
+  * Writes meta data, e.g., DICOM Pixel Spacing
+  * Assigns the just created Volume Texture asset `T_MyDataName_SV_Volume`
 
 ### 3.2. Import MetaImage
 
@@ -176,6 +182,8 @@ Workflow:
 ## 4. Actors
 
 ### 4.1. Scalar Volume SV
+
+Scalar Volume SV (not to be confused with the HLSL abbreviation for System Value; cp. Online: *[Semantics](https://learn.microsoft.com/en-gb/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)*).
 
 #### 4.1.1. SV Actor
 
@@ -649,6 +657,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * dGEMRIC &mdash; delayed gadolinium-enhanced MRI of cartilage
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
+* MRT &mdash; Multiple Render Targets (rendering technique)
 * PET &mdash; Positron Emission Tomography
 * CRS &mdash; Coordinate Reference System
 * WCS &mdash; World Coordinate System
@@ -756,41 +765,41 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 #### A.1. Medical Imaging
 
 * Anatomical Terms:
-  * [mbbs] mbbsbooks: **Anatomical Terms**. In: mbbsbooks Medical - Category Anatomy. Feb 14, 2023. Online: [https://mbbsbooks.com/anatomical-terms/](https://mbbsbooks.com/anatomical-terms/)
+  * [mbbs] mbbsbooks: **Anatomical Terms**. In: mbbsbooks Medical - Category Anatomy. Feb 14, 2023. Online: *[https://mbbsbooks.com/anatomical-terms/](https://mbbsbooks.com/anatomical-terms/)*
 * DICOM:
-  * [DICOM] **The DICOM Standard**. Online: [https://www.dicomstandard.org/current](https://www.dicomstandard.org/current)
-  * [DICOM, FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
-  * [DICOM-Browser] Innolitics: **DICOM Standard Browser**. Online: [https://dicom.innolitics.com/ciods/ct-image](https://dicom.innolitics.com/ciods/ct-image)
-  * [Sharma 2021] Shivam Sharma: **Introduction to DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 15, 2021. Online: [https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd](https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd)
-  * [Sharma 2022] Shivam Sharma: **DICOM Coordinate Systems &ndash; 3D DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 22, 2022. Online: [https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f](https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f)
-  * [Adaloglouon 2020] Nikolas Adaloglouon: **Understanding Coordinate Systems and DICOM for Deep Learning Medical Image Analysis**. In: *The AI Summer*. July 16, 2020. Online: [https://theaisummer.com/medical-image-coordinates/](https://theaisummer.com/medical-image-coordinates/)
-  * [Zaharia 2013] Roni Zaharia: **Chapter 14 - Image Orientation: Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. June 6, 2013. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
+  * [DICOM] **The DICOM Standard**. Online: *[https://www.dicomstandard.org/current](https://www.dicomstandard.org/current)*
+  * [DICOM, FAQ] **DICOM Standard FAQ**. Online: *[https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)*
+  * [DICOM-Browser] Innolitics: **DICOM Standard Browser**. Online: *[https://dicom.innolitics.com/ciods/ct-image](https://dicom.innolitics.com/ciods/ct-image)*
+  * [Sharma 2021] Shivam Sharma: **Introduction to DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 15, 2021. Online: *[https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd](https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd)*
+  * [Sharma 2022] Shivam Sharma: **DICOM Coordinate Systems &ndash; 3D DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 22, 2022. Online: *[https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f](https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f)*
+  * [Adaloglouon 2020] Nikolas Adaloglouon: **Understanding Coordinate Systems and DICOM for Deep Learning Medical Image Analysis**. In: *The AI Summer*. July 16, 2020. Online: *[https://theaisummer.com/medical-image-coordinates/](https://theaisummer.com/medical-image-coordinates/)*
+  * [Zaharia 2013] Roni Zaharia: **Chapter 14 - Image Orientation: Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. June 6, 2013. Online: *[http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)*
 * Volume Rendering:
-  * [Luecke 2005] Peter Lücke: **Volume Rendering Techniques for Medical Imaging**. Diplomarbeit. Technische Universität München, Fakultät für Informatik. April 15, 2005. In collaboration with Siemens Corporate Research Inc., Princeton, USA. Online: [https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf](https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf)
-  <!--* [Piper et al.] Piper S., Finet J., Yarmarkovich A., Aucoin N.: **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)-->
-  <!--* [Finet et al.] Finet J., Yarmarkovich A., Liu Y., Freudling A., Kikinis R.: **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html); Transfer Function Presets on GitHub: [https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)-->
-  * [Radiopaedia] : **Radiopaedia**. Online: [https://radiopaedia.org/](https://radiopaedia.org/)
-  * [Lindberg] Kjell Lindberg: **How can a processor handle 10 Gigabit per second or more data rate?**. In: Quora. Nov 2021. URL: [https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate](https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate)
+  * [Luecke 2005] Peter Lücke: **Volume Rendering Techniques for Medical Imaging**. Diplomarbeit. Technische Universität München, Fakultät für Informatik. April 15, 2005. In collaboration with Siemens Corporate Research Inc., Princeton, USA. Online: *[https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf](https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf)*
+  <!--* [Piper et al.] Piper S., Finet J., Yarmarkovich A., Aucoin N.: **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation:* [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)*-->
+  <!--* [Finet et al.] Finet J., Yarmarkovich A., Liu Y., Freudling A., Kikinis R.: **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: *[https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html)*; Transfer Function Presets on GitHub: *[https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)*-->
+  * [Radiopaedia] : **Radiopaedia**. Online: *[https://radiopaedia.org/](https://radiopaedia.org/)*
+  * [Lindberg] Kjell Lindberg: **How can a processor handle 10 Gigabit per second or more data rate?**. In: Quora. Nov 2021. Online: *[https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate](https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate)*
 * Lighting:
-  * [21] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: [https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)
-  <!--* [22] **The Different Colors Of Operating Theatre Lights**. In: Website "Forum Theatre". September 15, 2022. Online: [https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/](https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/)-->
+  * [21] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: *[https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)*
+  <!--* [22] **The Different Colors Of Operating Theatre Lights**. In: Website "Forum Theatre". September 15, 2022. Online: *[https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/](https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/)*-->
 
 #### A.2. Unreal Engine
 
-* [UEDoc] Epic Games: **Unreal Engine Documentation**. URL: [https://docs.unrealengine.com](https://docs.unrealengine.com)
+* [UEDoc] Epic Games: **Unreal Engine Documentation**. Online: *[https://docs.unrealengine.com](https://docs.unrealengine.com)*
 * Coordinate System:
   * [Mower, Scale] Nick Mower: **Scale and Measurement Inside Unreal Engine 4**. In: TechArt-Hub. Online: [https://www.techarthub.com/scale-and-measurement-inside-unreal-engine-4/](https://www.techarthub.com/scale-and-measurement-inside-unreal-engine-4/)
   * [Mower, Coordinate System] Nick Mower: **A Practical Guide to Unreal Engine 4’s Coordinate System**. In: TechArt-Hub. Online: [https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/](https://www.techarthub.com/a-practical-guide-to-unreal-engine-4s-coordinate-system/)
 * Naming Convention:
-  * [UEDoc, Recommended Asset Naming Conventions] Epic Games: **Recommended Asset Naming Conventions**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/](https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/)
-  * [Allar 2022] Michael Allar: **Gamemakin UE Style Guide**. March 7, 2022. URL: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide)
-  * [Amos 2021] Dylan "Tezenari" Amos: **Asset Naming Conventions**. In: Unreal Directive. October 12, 2021. URL: [https://www.unrealdirective.com/resource/asset-naming-conventions](https://www.unrealdirective.com/resource/asset-naming-conventions)
+  * [UEDoc, Recommended Asset Naming Conventions] Epic Games: **Recommended Asset Naming Conventions**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/](https://docs.unrealengine.com/5.1/en-US/recommended-asset-naming-conventions-in-unreal-engine-projects/)
+  * [Allar 2022] Michael Allar: **Gamemakin UE Style Guide**. March 7, 2022. Online: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide)
+  * [Amos 2021] Dylan "Tezenari" Amos: **Asset Naming Conventions**. In: Unreal Directive. October 12, 2021. Online: [https://www.unrealdirective.com/resource/asset-naming-conventions](https://www.unrealdirective.com/resource/asset-naming-conventions)
 * Textures:
-  * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
+  * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.1/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
   * [Mower, Compression] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. In: TechArt-Hub. Online: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
-  * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. June 19, 2021. URL: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
+  * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. June 19, 2021. Online: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 * Lighting:
-  * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. URL: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
+  * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
 
 ### B. Readings
 
@@ -808,7 +817,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 ### D. Attribution
 
-* The word mark *Unreal* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, URL: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
+* The word mark *Unreal* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, Online: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
 * The word mark *DICOM&mdash;Digital Imaging and Communication in Medicine* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
 * The word mark *MetaImage* is a trademark or registered trademark of Kitware, Inc.
 <!--* The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc.-->
