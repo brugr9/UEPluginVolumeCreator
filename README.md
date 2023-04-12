@@ -38,9 +38,11 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
   * [1.2. Project Configuration](#12-project-configuration)
 * [2. Concept](#2-concept)
 * [3. Medical Imaging Data Import](#3-medical-imaging-data-import)
-  * [3.1. Import DICOM](#31-import-dicom)
-  * [3.2. Import MetaImage](#32-import-metaimage)
-* [4. Actors](#4-actors)
+  * [3.1. Import Actor](#31-import-actor)
+    * [3.1.1. Import DICOM](#311-import-dicom)
+    * [3.2.2. Import MetaImage](#312-import-metaimage)
+  * [3.2. Import User Widget Actor](#32-import-user-widget-actor)
+* [4. Rendering](#4-rendering)
   * [4.1. Scalar Volume SV](#41-scalar-volume-sv)
     * [4.1.1. SV Actor](#411-sv-actor)
     * [4.1.2. SV User Widget Actor](#412-sv-user-widget-actor)
@@ -151,41 +153,43 @@ With processing, e.g., 30 fps (cp. [Lindberg]):
 * *ProcessedData<sub>2</sub> = 4.295 Gigabit/frame x 30 frames/s = 128.8 Gigabit/s*
 * *ProcessedData<sub>3</sub> = 34.359 Gigabit/frame x 30 frames/s = 1030.8 Gigabit/s*
 
-The created asset name derives from the file name which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)):
+The created asset name derives from the file name which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.):
 
 * `AssetName`:
   * The same as the imported file
-  * Underlines (`_`) from the imported file name are replaced by minus (`-`) in asset names (from Project Settings)
-  * Maximum length: 20 signs (from Project Settings)
+  * Underlines (`_`) are replaced with a String as given by the Project Settings, which is minus (`-`) by default
+  * Maximum length as given by the Project Settings, which is `20` by default
 
 Example: A file named `My_0123456789_ImageFile.*` becomes `My-0123456789-ImageF`
 
 ![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.: Screenshot of Project Settings > Plugin > Volume Creator*
 
-### 3.1. Import DICOM
+### 3.1. Import Actor
+
+#### 3.1.1. Import DICOM
 
 Workflow:
 
 * Reads from DICOM&reg; files, file name extension `*.dcm` and
   * Writes Scalar Volume image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_Volume`
-  * Saves the Volume Texture Render Target `RT_SV_Volume` as newly created Scalar Volume Volume Texture asset `T_MyDataName_SV_Volume`
+  * Saves the Volume Texture Render Target `RT_SV_Volume` as newly created Volume Texture asset `T_MyDataName_SV_Volume`
 * Creates a Blueprint asset `BP_MyDataName` deriving from Scalar Volume Actor `BP_SV` and
   * Writes meta data, e.g., DICOM Pixel Spacing
   * Assigns the just created Volume Texture asset `T_MyDataName_SV_Volume`
 
-### 3.2. Import MetaImage
+#### 3.1.2. Import MetaImage
 
 Workflow:
 
 * Reads from MetaImage&trade;, file name extension `*.mhds`
 
+### 3.2. Import User Widget Actor
+
 <div style='page-break-after: always'></div>
 
-## 4. Actors
+## 4. Rendering
 
 ### 4.1. Scalar Volume SV
-
-Scalar Volume SV (not to be confused with the HLSL abbreviation for System Value; cp. Online: *[Semantics](https://learn.microsoft.com/en-gb/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)*).
 
 #### 4.1.1. SV Actor
 
@@ -638,6 +642,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * OG &mdash; Orientation Guide
 * P &mdash; Posterior
 * PIE &mdash; Play in Editor
+* PS &mdash; Pixel Shader
 * R &mdash; Right
 * R-A-S &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
@@ -655,13 +660,14 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 <!--
 * AAA &mdash; Abdominal Aortic Aneurysm
 * CRI &mdash; Color Rendering Index
+* CRS &mdash; Coordinate Reference System
 * CTA &mdash; Computed Tomography Angiography
-* dGEMRIC &mdash; delayed gadolinium-enhanced MRI of cartilage
+* dGEMRIC &mdash; delayed Gadolinium-Enhanced MRI of Cartilage
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
 * MRT &mdash; Multiple Render Targets (rendering technique)
 * PET &mdash; Positron Emission Tomography
-* CRS &mdash; Coordinate Reference System
+* SV &mdash; Scalar Volume (not to be confused with the HLSL abbreviation for System Value; cp. Online: *[HLSL Semantics](https://learn.microsoft.com/en-gb/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)*).
 * WCS &mdash; World Coordinate System
 -->
 
@@ -754,8 +760,9 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
   * Color Atlas: `ColorAtlas`
-  * Compute Shader: `CS`
+  <!--* Compute Shader: `CS`-->
   * Main Material: `Main`
+  <!--* Pixel Shader: `PS`-->
   * Texture Drawn from 'Material to Texture Render Target': `Tex`
   * User Widget Actor: `UI`
   * Volume Texture: `Volume`
