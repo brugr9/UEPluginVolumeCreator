@@ -109,8 +109,11 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 
 ![Volume Creator Blueprint Classes](Docs/VolumeCreator-Content-Classes.png "Volume Creator Blueprint Classes")<br>*Fig. 2.1.: Volume Creator Blueprint Classes*
 
+* **Medical Imaging Data Import**:
+  * **Import Actor**: Medical Medical imaging data is imported from DICOM or MetaImage files and stored as Hounsfield Units encoded Volume Texture.
+  * **Import User Widget Actor**: To access and change parameters of an Import Actor in runtime, the plugin provides with an Import User Widget Actor.
 * **Scalar Volume SV**:
-  * **SV Actor**: Medical images are imported, e.g., from DICOM files and stored as Hounsfield Units encoded Volume Texture. A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
+  * **SV Actor**: A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
   * **SV User Widget Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget Actor.
 * **Values Of Interest VOI**
   * **VOI Actor**: A Values Of Interest VOI Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
@@ -155,12 +158,16 @@ With processing, e.g., 30 fps (cp. [Lindberg]):
 
 The created asset name derives from the file name which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.):
 
+* `AssetTypePrefix`: `T_`
 * `AssetName`:
   * The same as the imported file
   * Underlines (`_`) are replaced with a String as given by the Project Settings, which is minus (`-`) by default
   * Maximum length as given by the Project Settings, which is `20` by default
+* `DescriptorSuffix`: `_Volume`
 
-Example: A file named `My_0123456789_ImageFile.*` becomes `My-0123456789-ImageF`
+Example: With importing a file named `My_0123456789_ImageFile.dcm` and using the plugin default settings the AssetName becomes `My-0123456789-ImageF`. In addition, the AssetTypePrefix `T_` and the DescriptorSuffix `_Volume` are added, resulting in a Content file named `T_My-0123456789-ImageF_Volume`.
+
+When setting the `AssetName Maximum Length`, note that an assets pathname may be limited on the operating system, e.g. to 260 characters.
 
 ![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.: Screenshot of Project Settings > Plugin > Volume Creator*
 
@@ -763,7 +770,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   <!--* Compute Shader: `CS`-->
   * Main Material: `Main`
   <!--* Pixel Shader: `PS`-->
-  * Texture Drawn from 'Material to Texture Render Target': `Tex`
+  <!--* Texture Drawn from 'Material to Texture Render Target': `Tex`-->
   * User Widget Actor: `UI`
   * Volume Texture: `Volume`
 
