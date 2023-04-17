@@ -18,7 +18,7 @@ Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Ima
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system.
 
-The delivered assets provide importing DICOM&reg; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring the same from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may shrink the rendered volume interactively. The plugin allows to create solutions that can be used in VR/AR serious games, e.g., for teaching and training in medical education.
+The delivered assets provide importing DICOM&reg; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring the same from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may shrink the rendered volume interactively. The plugin acts as framework which allows game developers to create solutions that can be used in VR/AR serious games, e.g., for teaching and training in medical education.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -121,15 +121,16 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 * **Multiplanar Rendering MPR**
   * **MPR Actor**: The Values Of Interest may be visualized by multiplanar rendering in an MPR Actor. The MPR Actor&mdash;as a 3D representation of MPR&mdash;holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane.
   * **MPR User Widget Actor**: The MPR Actor produces planar rendering, which is also consumed by the MPR User Widget Actor, a 2D representation of MPR. The planes can be moved in the direction of their corresponding axes interactively in real-time.
-* **Direct Volume Rendering DVR**
-  * **DVR Actor**: The Values Of Interest may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
-  * **DVR User Widget Actor**: To access and change parameters of a DVR Actor in runtime, the plugin provides with a DVR User Widget Actor.
+* **Volume Rendering**
+  * **Direct Volume Rendering DVR**
+    * **DVR Actor**: The Values Of Interest may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
+    * **DVR User Widget Actor**: To access and change parameters of a DVR Actor in runtime, the plugin provides with a DVR User Widget Actor.
   * **Region Of Interest ROI**
-    * **ROI Actor**: The DVR Actor geometry can be optionally shrinked in real-time using a region of interest ROI Actor.
-    * **ROI Handles Actor**: A ROI geometry can be optionally modified with a ROI Handles Actor interactively in real-time.
-  * **Clip Plane Actor**: The DVR Actor geometry can be optionally shrinked in real-time using a Clip Plane Actor.
-  * **Light Source Actor**: The DVR can be optionally illuminated with static light source from Light Source Actors.
-  * **Orientation Guide Actor**: The volume rendering actor can be optionally attached a rotation synchronized orientation guide.
+    * **ROI Actor**: The volume rendering actor geometry can optionally be shrunk in real-time using a region of interest ROI Actor.
+    * **ROI Handles Actor**: A ROI geometry can optionally be modified with a ROI Handles Actor interactively in real-time.
+  * **Clip Plane Actor**: The volume rendering actor geometry can optionally be shrunk in real-time using a Clip Plane Actor.
+  * **Light Source Actor**: The volume rendering actor can optionally be illuminated with static light sources from Light Source Actors.
+  * **Orientation Guide Actor**: The volume rendering actor can optionally be attached a rotation synchronized orientation guide.
 
 ![Domain Model Diagram &mdash; Multiplanar Rendering MPR](Docs/DMD-MPR.png "Domain Model Diagram &mdash; Multiplanar Rendering MPR")<br>*Fig. 2.2.: Domain Model Diagram &mdash; Multiplanar Rendering MPR*
 
@@ -165,9 +166,9 @@ The created asset name derives from the file name which is imported (cp. appendi
   * Maximum length as given by the Project Settings, which is `20` by default
 * `DescriptorSuffix`: `_Volume`
 
-Example: With importing a file named `My_0123456789_ImageFile.dcm` and using the plugin default settings the AssetName becomes `My-0123456789-ImageF`. In addition, the AssetTypePrefix `T_` and the DescriptorSuffix `_Volume` are added, resulting in a Content file named `T_My-0123456789-ImageF_Volume`.
+Example: With importing imaging data from a file named `My_0123456789_ImageFile.dcm` and using the plugin default settings the AssetName becomes `My-0123456789-ImageF`. In addition, the AssetTypePrefix `T_` and the DescriptorSuffix `_Volume` are added, resulting in a content file named `T_My-0123456789-ImageF_Volume`.
 
-When setting the `AssetName Maximum Length`, note that an assets pathname may be limited on the operating system, e.g. to 260 characters.
+When setting the `AssetName Maximum Length`, note that an assets pathname may be limited by the operating system, e.g. to 260 characters.
 
 ![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.: Screenshot of Project Settings > Plugin > Volume Creator*
 
@@ -307,16 +308,17 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `4096.0`
   * Range: [`1.0`, `4096.0`]
   * Info: Window Width in Hounsfield Units (aka range or contrast)
-* Window Range
+* Window Border
   * Left
     * Type: `Float`
     * Default Value: `-1000.0`
     * Range: [`-1000.0`, `3096.0`]
+    * Info: Window lower border value; which is calculated (not editable, for information only).
   * Right
     * Type: `Float`
     * Default Value: `3096.0`
     * Range: [`-1000.0`, `3096.0`]
-  * Info: Window Left and Right Border which are calculated, not editable, for information only.
+    * Info: Window upper border value; which is calculated (not editable, for information only).
 * Window Mask
   * Type: `Boolean`
   * Default Value: `true`
@@ -541,7 +543,7 @@ Widget Entries:
 
 ##### 4.4.3.1. ROI Actor
 
-Plugin "Volume Creator" provides with a Region Of Interest ROI Actor (Blueprint Class: `BP_ROI`), with which a DVR Actor geometry can be shrinked in real-time. A ROI Actor instance can be assigned as a parameter in a DVR Actor instance. In the Unreal Editor Outline Hierarchy a ROI Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
+Plugin "Volume Creator" provides with a Region Of Interest ROI Actor (Blueprint Class: `BP_ROI`), with which a volume rendering Actor geometry can be shrunk in real-time. A ROI Actor instance can be assigned as a parameter in a DVR Actor instance. In the Unreal Editor Outline Hierarchy a ROI Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
 
 ![Blueprint Actor BP_ROI](Docs/BP_ROI.png "DetailsBlueprint Actor BP_ROI")<br>*Fig. 4.4.3.1.1.: Blueprint Actor BP_ROI*
 
@@ -568,7 +570,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 #### 4.4.4. Clip Plane Actor
 
-Plugin "Volume Creator" provides with a Clip Plane Actor (Blueprint Class: `BP_DvrClipPlane`), with which a DVR Actor geometry can be shrinked in real-time.
+Plugin "Volume Creator" provides with a Clip Plane Actor (Blueprint Class: `BP_DvrClipPlane`), with which a volume rendering Actor geometry can be shrunk in real-time.
 
 ![Blueprint Actor BP_DvrClipPlane](Docs/BP_DvrClipPlane.png "DetailsBlueprint Actor BP_DvrClipPlane")<br>*Fig. 4.4.4.1.: Blueprint Actor BP_DvrClipPlane*
 
@@ -578,7 +580,7 @@ Parameter, Category 'Volume Creator':
 
 #### 4.4.5. Light Source Actor
 
-Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can be optionally attached to a DVR Actor. The Light Source Actor will serve as static lighting source to illuminate the direct volume rendering. Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light (see figure 4.4.5.2.). By default, the lighting is intended only for the DVR. It is up to the developer whether the light should also affect the world and ray tracing.
+Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering Actor. The Light Source Actor will serve as static lighting source to illuminate the volume rendering. Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light (see figure 4.4.5.2.). By default, the lighting is intended only for the DVR. It is up to the developer whether the light should also affect the world and ray tracing.
 
 ![Blueprint Actor BP_LightSource](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource")<br>*Fig. 4.4.5.1.: Blueprint Actor BP_LightSource*
 
@@ -604,7 +606,7 @@ Parameter (cp. figure 'Details Panel'):
 
 #### 4.4.6. Orientation Guide Actor
 
-Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class: `BP_OrientationGuide`), which can be attached to a DVR Actor and serves as rotation synchronized orientation guide.
+Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering Actor and serves as rotation synchronized orientation guide.
 
 ![Blueprint Actor BP_OrientationGuide](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_OrientationGuide*
 
@@ -624,7 +626,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 ### Abbreviations and Acronyms
 
 * A &mdash; Anterior
-* A-R-S &mdash; Anterior&ndash;Right&ndash;Superior
+* A&ndash;R&ndash;S &mdash; Anterior&ndash;Right&ndash;Superior
 * AXE &mdash; Axial
 * BB &mdash; Bounding Box
 * COR &mdash; Coronal
@@ -639,8 +641,8 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * IES &mdash; Illuminating Engineering Society, Lighting Profile File Extension
 * L &mdash; Left
 * LhS &mdash; Left-handed System
-* L-A-S &mdash; Left&ndash;Anterior&ndash;Superior
-* L-P-S &mdash; Left&ndash;Posterior&ndash;Superior
+* L&ndash;A&ndash;S &mdash; Left&ndash;Anterior&ndash;Superior
+* L&ndash;P&ndash;S &mdash; Left&ndash;Posterior&ndash;Superior
 * LUT &mdash; Look-Up Table
 * MinIP &mdash; Minimum Intensity Projection
 * MIP &mdash; Maximum Intensity Projection
@@ -651,7 +653,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * PIE &mdash; Play in Editor
 * PS &mdash; Pixel Shader
 * R &mdash; Right
-* R-A-S &mdash; Right&ndash;Anterior&ndash;Superior
+* R&ndash;A&ndash;S &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
 * ROI &mdash; Region of Interest
 * RT &mdash; Render Target Texture
@@ -692,7 +694,7 @@ Patient Coordinate System: Anatomical planes and terms of location on a person s
 
 ##### DICOM
 
-DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*). DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cp. [Adaloglouon 2020, Medical Image coordinate system (Voxel space)]):
+DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*). DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cp. [Adaloglouon 2020, Medical Image coordinate system (Voxel space)]):
 
 * The image stack Origin is located in the first slice, first column, first row
 * i: Image width in columns, increases to anatomical **Left L**
@@ -701,13 +703,13 @@ DICOM images are using a **Left&ndash;Posterior&ndash;Superior L-P-S** system (c
 
 ##### Unreal Engine
 
-Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in a **Anterior&ndash;Right&ndash;Superior A-R-S** system (cp. figure G.1.):
+Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in a **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (cp. figure G.1.):
 
 * X: Increases from Back to Front, color code red; anatomical from Posterior P to **Anterior A**
 * Y: Increases from Left to Right, color code green; anatomical from Left L to **Right R**
 * Z: Increases upwards from Bottom to Top, color code blue; anatomical from Inferior I to **Superior S**
 
-![DVR Orientation Guide Actor with UE Left Handed Location-Gizmo Arrows](Docs/OrientationGuide.png "DVR Orientation Guide Actor with UE Left Handed Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with UE Left Handed Location-Gizmo Arrows*
+![DVR Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](Docs/OrientationGuide.png "DVR Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
 
 <div style='page-break-after: always'></div>
 
@@ -717,7 +719,7 @@ Anatomical Planes and Terms of Location in plugin "Volume Creator" (cp. figure G
 * **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) <br>with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
 * **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) <br>with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
 
-![ROI-Handles Actor with UE Left Handed Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with UE Left Handed Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with UE Left Handed Location-Gizmo Arrows*
+![ROI-Handles Actor with UE Left handed Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with UE Left handed Location-Gizmo Arrows*
 
 #### Asset Naming Convention
 
