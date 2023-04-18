@@ -18,7 +18,7 @@ Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Ima
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system.
 
-The delivered assets provide importing DICOM&reg; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring the same from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may shrink the rendered volume interactively. The plugin acts as framework which allows game developers to create solutions that can be used in VR/AR serious games, e.g., for teaching and training in medical education.
+The delivered assets provide importing DICOM&reg; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring the same from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may shrink the rendered volume interactively. The plugin acts as a framework which allows game developers to create VR/AR solutions which can be used as serious games, e.g., for teaching and training in medical education.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -313,12 +313,12 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
     * Type: `Float`
     * Default Value: `-1000.0`
     * Range: [`-1000.0`, `3096.0`]
-    * Info: Window lower border value; which is calculated (not editable, for information only).
+    * Info: Window Left (lower) Border Value; which is calculated (not editable, for information only).
   * Right
     * Type: `Float`
     * Default Value: `3096.0`
     * Range: [`-1000.0`, `3096.0`]
-    * Info: Window upper border value; which is calculated (not editable, for information only).
+    * Info: Window Right (upper) Border Value; which is calculated (not editable, for information only).
 * Window Mask
   * Type: `Boolean`
   * Default Value: `true`
@@ -387,11 +387,6 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory
-* Planes Location:
-  * Type: `Vector`
-  * Default Value: `X 0.0, Y 0.0, Z 0.0`
-  * Ranges: [`-50.0`, `50.0`]
-  * Info: Anatomical Planes Location (X: COR, Y: SAG, Z: AXE)
 * LUT Index:
   * Type: `Integer`
   * Default Value: `0`
@@ -402,6 +397,23 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Default Value: `0.5`
   * Range: [`0`, `10`]
   * Info: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
+* Planes Location:
+  * Type: `Vector`
+  * Default Value: `X 0.0, Y 0.0, Z 0.0`
+  * Ranges: [`-50.0`, `50.0`]
+  * Info: Anatomical Planes Location (X: Coronal, Y: Sagittal, Z: Axial)<br>Use this Values instead of Component Location Values (Serialized for Saved Games).
+* Coronal Plane Visibility:
+  * Type: `bool`
+  * Default Value: `true`
+  * Info: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
+* Sagittal Plane Visibility:
+  * Type: `bool`
+  * Default Value: `true`
+  * Info: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
+* Axial Plane Visibility:
+  * Type: `bool`
+  * Default Value: `true`
+  * Info: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
 
 <div style='page-break-after: always'></div>
 
