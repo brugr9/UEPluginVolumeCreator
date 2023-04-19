@@ -41,7 +41,8 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
   * [3.1. Import Actor](#31-import-actor)
     * [3.1.1. Import DICOM](#311-import-dicom)
     * [3.2.2. Import MetaImage](#312-import-metaimage)
-  * [3.2. Import User Widget Actor](#32-import-user-widget-actor)
+  * [3.2. Import User Widget](#32-import-user-widget)
+  * [3.2. Import User Widget Actor](#33-import-user-widget-actor)
 * [4. Rendering](#4-rendering)
   * [4.1. Scalar Volume SV](#41-scalar-volume-sv)
     * [4.1.1. SV Actor](#411-sv-actor)
@@ -65,6 +66,9 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
     * [4.4.4. Clip Plane Actor](#444-clip-plane-actor)
     * [4.4.5. Light Source Actor](#445-light-source-actor)
     * [4.4.6. Orientation Guide Actor](#446-orientation-guide-actor)
+
+<div style='page-break-after: always'></div>
+
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
@@ -115,20 +119,20 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 
 * **Medical Imaging Data Import**:
   * **Import Actor**: Medical Medical imaging data is imported from DICOM or MetaImage files and stored as Hounsfield Units encoded Volume Texture.
-  * **Import User Widget and Actor**: To access and change parameters of an Import Actor in runtime, the plugin provides with an Import User Widget Actor.
+  * **Import User Widget and Import UI Actor**: To access and change parameters of an Import Actor in runtime, the plugin provides with an Import User Widget and an Import UI Actor.
 * **Scalar Volume SV**:
   * **SV Actor**: A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
-  * **SV User Widget and Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget Actor.
+  * **SV User Widget and SV UI Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget and an SV UI Actor.
 * **Values Of Interest VOI**
   * **VOI Actor**: A Values Of Interest VOI Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
-  * **VOI User Widget and Actor**: To access and change parameters of a VOI Actor in runtime, the plugin provides with a VOI User Widget Actor.
+  * **VOI User Widget and VOI UI Actor**: To access and change parameters of a VOI Actor in runtime, the plugin provides with a VOI User Widget and a VOI UI Actor.
 * **Multiplanar Rendering MPR**
   * **MPR Actor**: The Values Of Interest may be visualized by multiplanar rendering in an MPR Actor. The MPR Actor&mdash;as a 3D representation of MPR&mdash;holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane.
-  * **MPR User Widget and Actor**: The MPR Actor produces planar rendering, which is also consumed by the MPR User Widget Actor, a 2D representation of MPR. The planes can be moved in the direction of their corresponding axes interactively in real-time.
+  * **MPR User Widget and MPR UI Actor**: The MPR Actor produces planar rendering, which is also consumed by an MPR User Widget and an MPR UI Actor, which are 2D representations of MPR. The anatomical planes can be moved in the direction of their corresponding axes interactively in real-time.
 * **Volume Rendering**
   * **Direct Volume Rendering DVR**
     * **DVR Actor**: The Values Of Interest may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
-    * **DVR User Widget and Actor**: To access and change parameters of a DVR Actor in runtime, the plugin provides with a DVR User Widget Actor.
+    * **DVR User Widget and DVR UI Actor**: To access and change parameters of a DVR Actor in runtime, the plugin provides with a DVR User Widget and a DVR UI Actor.
   * **Region Of Interest ROI**
     * **ROI Actor**: The volume rendering actor geometry can optionally be cropped in real-time using a region of interest ROI Actor.
     * **ROI Handles Actor**: A ROI geometry can optionally be modified with a ROI Handles Actor interactively in real-time.
@@ -195,7 +199,13 @@ Workflow:
 
 * Reads from MetaImage&trade;, file name extension `*.mhds`
 
-### 3.2. Import User Widget Actor
+<div style='page-break-after: always'></div>
+
+### 3.2. Import User Widget
+
+<div style='page-break-after: always'></div>
+
+### 3.3. Import User Widget Actor
 
 <div style='page-break-after: always'></div>
 
@@ -267,7 +277,7 @@ Widget Entries:
 * Save
 * Save As... (Dialog)
 
-![Level Blueprint Create SV User Widget](Docs/LevelBP-CreateSVUserWidget.png "Level Blueprint Create SV User Widget")<br>*Fig. 4.1.2.2.: Level Blueprint Create SV User Widget*
+![Level Blueprint Example, Create SV User Widget](Docs/UserWidget-WBP_SV-LevelBP.png "Level Blueprint Example, Create SV User Widget")<br>*Fig. 4.1.2.2.: Level Blueprint Example, Create SV User Widget*
 
 Create Parameter:
 
@@ -280,7 +290,7 @@ Create Parameter:
 
 #### 4.1.3. SV User Widget Actor
 
-Plugin "Volume Creator" provides with SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds an SV User Widget (Blueprint Class: `WBP_SV`).
+Plugin "Volume Creator" provides with SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an SV User Widget assigned (Blueprint Class: `WBP_SV`).
 
 ![Blueprint Actor BP_SV_UI](Docs/BP_SV_UI.png "Blueprint Actor BP_SV_UI")<br>*Fig. 4.1.3.1.: Blueprint Actor BP_SV_UI*
 
@@ -373,7 +383,7 @@ Widget Entries:
 * Window Width (Slider)
 * Window Mask (Check)
 
-![Level Blueprint Create VOI User Widget](Docs/LevelBP-CreateVOIUserWidget.png "Level Blueprint Create VOI User Widget")<br>*Fig. 4.2.2.2.: Level Blueprint Create VOI User Widget*
+![Level Blueprint Example, Create VOI User Widget](Docs/UserWidget-WBP_VOI-LevelBP.png "Level Blueprint Example, Create VOI User Widget")<br>*Fig. 4.2.2.2.: Level Blueprint Example, Create VOI User Widget*
 
 Create Parameter:
 
@@ -386,7 +396,7 @@ Create Parameter:
 
 #### 4.2.3. VOI User Widget Actor
 
-Plugin "Volume Creator" provides with a VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a VOI User Widget (Blueprint Class: `WBP_VOI`).
+Plugin "Volume Creator" provides with a VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned (Blueprint Class: `WBP_VOI`).
 
 ![Blueprint Actor BP_VOI_UI](Docs/BP_VOI_UI.png "Blueprint Actor BP_VOI_UI")<br>*Fig. 4.2.3.1.: Blueprint Actor BP_VOI_UI*
 
@@ -467,7 +477,7 @@ Widget Entries:
   * Location I&ndash;S (Slider)
   * Visibility (Check Box)
 
-![Level Blueprint Create MPR User Widget](Docs/LevelBP-CreateMPRUserWidget.png "Level Blueprint Create MPR User Widget")<br>*Fig. 4.3.2.2.: Level Blueprint Create MPR User Widget*
+![Level Blueprint Example, Create MPR User Widget](Docs/UserWidget-WBP_MPR-LevelBP.png "Level Blueprint Example, Create MPR User Widget")<br>*Fig. 4.3.2.2.: Level Blueprint Example, Create MPR User Widget*
 
 Create Parameter:
 
@@ -480,7 +490,7 @@ Create Parameter:
 
 #### 4.3.3. MPR User Widget Actor
 
-Plugin "Volume Creator" provides with an MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds an MPR User Widget (Blueprint Class: `WBP_MPR`).
+Plugin "Volume Creator" provides with an MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (Blueprint Class: `WBP_MPR`).
 
 ![Blueprint Actor BP_MPR_UI](Docs/BP_MPR_UI.png "Blueprint Actor BP_MPR_UI")<br>*Fig. 4.3.3.1.: Blueprint Actor BP_MPR_UI*
 
@@ -594,7 +604,7 @@ Widget Entries:
   * Specular (Slider)
   * Specular Power (Slider)
 
-![Level Blueprint Create DVR User Widget](Docs/LevelBP-CreateDVRUserWidget.png "Level Blueprint Create DVR User Widget")<br>*Fig. 4.4.2.2.: Level Blueprint Create DVR User Widget*
+![Level Blueprint Example, Create DVR User Widget](Docs/UserWidget-WBP_DVR-LevelBP.png "Level Blueprint Example, Create DVR User Widget")<br>*Fig. 4.4.2.2.: Level Blueprint Example, Create DVR User Widget*
 
 Create Parameter:
 
@@ -607,7 +617,7 @@ Create Parameter:
 
 #### 4.4.3. DVR User Widget Actor
 
-Plugin "Volume Creator" provides with a DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a DVR User Widget (Blueprint Class: `WBP_DVR`).
+Plugin "Volume Creator" provides with a DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned (Blueprint Class: `WBP_DVR`).
 
 ![Blueprint Actor BP_DVR_UI](Docs/BP_DVR_UI.png "Blueprint Actor BP_DVR_UI")<br>*Fig. 4.4.3.1.: Blueprint Actor BP_DVR_UI*
 
@@ -843,8 +853,9 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
       * Plane: `COR`, `SAG`, `AXE`
       * Location: `P`, `A`, `L`, `R`, `I`, `S`
       * Look-Up Table: `LUT`
-    * Direct Volume Rendering: `DVR`
+    * Volume Rendering:
       * Bounding Box: `BB`
+      * Direct Volume Rendering: `DVR`
       * Orientation Guide: `OG`
       * Region Of Interest: `ROI`
       * Transfer Function: `TF`
