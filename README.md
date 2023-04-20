@@ -119,20 +119,20 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 
 * **Medical Imaging Data Import**:
   * **Import Actor**: Medical Medical imaging data is imported from DICOM or MetaImage files and stored as Hounsfield Units encoded Volume Texture.
-  * **Import User Widget and Import UI Actor**: To access and change parameters of an Import Actor in runtime, the plugin provides with an Import User Widget and an Import UI Actor.
+  * **Import User Widget and Import User Widget Actor**: To access and change parameters of an Import Actor in runtime, the plugin provides with an Import User Widget and an Import User Widget Actor.
 * **Scalar Volume SV**:
   * **SV Actor**: A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
-  * **SV User Widget and SV UI Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget and an SV UI Actor.
+  * **SV User Widget and SV User Widget Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget and an SV User Widget Actor.
 * **Values Of Interest VOI**
   * **VOI Actor**: A Values Of Interest VOI Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
-  * **VOI User Widget and VOI UI Actor**: To access and change parameters of a VOI Actor in runtime, the plugin provides with a VOI User Widget and a VOI UI Actor.
+  * **VOI User Widget and VOI User Widget Actor**: To access and change parameters of a VOI Actor in runtime, the plugin provides with a VOI User Widget and a VOI User Widget Actor.
 * **Multiplanar Rendering MPR**
   * **MPR Actor**: The Values Of Interest may be visualized by multiplanar rendering in an MPR Actor. The MPR Actor&mdash;as a 3D representation of MPR&mdash;holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane.
-  * **MPR User Widget and MPR UI Actor**: The MPR Actor produces planar rendering, which is also consumed by an MPR User Widget and an MPR UI Actor, which are 2D representations of MPR. The anatomical planes can be moved in the direction of their corresponding axes interactively in real-time.
+  * **MPR User Widget and MPR User Widget Actor**: The MPR Actor produces planar rendering, which is also consumed by an MPR User Widget and an MPR User Widget Actor, which are 2D representations of MPR. The anatomical planes can be moved in the direction of their corresponding axes interactively in real-time.
 * **Volume Rendering**
   * **Direct Volume Rendering DVR**
     * **DVR Actor**: The Values Of Interest may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
-    * **DVR User Widget and DVR UI Actor**: To access and change parameters of a DVR Actor in runtime, the plugin provides with a DVR User Widget and a DVR UI Actor.
+    * **DVR User Widget and DVR User Widget Actor**: To access and change parameters of a DVR Actor in runtime, the plugin provides with a DVR User Widget and a DVR User Widget Actor.
   * **Region Of Interest ROI**
     * **ROI Actor**: The volume rendering actor geometry can optionally be cropped in real-time using a region of interest ROI Actor.
     * **ROI Handles Actor**: A ROI geometry can optionally be modified with a ROI Handles Actor interactively in real-time.
@@ -459,7 +459,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 #### 4.3.2. MPR User Widget
 
-Plugin "Volume Creator" provides with an MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of Coronal, Sagittal and Axial planes consumed from an MPR Actor instance and arranged side by side.
+Plugin "Volume Creator" provides with an MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side.
 
 ![User Widget Blueprint WBP_MPR](Docs/UserWidget-WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
