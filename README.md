@@ -156,8 +156,8 @@ CT image data is expected to come in Hounsfield Units HU. DICOM image data is st
 The size of Volume<sub>1</sub> becomes 67 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size of Volume<sub>2</sub> increases to 0.5 GB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of Volume<sub>3</sub> increases to 4 GB.
 
 * *Volume<sub>1</sub> = 256<sup>3</sup> x 4 x 8 bit = 536’870’912 bit = 0.537 Gigabit = 67 MB*
-* *Volume<sub>2</sub> = 512<sup>3</sup> x 4 x 8 bit = 4’294’967’296 bit = 4.295 Gigabit = 537 MB*
-* *Volume<sub>3</sub> = 1024<sup>3</sup> x 4 x 8 bit = 34’359’738’368 bit = 34.359 Gigabit = 4295 MB*
+* *Volume<sub>2</sub> = 512<sup>3</sup> x 4 x 8 bit = 4’294’967’296 bit = 4.295 Gigabit = 537 MB = 0.52 GB*
+* *Volume<sub>3</sub> = 1024<sup>3</sup> x 4 x 8 bit = 34’359’738’368 bit = 34.359 Gigabit = 4295 MB = 4.19 GB*
 
 With processing, e.g., 30 fps (cp. [Lindberg]):
 
@@ -225,7 +225,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 * Scalar Volume Texture
   * Type: `Volume Texture`
-  * Default Value: `T_SV_Volume_Tex`
+  * Default Value: `T_SV_Volume`
   * Info: Scalar Volume, Hounsfield Units encoded Volume Texture
 * Origin
   * Type: `Vector`
@@ -735,7 +735,6 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * FPV &mdash; First Person View
 * HU &mdash; Hounsfield Units
 * I &mdash; Inferior
-* IES &mdash; Illuminating Engineering Society, Lighting Profile File Extension
 * L &mdash; Left
 * LhS &mdash; Left-handed System
 * L&ndash;A&ndash;S &mdash; Left&ndash;Anterior&ndash;Superior
@@ -769,6 +768,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * CRS &mdash; Coordinate Reference System
 * CTA &mdash; Computed Tomography Angiography
 * dGEMRIC &mdash; delayed Gadolinium-Enhanced MRI of Cartilage
+* IES &mdash; Illuminating Engineering Society, Lighting Profile File Extension
 * MRI &mdash; Magnetic Resonance Imaging
 * MRT &mdash; Magnetic Resonance Tomography
 * MRT &mdash; Multiple Render Targets (rendering technique)
@@ -867,10 +867,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
   * Color Atlas: `ColorAtlas`
-  <!--* Compute Shader: `CS`-->
   * Main Material: `Main`
-  <!--* Pixel Shader: `PS`-->
-  <!--* Texture Drawn from 'Material to Texture Render Target': `Tex`-->
   * User Widget Actor: `UI`
   * Volume Texture: `Volume`
 
