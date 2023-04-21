@@ -148,24 +148,40 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 
 ## 3. Medical Imaging Data Import
 
-CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes you also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3096]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
+CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes one also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3096]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
 
 * A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
-* 4 channels RGBA with 8 bit per channel (2<sup>8</sup> = 256, range from 0 to 255) TODO: Update channels and bit per channel
+* A single grayscale 12 bit channel G
 
-The size of Volume<sub>1</sub> becomes 67 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size of Volume<sub>2</sub> increases to 0.5 GB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of Volume<sub>3</sub> increases to 4 GB.
+The size of Volume<sub>1</sub> becomes 24 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size of Volume<sub>2</sub> increases to 192 MB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of Volume<sub>3</sub> increases to 1.5 GB.
 
-* *Volume<sub>1</sub> = 256<sup>3</sup> x 4 x 8 bit = 536’870’912 bit = 0.537 Gigabit = 67 MB*
-* *Volume<sub>2</sub> = 512<sup>3</sup> x 4 x 8 bit = 4’294’967’296 bit = 4.295 Gigabit = 537 MB = 0.52 GB*
-* *Volume<sub>3</sub> = 1024<sup>3</sup> x 4 x 8 bit = 34’359’738’368 bit = 34.359 Gigabit = 4295 MB = 4.19 GB*
+* *Volume<sub>1</sub> = 256<sup>3</sup> x 12 bit = 201'326'592 bit = 0.201 Gigabit = 24 MB*
+* *Volume<sub>2</sub> = 512<sup>3</sup> x 12 bit = 1'610'612'736 bit = 1.611 Gigabit = 192 MB*
+* *Volume<sub>3</sub> = 1024<sup>3</sup> x 12 bit = 12'884'901'888 bit = 12.885 Gigabit =  1'536 MB = 1.5 GB*
 
 With processing, e.g., 30 fps (cp. [Lindberg]):
 
-* *ProcessedData<sub>1</sub> = 0.537 Gigabit/frame x 30 frames/s = 16.1 Gigabit/s*
-* *ProcessedData<sub>2</sub> = 4.295 Gigabit/frame x 30 frames/s = 128.8 Gigabit/s*
-* *ProcessedData<sub>3</sub> = 34.359 Gigabit/frame x 30 frames/s = 1030.8 Gigabit/s*
+* *ProcessedData<sub>1</sub> = 0.201 Gigabit/frame x 30 frames/s = 6.03 Gigabit/s*
+* *ProcessedData<sub>2</sub> = 1.611 Gigabit/frame x 30 frames/s = 48.33 Gigabit/s*
+* *ProcessedData<sub>3</sub> = 12.885 Gigabit/frame x 30 frames/s = 386.55 Gigabit/s*
 
-The created asset name derives from the file name which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.):
+### Render Targets
+
+The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data:
+
+* SV: `T_SV_Volume`, Grayscale G16 (single channel, 16 bit); G: Hounsfield Units [-1000, 3076], W/H/D from Import<br>*Example: W/H/D 512 x 512 x 141 px, 72'192 Kb*
+* VOI: `RT_VOI_Volume`, Linear RG8 (dual channel, 8 bit); R: VOI [0, 255], G: Mask [0, 1], W/H/D from T_SV_Volume<br>*Example: W/H/D 512 x 512 x 141 px, 144'384 Kb*
+* DVR: `RT_Lightmap_Volume`, Linear Color RGBA8 (quad channel, 8 bit); RGBA: Color [0, 255], W/H/D from RT_VOI_Volume but half Resolution<br>*Example: W/H/D 256 x 256 x 70 px, 17'920 Kb*
+
+*Example, size: 72'192 Kb + 144'384 Kb + 17'920 Kb = 234'496 Kb*
+
+The MPR Render Targets do not inherit, they are always the same size:
+
+* MPR: `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`, Linear R8 (single channel, 8 bit); R: VOI [0, 255], W/H 1024 x 1024 px each, 1'024 Kb each (Sum: 3'072 Kb)
+
+### Content File Name
+
+The created content file name derives from the file name which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.):
 
 * `AssetTypePrefix`: `T_`
 * `AssetName`:
@@ -174,7 +190,7 @@ The created asset name derives from the file name which is imported (cp. appendi
   * Maximum length as given by the Project Settings, which is `20` by default
 * `DescriptorSuffix`: `_Volume`
 
-Example: With importing imaging data from a file named `My_0123456789_ImageFile.dcm` and using the plugin default settings the AssetName becomes `My-0123456789-ImageF`. In addition, the AssetTypePrefix `T_` and the DescriptorSuffix `_Volume` are added, resulting in a content file named `T_My-0123456789-ImageF_Volume`.
+Example: With importing imaging data from a file named `My_0123456789_ImageFile.dcm` and using the plugin default settings the `AssetName` becomes `My-0123456789-ImageF`. In addition, the `AssetTypePrefix` `T_` and the `DescriptorSuffix` `_Volume` are added, resulting in a content file named `T_My-0123456789-ImageF_Volume`.
 
 When setting the `AssetName Maximum Length`, note that an assets pathname may be limited by the operating system, e.g. to 260 characters.
 
