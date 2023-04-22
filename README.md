@@ -35,6 +35,8 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
   * [1.1. Plugin Installation](#11-plugin-installation)
   * [1.2. Project Configuration](#12-project-configuration)
 * [2. Concept](#2-concept)
+  * [2.1. Objects](#21-objects)
+  * [2.2. Domain Model](#22-domain-model)
 * [3. Medical Imaging Data Import](#3-medical-imaging-data-import)
   * [3.1. Import Actor](#31-import-actor)
     * [3.1.1. Import DICOM](#311-import-dicom)
@@ -114,15 +116,37 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ## 2. Concept
 
-The plugin provides rendering of image-stack based volumes, commonly known as scalar volumes. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. Following the Object Oriented Paradigm OOP the domain specific entities are implemented as Blueprint Classes or Actors respectively:
+### 2.1. Objects
 
-![Volume Creator Content, Classes - Blueprint Actors](Docs/VolumeCreator-Content-Classes.png "Volume Creator Content, Classes - Blueprint Actors")<br>*Fig. 2.1.: Volume Creator Content, Classes &ndash; Blueprint Actors*
+The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. Following the Object Oriented Paradigm OOP the following domain specific entities are implemented as Blueprint Classes or Actors respectively (see figure 2.1.):
 
-![Volume Creator Content, Basic - User Widget Blueprints](Docs/VolumeCreator-Content-Basic-WBP.png "Volume Creator Content, Basic - User Widget Blueprints")<br>*Fig. 2.1.: Volume Creator Content, Basic &ndash; User Widget Blueprints*
+* Scalar Volume SV
+* Values of Interest VOI
+* Multiplanar Rendering MPR
+* Direct Volume Rendering DVR
+  * Region of Interest ROI
+    * Region of Interest ROI Handles
+  * Clip Plane
+  * Light Source
+  * Orientation Guide
 
+![Content Browser, VolumeCreator Content, Folder Classes - Blueprint Actors](Docs/VolumeCreator-Content-Classes-NotUI.png "Content Browser, VolumeCreator Content, Folder Classes - Blueprint Actors")<br>*Fig. 2.1.1.: Content Browser, VolumeCreator Content, Folder Classes &ndash; Blueprint Actors*
+
+To access and change parameters of the Blueprint Actors in runtime, the plugin provides with User Widgets (see figure 2.1.2.) as well as with User Widget Actors for the use in augmented and/or virtual reality applications (see figure 2.1.3.).
+
+![Content Browser, VolumeCreator Content, Folder Basic - User Widget Blueprints](Docs/VolumeCreator-Content-Basic-WBP.png "Content Browser, VolumeCreator Content, Folder Basic - User Widget Blueprints")<br>*Fig. 2.1.2.: Content Browser, VolumeCreator Content, Folder Basic &ndash; User Widget Blueprints*
+
+![Content Browser, VolumeCreator Content, Folder Classes - User Widget Actor Blueprints](Docs/VolumeCreator-Content-Classes-UI.png "Content Browser, VolumeCreator Content, Folder Classes - User Widget Actor Blueprints")<br>*Fig. 2.1.3.: Content Browser, VolumeCreator Content, Folder Classes &ndash; User Widget Actor Blueprints*
+
+### 2.2. Domain Model
+
+Domain Model Description:
+
+<!--
 * **Medical Imaging Data Import**:
   * **Import Actor**: Medical Medical imaging data is imported from DICOM or MetaImage files and stored as Hounsfield Units encoded Volume Texture.
   * **Import User Widget and Import User Widget Actor**: To access and change parameters of an Import Actor in runtime, the plugin provides with an Import User Widget and an Import User Widget Actor.
+  -->
 * **Scalar Volume SV**:
   * **SV Actor**: A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
   * **SV User Widget and SV User Widget Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget and an SV User Widget Actor.
@@ -143,9 +167,9 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
   * **Light Source Actor**: The volume rendering actor can optionally be illuminated with static light sources from Light Source Actors.
   * **Orientation Guide Actor**: The volume rendering actor can optionally be attached a rotation synchronized orientation guide.
 
-![Domain Model Diagram &mdash; Multiplanar Rendering MPR](Docs/DMD-MPR.png "Domain Model Diagram &mdash; Multiplanar Rendering MPR")<br>*Fig. 2.2.: Domain Model Diagram &mdash; Multiplanar Rendering MPR*
+![Domain Model Diagram - Multiplanar Rendering MPR](Docs/DMD-MPR.png "Domain Model Diagram - Multiplanar Rendering MPR")<br>*Fig. 2.2.1.: Domain Model Diagram &ndash; Multiplanar Rendering MPR*
 
-![Domain Model Diagram &mdash; Direct Volume Rendering DVR](Docs/DMD-DVR.png "Domain Model Diagram &mdash; Direct Volume Rendering DVR")<br>*Fig. 2.3.: Domain Model Diagram &mdash; Direct Volume Rendering DVR*
+![Domain Model Diagram - Direct Volume Rendering DVR](Docs/DMD-DVR.png "Domain Model Diagram - Direct Volume Rendering DVR")<br>*Fig. 2.2.2.: Domain Model Diagram &ndash; Direct Volume Rendering DVR*
 
 <div style='page-break-after: always'></div>
 
@@ -216,9 +240,9 @@ The size of ScalarVolume<sub>1</sub> becomes 24 MB. If the images are double the
 
 The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data:
 
-* SV: `T_SV_Volume`, Grayscale G16 (single channel, 16 bit); G: Hounsfield Units [-1000, 3076], W/H/D from Import<br>*Example: W/H/D 512 x 512 x 141 px, 72'192 Kb*
-* VOI: `RT_VOI_Volume`, Linear RG8 (dual channel, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1], W/H/D inherited from `T_SV_Volume`<br>*Example: W/H/D 512 x 512 x 141 px, 144'384 Kb*
-* DVR: `RT_Lightmap_Volume`, Linear Color RGBA8 (quad channel, 8 bit); RGBA: Color [0, 255], W/H/D inherited from `RT_VOI_Volume` but with half Resolution<br>*Example: W/H/D 256 x 256 x 70 px, 17'920 Kb*
+* SV: `T_SV_Volume`, Grayscale G16 (single channel, 16 bit); G: Hounsfield Units [-1000, 3076], Width/Height/Depth from Import<br>*Example: Width/Height/Depth 512 x 512 x 141 px, 72'192 Kb*
+* VOI: `RT_VOI_Volume`, Linear RG8 (dual channel, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1], Width/Height/Depth inherited from `T_SV_Volume`<br>*Example: Width/Height/Depth 512 x 512 x 141 px, 144'384 Kb*
+* DVR: `RT_Lightmap_Volume`, Linear Color RGBA8 (quad channel, 8 bit); RGBA: Color [0, 255], Width/Height/Depth inherited from `RT_VOI_Volume` but with half Resolution<br>*Example: Width/Height/Depth 256 x 256 x 70 px, 17'920 Kb*
 
 *Example, size in Memory: 72'192 Kb + 144'384 Kb + 17'920 Kb = 234'496 Kb*
 
@@ -245,7 +269,7 @@ Plugin "Volume Creator" provides with an SV Actor (Blueprint Class: `BP_SV`) to 
 
 ![Blueprint Actor BP_SV Details Panel](Docs/DetailsPanel-BP_SV.png "Blueprint Actor BP_SV Details Panel")<br>*Fig. 4.1.1.2.: Blueprint Actor BP_SV &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Scalar Volume Texture
   * Type: `Volume Texture`
@@ -320,7 +344,7 @@ Plugin "Volume Creator" provides with SV User Widget Actor (Blueprint Class: `BP
 
 ![Blueprint Actor BP_SV_UI Details Panel](Docs/DetailsPanel-BP_SV_UI.png "Blueprint Actor BP_SV_UI Details Panel")<br>*Fig. 4.1.3.2.: Blueprint Actor BP_SV_UI &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Scalar Volume Actor:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
@@ -337,13 +361,13 @@ CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3
 
 If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and width.
 
-Plugin "Volume Creator" provides with a Values Of Interest VOI Actor (Blueprint Class: `BP_VOI`) to handle a DICOM window. The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from a Scalar Volume SV Actor and applies a DICOM window. In the background, the result is hold in a VOI Volume Texture.
+Plugin "Volume Creator" provides with a Values Of Interest VOI Actor (Blueprint Class: `BP_VOI`) to handle a DICOM Window. The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from a Scalar Volume SV Actor and applies a DICOM Window. In the background, the result is hold in a VOI Volume Texture.
 
 ![Blueprint Actor BP_SV in Viewport](Docs/BP_VOI.png "Blueprint Actor BP_VOI in Viewport")<br>*Fig. 4.2.1.1.: Blueprint Actor BP_VOI &ndash; Viewport*
 
 ![Blueprint Actor BP_VOI Details Panel](Docs/DetailsPanel-BP_VOI.png "Blueprint Actor BP_VOI Details Panel")<br>*Fig. 4.2.1.2.: Blueprint Actor BP_VOI &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Scalar Volume Actor
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
@@ -426,7 +450,7 @@ Plugin "Volume Creator" provides with a VOI User Widget Actor (Blueprint Class: 
 
 ![Blueprint Actor BP_VOI_UI Details Panel](Docs/DetailsPanel-BP_VOI_UI.png "Blueprint Actor BP_VOI_UI Details Panel")<br>*Fig. 4.2.3.2.: Blueprint Actor BP_VOI_UI &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
@@ -439,13 +463,13 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 #### 4.3.1. MPR Actor
 
-Plugin "Volume Creator" provides with an Multiplanar Rendering MPR Actor (Blueprint Class: `BP_MPR`) to visualize a 3D representation of a DICOM windowed and scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
+Plugin "Volume Creator" provides with an Multiplanar Rendering MPR Actor (Blueprint Class: `BP_MPR`) to visualize a 3D representation of a scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
 
 ![Blueprint Actor BP_MPR in Viewport](Docs/BP_MPR.png "Blueprint Actor BP_MPR in Viewport")<br>*Fig. 4.3.1.1.: Blueprint Actor BP_MPR &ndash; Viewport*
 
 ![Blueprint Actor BP_MPR Details Panel](Docs/DetailsPanel-BP_MPR.png "Blueprint Actor BP_MPR Details Panel")<br>*Fig. 4.3.1.2.: Blueprint Actor BP_MPR &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
@@ -520,7 +544,7 @@ Plugin "Volume Creator" provides with an MPR User Widget Actor (Blueprint Class:
 
 ![Blueprint Actor BP_MPR_UI Details Panel](Docs/DetailsPanel-BP_MPR_UI.png "Blueprint Actor BP_MPR_UI Details Panel")<br>*Fig. 4.3.3.2.: Blueprint Actor BP_MPR_UI &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Multiplanar Rendering Actor:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
@@ -539,7 +563,7 @@ Plugin "Volume Creator" provides with a Direct Volume Rendering DVR Actor (Bluep
 
 ![Blueprint Actor BP_DVR Details Panel](Docs/DetailsPanel-BP_DVR.png "Blueprint Actor BP_DVR Details Panel")<br>*Fig. 4.4.1.2.: Blueprint Actor BP_DVR &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Data:
   * Values Of Interest Actor:
@@ -647,7 +671,7 @@ Plugin "Volume Creator" provides with a DVR User Widget Actor (Blueprint Class: 
 
 ![Blueprint Actor BP_DVR_UI Details Panel](Docs/DetailsPanel-BP_DVR_UI.png "Blueprint Actor BP_VOIBP_DVR_UIUI Details Panel")<br>*Fig. 4.4.3.2.: Blueprint Actor BP_DVR_UI &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
@@ -678,7 +702,7 @@ Plugin "Volume Creator" provides with a Region Of Interest ROI Handles Actor (Bl
 
 ![Blueprint Actor BP_RoiHandles &ndash; Details Panel](Docs/DetailsPanel-BP_RoiHandles.png "Blueprint Actor BP_RoiHandles &ndash; Details Panel")<br>*Fig. 4.4.3.2.2.: Blueprint Actor BP_RoiHandles &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Region Of Interest:
   * Type: Array of ROI Actor `BP_ROI` instances as Object References
@@ -707,7 +731,7 @@ Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP
 
 ![Blueprint Actor BP_LightSource Details Panel](Docs/DetailsPanel-BP_LightSource.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.5.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
 
-Parameter (cp. figure 'Details Panel'):
+Parameter (see figure 'Details Panel'):
 
 * Transform:
   * Mobility: Static
@@ -733,7 +757,7 @@ Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class
 
 ![Blueprint Actor BP_OrientationGuide Details Panel](Docs/DetailsPanel-BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
 
-Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * DVR Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
@@ -824,17 +848,17 @@ DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S
 
 ##### Unreal Engine
 
-Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in a **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (cp. figure G.1.):
+Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in a **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (see figure G.1.):
 
 * X: Increases from Back to Front, color code red; anatomical from Posterior P to **Anterior A**
 * Y: Increases from Left to Right, color code green; anatomical from Left L to **Right R**
 * Z: Increases upwards from Bottom to Top, color code blue; anatomical from Inferior I to **Superior S**
 
-![DVR Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-OrientationGuide.png "DVR Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: DVR Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
+![Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-OrientationGuide.png "Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
 
 <div style='page-break-after: always'></div>
 
-Anatomical Planes and Terms of Location in plugin "Volume Creator" (cp. figure G.2.):
+Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G.2.):
 
 * **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows)<br>with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
 * **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows)<br>with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
