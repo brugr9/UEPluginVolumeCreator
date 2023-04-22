@@ -118,7 +118,7 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ### 2.1. Objects
 
-The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. The plugin however does not support the rendering of other type of volumes, like vector volumes or tensor volumes. Following the Object Oriented Paradigm OOP the following domain specific entities are implemented as Blueprint Classes or Actors respectively (see figure 2.1.):
+The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of either vector or tensor volumes. Following the object oriented paradigm the domain specific entities are implemented as Blueprint Actors (see figure 2.1.):
 
 * Scalar Volume SV
 * Values of Interest VOI
@@ -132,7 +132,7 @@ The plugin provides the rendering of image-stack based volumes, commonly known a
 
 ![Content Browser, VolumeCreator Content, Folder Classes - Blueprint Actors](Docs/VolumeCreator-Content-Classes-NotUI.png "Content Browser, VolumeCreator Content, Folder Classes - Blueprint Actors")<br>*Fig. 2.1.1.: Content Browser, VolumeCreator Content, Folder Classes &ndash; Blueprint Actors*
 
-To access and change parameters of the Blueprint Actors in runtime, the plugin provides with User Widgets (see figure 2.1.2.) as well as with User Widget Actors for the use in augmented and/or virtual reality applications (see figure 2.1.3.).
+To access and change parameters of the Blueprint Actors in runtime, the plugin provides with User Widgets (see figure 2.1.2.) as well as with User Widget Actors for the use in augmented and/or virtual reality (see figure 2.1.3.).
 
 ![Content Browser, VolumeCreator Content, Folder Basic - User Widget Blueprints](Docs/VolumeCreator-Content-Basic-WBP.png "Content Browser, VolumeCreator Content, Folder Basic - User Widget Blueprints")<br>*Fig. 2.1.2.: Content Browser, VolumeCreator Content, Folder Basic &ndash; User Widget Blueprints*
 
@@ -177,14 +177,15 @@ Domain Model Description:
 
 ### 3.1. Import Actor
 
-Workflow:
+Workflow: Read from DICOM&reg; or MetaImage&trade; files and
 
-* Read from DICOM&reg; or MetaImage&trade; files and
-  * Write Scalar Volume image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_Volume`
-  * Save the Volume Texture Render Target persistently as Volume Texture asset `T_MyDataName_SV_Volume` (see also section "Content File Name" below)
+* Write the scalar volume image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_Volume`
+* Save the Volume Texture Render Target persistently as Volume Texture asset `T_MyDataName_SV_Volume`
 * Create a Blueprint asset `BP_MyDataName` deriving from Scalar Volume Actor `BP_SV` and
   * Assign the just created Volume Texture asset `T_MyDataName_SV_Volume`
   * Set meta data, e.g., DICOM Pixel Spacing
+
+See also section "Content File Name" below.
 
 #### 3.1.1. Import DICOM
 
