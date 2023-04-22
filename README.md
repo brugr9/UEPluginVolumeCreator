@@ -25,8 +25,6 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
 * Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
 * Technology: DICOM, Unreal Engine, Blueprint visual scripting system, C++ Code Plugin, HLSL Compute Shader
 
----
-
 <div style='page-break-after: always'></div>
 
 ## Table of Contents
@@ -43,6 +41,9 @@ The delivered assets provide importing DICOM&reg; based medical imaging data, ap
     * [3.2.2. Import MetaImage](#312-import-metaimage)
   * [3.2. Import User Widget](#32-import-user-widget)
   * [3.2. Import User Widget Actor](#33-import-user-widget-actor)
+  * [3.4. Content File Name](#34-content-file-name)
+  * [3.5. File Size](#35-file-size)
+  * [3.6. Data Processing](#36-data-processing)
 * [4. Rendering](#4-rendering)
   * [4.1. Scalar Volume SV](#41-scalar-volume-sv)
     * [4.1.1. SV Actor](#411-sv-actor)
@@ -148,54 +149,6 @@ The plugin provides rendering of image-stack based volumes, commonly known as sc
 
 ## 3. Medical Imaging Data Import
 
-CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes one also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3096]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
-
-* A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
-* A single grayscale 12 bit channel G
-
-The size of Volume<sub>1</sub> becomes 24 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size of Volume<sub>2</sub> increases to 192 MB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of Volume<sub>3</sub> increases to 1.5 GB.
-
-* *Volume<sub>1</sub> = 256<sup>3</sup> x 12 bit = 201'326'592 bit = 0.201 Gigabit = 24 MB*
-* *Volume<sub>2</sub> = 512<sup>3</sup> x 12 bit = 1'610'612'736 bit = 1.611 Gigabit = 192 MB*
-* *Volume<sub>3</sub> = 1024<sup>3</sup> x 12 bit = 12'884'901'888 bit = 12.885 Gigabit =  1'536 MB = 1.5 GB*
-
-With processing, e.g., 30 fps (cp. [Lindberg]):
-
-* *ProcessedData<sub>1</sub> = 0.201 Gigabit/frame x 30 frames/s = 6.03 Gigabit/s*
-* *ProcessedData<sub>2</sub> = 1.611 Gigabit/frame x 30 frames/s = 48.33 Gigabit/s*
-* *ProcessedData<sub>3</sub> = 12.885 Gigabit/frame x 30 frames/s = 386.55 Gigabit/s*
-
-### Render Targets
-
-The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data:
-
-* SV: `T_SV_Volume`, Grayscale G16 (single channel, 16 bit); G: Hounsfield Units [-1000, 3076], W/H/D from Import<br>*Example: W/H/D 512 x 512 x 141 px, 72'192 Kb*
-* VOI: `RT_VOI_Volume`, Linear RG8 (dual channel, 8 bit); R: VOI [0, 255], G: Mask [0, 1], W/H/D from T_SV_Volume<br>*Example: W/H/D 512 x 512 x 141 px, 144'384 Kb*
-* DVR: `RT_Lightmap_Volume`, Linear Color RGBA8 (quad channel, 8 bit); RGBA: Color [0, 255], W/H/D from RT_VOI_Volume but half Resolution<br>*Example: W/H/D 256 x 256 x 70 px, 17'920 Kb*
-
-*Example, size: 72'192 Kb + 144'384 Kb + 17'920 Kb = 234'496 Kb*
-
-The MPR Render Targets do not inherit, they are always the same size:
-
-* MPR: `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`, Linear R8 (single channel, 8 bit); R: VOI [0, 255], W/H 1024 x 1024 px each, 1'024 Kb each (Sum: 3'072 Kb)
-
-### Content File Name
-
-The created content file name derives from the file name which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.):
-
-* `AssetTypePrefix`: `T_`
-* `AssetName`:
-  * The same as the imported file
-  * Underlines (`_`) are replaced with a String as given by the Project Settings, which is minus (`-`) by default
-  * Maximum length as given by the Project Settings, which is `20` by default
-* `DescriptorSuffix`: `_Volume`
-
-Example: With importing imaging data from a file named `My_0123456789_ImageFile.dcm` and using the plugin default settings the `AssetName` becomes `My-0123456789-ImageF`. In addition, the `AssetTypePrefix` `T_` and the `DescriptorSuffix` `_Volume` are added, resulting in a content file named `T_My-0123456789-ImageF_Volume`.
-
-When setting the `AssetName Maximum Length`, note that an assets pathname may be limited by the operating system, e.g. to 260 characters.
-
-![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.: Screenshot of Project Settings > Plugin > Volume Creator*
-
 ### 3.1. Import Actor
 
 #### 3.1.1. Import DICOM
@@ -224,6 +177,59 @@ Workflow:
 ### 3.3. Import User Widget Actor
 
 <div style='page-break-after: always'></div>
+
+### 3.4. Content File Name
+
+The created content file name derives from the file name which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.):
+
+* `AssetTypePrefix`: `T_`
+* `AssetName`:
+  * The same as the imported file
+  * Underlines (`_`) are replaced with a String as given by the Project Settings, which is minus (`-`) by default
+  * Maximum length as given by the Project Settings, which is `20` by default
+* `DescriptorSuffix`: `_Volume`
+
+Example: With importing imaging data from a file named `My_0123456789_ImageFile.dcm` and using the plugin default settings the `AssetName` becomes `My-0123456789-ImageF`. In addition, the `AssetTypePrefix` `T_` and the `DescriptorSuffix` `_Volume` are added, resulting in a content file named `T_My-0123456789-ImageF_Volume`.
+
+When setting the `AssetName Maximum Length`, note that an assets pathname may be limited by the operating system, e.g. to 260 characters.
+
+![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.: Screenshot of Project Settings > Plugin > Volume Creator*
+
+<div style='page-break-after: always'></div>
+
+### 3.5. File Size
+
+CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes one also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3096]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
+
+* A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
+* A single grayscale 12 bit channel
+
+The size of ScalarVolume<sub>1</sub> becomes 24 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size of Volume<sub>2</sub> increases to 192 MB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of Volume<sub>3</sub> increases to 1.5 GB.
+
+* *ScalarVolume<sub>1</sub> = 256<sup>3</sup> x 12 bit = 201'326'592 bit = 0.201 Gigabit = 24 MB*
+* *ScalarVolume<sub>2</sub> = 512<sup>3</sup> x 12 bit = 1'610'612'736 bit = 1.611 Gigabit = 192 MB*
+* *ScalarVolume<sub>3</sub> = 1024<sup>3</sup> x 12 bit = 12'884'901'888 bit = 12.885 Gigabit =  1'536 MB = 1.5 GB*
+
+### 3.6. Data Processing
+
+The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data:
+
+* SV: `T_SV_Volume`, Grayscale G16 (single channel, 16 bit); G: Hounsfield Units [-1000, 3076], W/H/D from Import<br>*Example: W/H/D 512 x 512 x 141 px, 72'192 Kb*
+* VOI: `RT_VOI_Volume`, Linear RG8 (dual channel, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1], W/H/D inherited from T_SV_Volume<br>*Example: W/H/D 512 x 512 x 141 px, 144'384 Kb*
+* DVR: `RT_Lightmap_Volume`, Linear Color RGBA8 (quad channel, 8 bit); RGBA: Color [0, 255], W/H/D inherited from RT_VOI_Volume but half Resolution<br>*Example: W/H/D 256 x 256 x 70 px, 17'920 Kb*
+
+*Example, size in Memory: 72'192 Kb + 144'384 Kb + 17'920 Kb = 234'496 Kb*
+
+The MPR Render Targets do not inherit, they are always the same size:
+
+* MPR: `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`, Linear R8 (single channel, 8 bit); R: VOI [0, 255], W/H 1024 x 1024 px each, 1'024 Kb each (Sum: 3'072 Kb)
+
+*Example, total size in Memory: 234'496 Kb + 3'072 Kb = 237'568 Kb*
+
+For a use case of DVR, the Render Textures `RT_VOI_Volume` and `RT_Lightmap_Volume` are used for data processing. With rendering, e.g., 30 fps (cp. [Lindberg]), this results in a rate of 4.87 Gigabit/s:
+
+* *144'384 Kb + 17'920 Kb = 162'304 Kb = 0.162 Gigabit*
+* *ProcessedData = 0.162 Gigabit/frame x 30 frames/s = 4.87 Gigabit/s*
 
 ## 4. Rendering
 
@@ -451,7 +457,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 * Brightness:
   * Type: `Float`
   * Default Value: `0.5`
-  * Range: [`0`, `10`]
+  * Range: [`0.0`, `2.0`]
   * Info: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
 * Planes Location:
   * Type: `Vector`
@@ -537,7 +543,7 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
   * Values Of Interest Actor:
     * Type: VOI Actor `BP_VOI` instance as Object Reference
     * Default Value: `none`
-    * Info: Mandatory, used for TF LUT application
+    * Info: Mandatory, data to which the transfer function is applied
 * Geometry:
   * Region Of Interest Actor:
     * Type: ROI Actor `BP_ROI` instance as Object Reference
@@ -582,22 +588,22 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
     * Type: `Float`
     * Default Value: `0.1`
     * Range: [`0.0`, `1.0`]
-    * Info: Phong Shading
+    * Info: Phong Shading Parameter
   * Diffuse:
     * Type: `Float`
     * Default Value: `0.9`
     * Range: [`0.0`, `1.0`]
-    * Info: Phong Shading
+    * Info: Phong Shading Parameter
   * Specular:
     * Type: `Float`
     * Default Value: `0.2`
     * Range: [`0.0`, `1.0`]
-    * Info: Phong Shading
+    * Info: Phong Shading Parameter
   * Specular Power:
     * Type: `Integer`
     * Default Value: `10`
     * Range: [`1`, `50`]
-    * Info: Phong Shading
+    * Info: Phong Shading Parameter
 
 <div style='page-break-after: always'></div>
 
@@ -801,9 +807,9 @@ Parameter, Category 'Volume Creator' (cp. figure 'Details Panel'):
 
 Patient Coordinate System: Anatomical planes and terms of location on a person standing upright (cp. [mbbs]):
 
-* **Axial Plane**: Horizontal plane, separates in **Inferior (I)** towards feet and **Superior (S)** towards head.
-* **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Left (L)** and **Right (R)** halves. A sagittal plane is any plane perpendicular to the median plane.
 * **Coronal Plane**: Frontal plane, separates in **Posterior (P)** towards back and **Anterior (A)** towards front.
+* **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Left (L)** and **Right (R)** halves. A sagittal plane is any plane perpendicular to the median plane.
+* **Axial Plane**: Horizontal plane, separates in **Inferior (I)** towards feet and **Superior (S)** towards head.
 
 ##### DICOM
 
@@ -828,9 +834,9 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 
 Anatomical Planes and Terms of Location in plugin "Volume Creator" (cp. figure G.2.):
 
-* **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) <br>with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
-* **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) <br>with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
-* **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) <br>with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
+* **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows)<br>with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
+* **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows)<br>with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
+* **Axial AXE**: Horizontal **XY-Plane** (red/green arrows)<br>with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
 
 ![ROI-Handles Actor with UE Left handed Location-Gizmo Arrows](Docs/ROIHandles.png "ROI-Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with UE Left handed Location-Gizmo Arrows*
 
