@@ -18,7 +18,7 @@ Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Ima
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system.
 
-The delivered assets provide importing DICOM&reg; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring the same from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may crop the rendered volume interactively. The plugin acts as a framework which allows game developers to create VR/AR solutions which can be used as serious games, e.g., for teaching and training in medical education.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may crop the rendered volume interactively. The plugin acts as a framework which allows game developers to create VR/AR solutions which can be used as serious games, e.g., for teaching and training in medical education.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -228,28 +228,27 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 
 CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes one also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3096]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
 
-* A Stack of 256 images of size 256 x 256 pixel per image = 256<sup>3</sup> pixel or voxel resp.
+* A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
 * A single grayscale 12 bit channel
 
-The size of ScalarVolume<sub>1</sub> becomes 24 MB. If the images are double the size (stack of 512 images with 512 x 512 pixel per image), the size of Volume<sub>2</sub> increases to 192 MB. If the images are even double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of Volume<sub>3</sub> increases to 1.5 GB.
+The size of ScalarVolume<sub>1</sub> becomes 192 MB. If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of ScalarVolume<sub>2</sub> increases to 1.5 GB.
 
-* *ScalarVolume<sub>1</sub> = 256<sup>3</sup> x 12 bit = 201'326'592 bit = 0.201 Gigabit = 24 MB*
-* *ScalarVolume<sub>2</sub> = 512<sup>3</sup> x 12 bit = 1'610'612'736 bit = 1.611 Gigabit = 192 MB*
-* *ScalarVolume<sub>3</sub> = 1024<sup>3</sup> x 12 bit = 12'884'901'888 bit = 12.885 Gigabit =  1'536 MB = 1.5 GB*
+* *ScalarVolume<sub>1</sub> = 512<sup>3</sup> x 12 bit = 1'610'612'736 bit = 1.611 Gigabit = 192 MB*
+* *ScalarVolume<sub>2</sub> = 1024<sup>3</sup> x 12 bit = 12'884'901'888 bit = 12.885 Gigabit =  1'536 MB = 1.5 GB*
 
 ### 3.6. Data Processing
 
 The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data:
 
-* SV: `T_SV_Volume`, Grayscale G16 (single channel, 16 bit); G: Hounsfield Units [-1000, 3076], Width/Height/Depth from Import<br>*Example: Width/Height/Depth 512 x 512 x 141 px, 72'192 Kb*
-* VOI: `RT_VOI_Volume`, Linear RG8 (dual channel, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1], Width/Height/Depth inherited from `T_SV_Volume`<br>*Example: Width/Height/Depth 512 x 512 x 141 px, 144'384 Kb*
-* DVR: `RT_Lightmap_Volume`, Linear Color RGBA8 (quad channel, 8 bit); RGBA: Color [0, 255], Width/Height/Depth inherited from `RT_VOI_Volume` but with half Resolution<br>*Example: Width/Height/Depth 256 x 256 x 70 px, 17'920 Kb*
+* SV: `T_SV_Volume`, <br>Grayscale G16 (single channel, 16 bit); G: Hounsfield Units [-1000, 3076], <br>Width/Height/Depth from Import<br>*Example: Width/Height/Depth 512 x 512 x 141 px, 72'192 Kb*
+* VOI: `RT_VOI_Volume`, <br>Linear RG8 (dual channel, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1], <br>Width/Height/Depth inherited from `T_SV_Volume`<br>*Example: Width/Height/Depth 512 x 512 x 141 px, 144'384 Kb*
+* DVR: `RT_Lightmap_Volume`, <br>Linear Color RGBA8 (quad channel, 8 bit); RGBA: Color [0, 255], <br>Width/Height/Depth inherited from `RT_VOI_Volume` but with half Resolution<br>*Example: Width/Height/Depth 256 x 256 x 70 px, 17'920 Kb*
 
 *Example, size in Memory: 72'192 Kb + 144'384 Kb + 17'920 Kb = 234'496 Kb*
 
 The MPR Render Targets do not inherit, they are always the same size:
 
-* MPR: `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`, Linear R8 (single channel, 8 bit); R: VOI [0, 255], W/H 1024 x 1024 px each, 1'024 Kb each (Sum: 3'072 Kb)
+* MPR: `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`, <br>Linear R8 (single channel, 8 bit); R: VOI [0, 255], <br>Width/Height 1024 x 1024 px each, 1'024 Kb each (Sum: 3'072 Kb)
 
 *Example, total size in Memory: 234'496 Kb + 3'072 Kb = 237'568 Kb*
 
@@ -266,9 +265,7 @@ For a use case of DVR, the Render Textures `RT_VOI_Volume` and `RT_Lightmap_Volu
 
 Plugin "Volume Creator" provides with an SV Actor (Blueprint Class: `BP_SV`) to handle a Hounsfield Units encoded Volume Texture and its pixel spacing. The SV Actor is an empty Actor and has no mesh.
 
-![Blueprint Actor BP_SV in Viewport](Docs/BP_SV.png "Blueprint Actor BP_SV in Viewport")<br>*Fig. 4.1.1.1.: Blueprint Actor BP_SV &ndash; Viewport*
-
-![Blueprint Actor BP_SV Details Panel](Docs/DetailsPanel-BP_SV.png "Blueprint Actor BP_SV Details Panel")<br>*Fig. 4.1.1.2.: Blueprint Actor BP_SV &ndash; Details Panel*
+![Blueprint Actor BP_SV Details Panel](Docs/BP_SV-DetailsPanel.png "Blueprint Actor BP_SV Details Panel")<br>*Fig. 4.1.1.1.: Blueprint Actor BP_SV &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -343,7 +340,7 @@ Plugin "Volume Creator" provides with SV User Widget Actor (Blueprint Class: `BP
 
 ![Blueprint Actor BP_SV_UI in Viewport](Docs/BP_SV_UI.png "Blueprint Actor BP_SV_UI in Viewport")<br>*Fig. 4.1.3.1.: Blueprint Actor BP_SV_UI &ndash; Viewport &ndash; Viewport*
 
-![Blueprint Actor BP_SV_UI Details Panel](Docs/DetailsPanel-BP_SV_UI.png "Blueprint Actor BP_SV_UI Details Panel")<br>*Fig. 4.1.3.2.: Blueprint Actor BP_SV_UI &ndash; Details Panel*
+![Blueprint Actor BP_SV_UI Details Panel](Docs/BP_SV_UI-DetailsPanel.png "Blueprint Actor BP_SV_UI Details Panel")<br>*Fig. 4.1.3.2.: Blueprint Actor BP_SV_UI &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -364,9 +361,7 @@ If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the con
 
 Plugin "Volume Creator" provides with a Values Of Interest VOI Actor (Blueprint Class: `BP_VOI`) to handle a DICOM Window. The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from a Scalar Volume SV Actor and applies a DICOM Window. In the background, the result is hold in a VOI Volume Texture.
 
-![Blueprint Actor BP_SV in Viewport](Docs/BP_VOI.png "Blueprint Actor BP_VOI in Viewport")<br>*Fig. 4.2.1.1.: Blueprint Actor BP_VOI &ndash; Viewport*
-
-![Blueprint Actor BP_VOI Details Panel](Docs/DetailsPanel-BP_VOI.png "Blueprint Actor BP_VOI Details Panel")<br>*Fig. 4.2.1.2.: Blueprint Actor BP_VOI &ndash; Details Panel*
+![Blueprint Actor BP_VOI Details Panel](Docs/BP_VOI-DetailsPanel.png "Blueprint Actor BP_VOI Details Panel")<br>*Fig. 4.2.1.1.: Blueprint Actor BP_VOI &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -449,7 +444,7 @@ Plugin "Volume Creator" provides with a VOI User Widget Actor (Blueprint Class: 
 
 ![Blueprint Actor BP_VOI_UI in Viewport](Docs/BP_VOI_UI.png "Blueprint Actor BP_VOI_UI in Viewport")<br>*Fig. 4.2.3.1.: Blueprint Actor BP_VOI_UI &ndash; Viewport*
 
-![Blueprint Actor BP_VOI_UI Details Panel](Docs/DetailsPanel-BP_VOI_UI.png "Blueprint Actor BP_VOI_UI Details Panel")<br>*Fig. 4.2.3.2.: Blueprint Actor BP_VOI_UI &ndash; Details Panel*
+![Blueprint Actor BP_VOI_UI Details Panel](Docs/BP_VOI_UI-DetailsPanel.png "Blueprint Actor BP_VOI_UI Details Panel")<br>*Fig. 4.2.3.2.: Blueprint Actor BP_VOI_UI &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -468,7 +463,7 @@ Plugin "Volume Creator" provides with an Multiplanar Rendering MPR Actor (Bluepr
 
 ![Blueprint Actor BP_MPR in Viewport](Docs/BP_MPR.png "Blueprint Actor BP_MPR in Viewport")<br>*Fig. 4.3.1.1.: Blueprint Actor BP_MPR &ndash; Viewport*
 
-![Blueprint Actor BP_MPR Details Panel](Docs/DetailsPanel-BP_MPR.png "Blueprint Actor BP_MPR Details Panel")<br>*Fig. 4.3.1.2.: Blueprint Actor BP_MPR &ndash; Details Panel*
+![Blueprint Actor BP_MPR Details Panel](Docs/BP_MPR-DetailsPanel.png "Blueprint Actor BP_MPR Details Panel")<br>*Fig. 4.3.1.2.: Blueprint Actor BP_MPR &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -543,7 +538,7 @@ Plugin "Volume Creator" provides with an MPR User Widget Actor (Blueprint Class:
 
 ![Blueprint Actor BP_MPR_UI in Viewport](Docs/BP_MPR_UI.png "Blueprint Actor BP_MPR_UI in Viewport")<br>*Fig. 4.3.3.1.: Blueprint Actor BP_MPR_UI &ndash; Viewport*
 
-![Blueprint Actor BP_MPR_UI Details Panel](Docs/DetailsPanel-BP_MPR_UI.png "Blueprint Actor BP_MPR_UI Details Panel")<br>*Fig. 4.3.3.2.: Blueprint Actor BP_MPR_UI &ndash; Details Panel*
+![Blueprint Actor BP_MPR_UI Details Panel](Docs/BP_MPR_UI-DetailsPanel.png "Blueprint Actor BP_MPR_UI Details Panel")<br>*Fig. 4.3.3.2.: Blueprint Actor BP_MPR_UI &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -562,7 +557,7 @@ Plugin "Volume Creator" provides with a Direct Volume Rendering DVR Actor (Bluep
 
 ![Blueprint Actor BP_DVR in Viewport](Docs/BP_DVR.png "Blueprint Actor BP_DVR in Viewport")<br>*Fig. 4.4.1.1.: Blueprint Actor BP_DVR  &ndash; Viewport*
 
-![Blueprint Actor BP_DVR Details Panel](Docs/DetailsPanel-BP_DVR.png "Blueprint Actor BP_DVR Details Panel")<br>*Fig. 4.4.1.2.: Blueprint Actor BP_DVR &ndash; Details Panel*
+![Blueprint Actor BP_DVR Details Panel](Docs/BP_DVR-DetailsPanel.png "Blueprint Actor BP_DVR Details Panel")<br>*Fig. 4.4.1.2.: Blueprint Actor BP_DVR &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -670,7 +665,7 @@ Plugin "Volume Creator" provides with a DVR User Widget Actor (Blueprint Class: 
 
 ![Blueprint Actor BP_DVR_UI in Viewport](Docs/BP_DVR_UI.png "Blueprint Actor BP_DVR_UI in Viewport")<br>*Fig. 4.4.3.1.: Blueprint Actor BP_DVR_UI &ndash; Viewport*
 
-![Blueprint Actor BP_DVR_UI Details Panel](Docs/DetailsPanel-BP_DVR_UI.png "Blueprint Actor BP_VOIBP_DVR_UIUI Details Panel")<br>*Fig. 4.4.3.2.: Blueprint Actor BP_DVR_UI &ndash; Details Panel*
+![Blueprint Actor BP_DVR_UI Details Panel](Docs/BP_DVR_UI-DetailsPanel.png "Blueprint Actor BP_VOIBP_DVR_UIUI Details Panel")<br>*Fig. 4.4.3.2.: Blueprint Actor BP_DVR_UI &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -701,7 +696,7 @@ Plugin "Volume Creator" provides with a Region Of Interest ROI Handles Actor (Bl
 
 ![Blueprint Actor BP_RoiHandles](Docs/BP_RoiHandles.png "DetailsBlueprint Actor BP_RoiHandles in Viewport")<br>*Fig. 4.4.3.2.1.: Blueprint Actor BP_RoiHandles &ndash; Viewport*
 
-![Blueprint Actor BP_RoiHandles &ndash; Details Panel](Docs/DetailsPanel-BP_RoiHandles.png "Blueprint Actor BP_RoiHandles &ndash; Details Panel")<br>*Fig. 4.4.3.2.2.: Blueprint Actor BP_RoiHandles &ndash; Details Panel*
+![Blueprint Actor BP_RoiHandles &ndash; Details Panel](Docs/BP_RoiHandles-DetailsPanel.png "Blueprint Actor BP_RoiHandles &ndash; Details Panel")<br>*Fig. 4.4.3.2.2.: Blueprint Actor BP_RoiHandles &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -730,7 +725,7 @@ Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP
 
 ![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.5.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
-![Blueprint Actor BP_LightSource Details Panel](Docs/DetailsPanel-BP_LightSource.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.5.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
+![Blueprint Actor BP_LightSource Details Panel](Docs/BP_LightSource-DetailsPanel.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.5.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
 
 Parameter (see figure 'Details Panel'):
 
@@ -756,7 +751,7 @@ Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class
 
 ![Blueprint Actor BP_OrientationGuide in Viewport](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
 
-![Blueprint Actor BP_OrientationGuide Details Panel](Docs/DetailsPanel-BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
+![Blueprint Actor BP_OrientationGuide Details Panel](Docs/BP_OrientationGuide-DetailsPanel.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -791,7 +786,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * LUT &mdash; Look-Up Table
 * MinIP &mdash; Minimum Intensity Projection
 * MIP &mdash; Maximum Intensity Projection
-* MPR &mdash; Multiplanar Reconstruction
+* MPR &mdash; Multiplanar Rendering or Reconstruction resp.
 * MR &mdash; Magnetic Resonance
 * OG &mdash; Orientation Guide
 * P &mdash; Posterior
