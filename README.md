@@ -501,6 +501,63 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 <div style='page-break-after: always'></div>
 
+*Table 4.3.1.1.: Look-Up Tables LUT*<br>
+| Index | Name | Colors |
+|------:|:-----|:-------|
+| 0 | dGEMRIC15 | ![CartilegeMRIdGEMRIC15T.png](Docs/LUT/CartilegeMRIdGEMRIC15T.png "CartilegeMRIdGEMRIC15T.png") |
+| 1 | dGEMRIC3 | ![CartilegeMRIdGEMRIC3T.png](Docs/LUT/CartilegeMRIdGEMRIC3T.png "CartilegeMRIdGEMRIC3T.png") |
+| 2 | BlueRed | ![FreeSurferBlueRed.png](Docs/LUT/FreeSurferBlueRed.png "FreeSurferBlueRed.png") |
+| 3 | Brain1 | ![SlicerBrainLUT2010.png](Docs/LUT/SlicerBrainLUT2010.png "SlicerBrainLUT2010.png") |
+| 4 | Brain2 | ![SlicerShortLUT.png](Docs/LUT/SlicerShortLUT.png "SlicerShortLUT.png") |
+| 5 | DiscreteBlue | ![DiscreteBlue.png](Docs/LUT/DiscreteBlue.png "DiscreteBlue.png") |
+| 6 | DiscreteCool1 | ![DiscreteCool1.png](Docs/LUT/DiscreteCool1.png "DiscreteCool1.png") |
+| 7 | DiscreteCool2 | ![DiscreteCool2.png](Docs/LUT/DiscreteCool2.png "DiscreteCool2.png") |
+| 8 | DiscreteCool3 | ![DiscreteCool3.png](Docs/LUT/DiscreteCool3.png "DiscreteCool3.png") |
+| 9 | DiscreteCyan | ![DiscreteCyan.png](Docs/LUT/DiscreteCyan.png "DiscreteCyan.png") |
+| 10 | DiscreteDeserLUT | ![DiscreteDesert.png](Docs/LUT/DiscreteDesert.png "DiscreteDesert.png") |
+| 11 | DiscreteFullRainbow | ![DiscreteFullRainbow.png](Docs/LUT/DiscreteFullRainbow.png "DiscreteFullRainbow.png") |
+| 12 | DiscreteGreen | ![DiscreteGreen.png](Docs/LUT/DiscreteGreen.png "DiscreteGreen.png") |
+| 13 | DiscreteGrey | ![DiscreteGrey.png](Docs/LUT/DiscreteGrey.png "DiscreteGrey.png") |
+| 14 | DiscreteInvertedGrey | ![DiscreteInvertedGrey.png](Docs/LUT/DiscreteInvertedGrey.png "DiscreteInvertedGrey.png") |
+| 15 | DiscreteIron | ![DiscreteIron.png](Docs/LUT/DiscreteIron.png "DiscreteIron.png") |
+| 16 | DiscreteMagenta | ![DiscreteMagenta.png](Docs/LUT/DiscreteMagenta.png "DiscreteMagenta.png") |
+| 17 | DiscreteOcean | ![DiscreteOcean.png](Docs/LUT/DiscreteOcean.png "DiscreteOcean.png") |
+| 18 | DiscreteRainbow | ![DiscreteRainbow.png](Docs/LUT/DiscreteRainbow.png "DiscreteRainbow.png") |
+| 19 | DiscreteRandomIntegers | ![DiscreteRandom.png](Docs/LUT/DiscreteRandom.png "DiscreteRandom.png") |
+| 20 | DiscreteRandom | ![DiscreteRandomIntegers.png](Docs/LUT/DiscreteRandomIntegers.png "DiscreteRandomIntegers.png") |
+| 21 | DiscreteRed | ![DiscreteRed.png](Docs/LUT/DiscreteRed.png "DiscreteRed.png") |
+| 22 | DiscreteReverseRainbow | ![DiscreteReverseRainbow.png](Docs/LUT/DiscreteReverseRainbow.png "DiscreteReverseRainbow.png") |
+| 23 | DiscreteWarm1 | ![DiscreteWarm1.png](Docs/LUT/DiscreteWarm1.png "DiscreteWarm1.png") |
+| 24 | DiscreteWarm2 | ![DiscreteWarm2.png](Docs/LUT/DiscreteWarm2.png "DiscreteWarm2.png") |
+| 25 | DiscreteWarm3 | ![DiscreteWarm3.png](Docs/LUT/DiscreteWarm3.png "DiscreteWarm3.png") |
+| 26 | DiscreteYellow | ![DiscreteYellow.png](Docs/LUT/DiscreteYellow.png "DiscreteYellow.png") |
+| 27 | DiscretefMRIPA | ![DiscretefMRI.png](Docs/LUT/DiscretefMRI.png "DiscretefMRI.png") |
+| 28 | DiscretefMRI | ![DiscretefMRIPA.png](Docs/LUT/DiscretefMRIPA.png "DiscretefMRIPA.png") |
+| 29 | Discretelabels | ![Discretelabels.png](Docs/LUT/Discretelabels.png "Discretelabels.png") |
+| 30 | GreenRed | ![FreeSurferGreenRed.png](Docs/LUT/FreeSurferGreenRed.png "FreeSurferGreenRed.png") |
+| 31 | HeaLUT | ![FreeSurferHeat.png](Docs/LUT/FreeSurferHeat.png "FreeSurferHeat.png") |
+| 32 | LabelsNonSemantic | ![LabelsNonSemantic.png](Docs/LUT/LabelsNonSemantic.png "LabelsNonSemantic.png") |
+| 33 | LabelsPelvis | ![LabelsPelvis.png](Docs/LUT/LabelsPelvis.png "LabelsPelvis.png") |
+| 34 | PETHeaLUT | ![PetPETHeat.png](Docs/LUT/PetPETHeat.png "PetPETHeat.png") |
+| 35 | PETMIP | ![PetPETMIP.png](Docs/LUT/PetPETMIP.png "PetPETMIP.png") |
+| 36 | PETRainbow | ![PetPETRainbow.png](Docs/LUT/PetPETRainbow.png "PetPETRainbow.png") |
+| 37 | RedBlue | ![FreeSurferRedBlue.png](Docs/LUT/FreeSurferRedBlue.png "FreeSurferRedBlue.png") |
+| 38 | RedGreen | ![FreeSurferRedGreen.png](Docs/LUT/FreeSurferRedGreen.png "FreeSurferRedGreen.png") |
+| 39 | ShadeCoolShade1 | ![ShadeCoolShade1.png](Docs/LUT/ShadeCoolShade1.png "ShadeCoolShade1.png") |
+| 40 | ShadeCoolShade2 | ![ShadeCoolShade2.png](Docs/LUT/ShadeCoolShade2.png "ShadeCoolShade2.png") |
+| 41 | ShadeCoolShade3 | ![ShadeCoolShade3.png](Docs/LUT/ShadeCoolShade3.png "ShadeCoolShade3.png") |
+| 42 | ShadeWarmShade1 | ![ShadeWarmShade1.png](Docs/LUT/ShadeWarmShade1.png "ShadeWarmShade1.png") |
+| 43 | ShadeWarmShade2 | ![ShadeWarmShade2.png](Docs/LUT/ShadeWarmShade2.png "ShadeWarmShade2.png") |
+| 44 | ShadeWarmShade3 | ![ShadeWarmShade3.png](Docs/LUT/ShadeWarmShade3.png "ShadeWarmShade3.png") |
+| 45 | TintCoolTint1 | ![TintCoolTint1.png](Docs/LUT/TintCoolTint1.png "TintCoolTint1.png") |
+| 46 | TintCoolTint2 | ![TintCoolTint2.png](Docs/LUT/TintCoolTint2.png "TintCoolTint2.png") |
+| 47 | TintCoolTint3 | ![TintCoolTint3.png](Docs/LUT/TintCoolTint3.png "TintCoolTint3.png") |
+| 48 | TintWarmTint1 | ![TintWarmTint1.png](Docs/LUT/TintWarmTint1.png "TintWarmTint1.png") |
+| 49 | TintWarmTint2 | ![TintWarmTint2.png](Docs/LUT/TintWarmTint2.png "TintWarmTint2.png") |
+| 50 | TintWarmTint3 | ![TintWarmTint3.png](Docs/LUT/TintWarmTint3.png "TintWarmTint3.png") |
+
+<div style='page-break-after: always'></div>
+
 #### 4.3.2. MPR User Widget
 
 Plugin "Volume Creator" provides with an MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side.
@@ -626,6 +683,40 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Default Value: `10`
     * Range: [`1`, `50`]
     * Info: Phong Shading Parameter
+
+<div style='page-break-after: always'></div>
+
+*Table 4.4.1.1.: Transfer Functions TF*<br>
+| Index | Name | Colors |
+|------:|:-----|:-------|
+| 0 | Default | ![Curve_Default_TF_Color](Docs/Curve/Curve_Default_TF_Color.png "Curve_Default_TF_Color") |
+| 1 | CT-AAA | ![Curve_CT-AAA_TF_Color](Docs/Curve/Curve_CT-AAA_TF_Color.png "Curve_CT-AAA_TF_Color") |
+| 2 | CT-AAA2 | ![Curve_CT-AAA2_TF_Color](Docs/Curve/Curve_CT-AAA2_TF_Color.png "Curve_CT-AAA2_TF_Color") |
+| 3 | CT-Air | ![Curve_CT-Air_TF_Color](Docs/Curve/Curve_CT-Air_TF_Color.png "Curve_CT-Air_TF_Color") |
+| 4 | CT-Bone | ![Curve_CT-Bone_TF_Color](Docs/Curve/Curve_CT-Bone_TF_Color.png "Curve_CT-Bone_TF_Color") |
+| 5 | CT-Bones | ![Curve_CT-Bones_TF_Color](Docs/Curve/Curve_CT-Bones_TF_Color.png "Curve_CT-Bones_TF_Color") |
+| 6 | CT-Cardiac | ![Curve_CT-Cardiac_TF_Color](Docs/Curve/Curve_CT-Cardiac_TF_Color.png "Curve_CT-Cardiac_TF_Color") |
+| 7 | CT-Cardiac2 | ![Curve_CT-Cardiac2_TF_Color](Docs/Curve/Curve_CT-Cardiac2_TF_Color.png "Curve_CT-Cardiac2_TF_Color") |
+| 8 | CT-Cardiac3 | ![Curve_CT-Cardiac3_TF_Color](Docs/Curve/Curve_CT-Cardiac3_TF_Color.png "Curve_CT-Cardiac3_TF_Color") |
+| 9 | CT-Chest-Contrast-Enhanced | ![Curve_CT-Chest-Contrast-Enhanced_TF_Color](Docs/Curve/Curve_CT-Chest-Contrast-Enhanced_TF_Color.png "Curve_CT-Chest-Contrast-Enhanced_TF_Color") |
+| 10 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_TF_Color](Docs/Curve/Curve_CT-Chest-Vessels_TF_Color.png "Curve_CT-Chest-Vessels_TF_Color") |
+| 11 | CT-Coronary-Arteries | ![Curve_CT-Coronary-Arteries_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries_TF_Color.png "Curve_CT-Coronary-Arteries_TF_Color") |
+| 12 | CT-Coronary-Arteries2 | ![Curve_CT-Coronary-Arteries2_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries2_TF_Color.png "Curve_CT-Coronary-Arteries2_TF_Color") |
+| 13 | CT-Coronary-Arteries3 | ![Curve_CT-Coronary-Arteries3_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries3_TF_Color.png "Curve_CT-Coronary-Arteries3_TF_Color") |
+| 14 | CT-Cropped-Volume-Bone | ![Curve_CT-Cropped-Volume-Bone_TF_Color](Docs/Curve/Curve_CT-Cropped-Volume-Bone_TF_Color.png "Curve_CT-Cropped-Volume-Bone_TF_Color") |
+| 15 | CT-Fat | ![Curve_CT-Fat_TF_Color](Docs/Curve/Curve_CT-Fat_TF_Color.png "Curve_CT-Fat_TF_Color") |
+| 16 | CT-Liver-Vasculature | ![Curve_CT-Liver-Vasculature_TF_Color](Docs/Curve/Curve_CT-Liver-Vasculature_TF_Color.png "Curve_CT-Liver-Vasculature_TF_Color") |
+| 17 | CT-Lung | ![Curve_CT-Lung_TF_Color](Docs/Curve/Curve_CT-Lung_TF_Color.png "Curve_CT-Lung_TF_Color") |
+| 18 | CT-MIP | ![Curve_CT-MIP_TF_Color](Docs/Curve/Curve_CT-MIP_TF_Color.png "Curve_CT-MIP_TF_Color") |
+| 19 | CT-Muscle | ![Curve_CT-Muscle_TF_Color](Docs/Curve/Curve_CT-Muscle_TF_Color.png "Curve_CT-Muscle_TF_Color") |
+| 20 | CT-Pulmonary-Arteries | ![Curve_CT-Pulmonary-Arteries_TF_Color](Docs/Curve/Curve_CT-Pulmonary-Arteries_TF_Color.png "Curve_CT-Pulmonary-Arteries_TF_Color") |
+| 21 | CT-Soft-Tissue | ![Curve_CT-Soft-Tissue_TF_Color](Docs/Curve/Curve_CT-Soft-Tissue_TF_Color.png "Curve_CT-Soft-Tissue_TF_Color") |
+| 22 | CT-XRay | ![Curve_CT-XRay_TF_Color](Docs/Curve/Curve_CT-XRay_TF_Color.png "Curve_CT-XRay_TF_Color") |
+| 23 | MR-Angio | ![Curve_MR-Angio_TF_Color](Docs/Curve/Curve_MR-Angio_TF_Color.png "Curve_MR-Angio_TF_Color") |
+| 24 | MR-Default | ![Curve_MR-Default_TF_Color](Docs/Curve/Curve_MR-Default_TF_Color.png "Curve_MR-Default_TF_Color") |
+| 25 | MR-MIP | ![Curve_MR-MIP_TF_Color](Docs/Curve/Curve_MR-MIP_TF_Color.png "Curve_MR-MIP_TF_Color") |
+| 26 | MR-T2-Brain | ![Curve_MR-T2-Brain_TF_Color](Docs/Curve/Curve_MR-T2-Brain_TF_Color.png "Curve_MR-T2-Brain_TF_Color") |
+| 27 | US-Fetal | ![Curve_US-Fetal_TF_Color](Docs/Curve/Curve_US-Fetal_TF_Color.png "Curve_US-Fetal_TF_Color") |
 
 <div style='page-break-after: always'></div>
 
@@ -846,9 +937,9 @@ DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S
 
 Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in a **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (see figure G.1.):
 
-* X: Increases from Back to Front, color code red; anatomical from Posterior P to **Anterior A**
-* Y: Increases from Left to Right, color code green; anatomical from Left L to **Right R**
-* Z: Increases upwards from Bottom to Top, color code blue; anatomical from Inferior I to **Superior S**
+* X: Increases from Back to Front, color code **Red**; anatomical from Posterior P to **Anterior A**
+* Y: Increases from Left to Right, color code **Green**; anatomical from Left L to **Right R**
+* Z: Increases upwards from Bottom to Top, color code **Blue**; anatomical from Inferior I to **Superior S**
 
 ![Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-OrientationGuide.png "Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
 
