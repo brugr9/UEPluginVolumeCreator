@@ -316,7 +316,7 @@ Plugin "Volume Creator" provides with an SV User Widget (Blueprint Class: `WBP_S
 
 ![User Widget Blueprint WBP_SV](Docs/WBP_SV.png "User Widget Blueprint WBP_SV")<br>*Fig. 4.1.2.1.: User Widget Blueprint WBP_SV*
 
-Widget Entries:
+Widget Input Entries:
 
 * Import... (Dialog)
 * Open... (Dialog)
@@ -420,12 +420,11 @@ Plugin "Volume Creator" provides with an VOI User Widget (Blueprint Class: `WBP_
 
 ![User Widget Blueprint WBP_VOI](Docs/WBP_VOI.png "User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.1.: User Widget Blueprint WBP_VOI*
 
-Widget Entries:
+Widget Input Entries:
 
-* VOI Actor (Select)
 * Window Center (Slider)
 * Window Width (Slider)
-* Window Mask (Check)
+* Window Mask (Check Box)
 
 ![Level Blueprint Example, Create VOI User Widget](Docs/WBP_VOI-LevelBP.png "Level Blueprint Example, Create VOI User Widget")<br>*Fig. 4.2.2.2.: Level Blueprint Example, Create VOI User Widget*
 
@@ -564,18 +563,18 @@ Plugin "Volume Creator" provides with an MPR User Widget (Blueprint Class: `WBP_
 
 ![User Widget Blueprint WBP_MPR](Docs/WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
-Widget Entries:
+Widget Input Entries:
 
 * LUT (Select)
 * Brightness (Slider)
 * Coronal Plane:
-  * Location P&ndash;A (Slider)
+  * Location Posterior/Anterior  P&ndash;A (Slider)
   * Visibility (Check Box)
 * Sagittal Plane:
-  * Location L&ndash;R (Slider)
+  * Location Left/Right L&ndash;R (Slider)
   * Visibility (Check Box)
 * Axial Plane:
-  * Location I&ndash;S (Slider)
+  * Location Inferior/Superior I&ndash;S (Slider)
   * Visibility (Check Box)
 
 ![Level Blueprint Example, Create MPR User Widget](Docs/WBP_MPR-LevelBP.png "Level Blueprint Example, Create MPR User Widget")<br>*Fig. 4.3.2.2.: Level Blueprint Example, Create MPR User Widget*
@@ -726,7 +725,7 @@ Plugin "Volume Creator" provides with an DVR User Widget (Blueprint Class: `WBP_
 
 ![User Widget Blueprint WBP_DVR](Docs/WBP_DVR.png "User Widget Blueprint WBP_DVR")<br>*Fig. 4.4.2.1.: User Widget Blueprint WBP_DVR*
 
-Widget Entries:
+Widget Input Entries:
 
 * DVR:
   * Distance Power (Slider)
