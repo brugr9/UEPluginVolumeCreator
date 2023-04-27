@@ -796,9 +796,9 @@ Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP
 
 Parameter (see figure 'Details Panel'):
 
-* Transform:
+* Category 'Transform':
   * Mobility: Static
-* Light:
+* Category 'Light':
   * Intensity (Brightness): `1700.0` lm
   * Attenuation Radius: `250.0`
   * Outer Cone Angle: `10.0`
@@ -809,6 +809,8 @@ Parameter (see figure 'Details Panel'):
   * Cast Ray Tracing Shadows: `false`
   * Affect Ray Tracing Reflections: `false`
   * Affect Ray Tracing Global Illumination: `false`
+* Category 'Volume Creator':
+  * none
 
 <div style='page-break-after: always'></div>
 
