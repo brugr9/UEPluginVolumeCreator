@@ -23,7 +23,7 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
 <!-- UE Marketplace : End 1/2 -->
 
 * Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
-* Technology: DICOM, Unreal Engine, Blueprint visual scripting system, C++ Code Plugin, HLSL Compute Shader
+* Technology: DICOM, Unreal Engine, Blueprint Visual Scripting System, Code Plugin, C++, HLSL
 
 <div style='page-break-after: always'></div>
 
@@ -118,7 +118,7 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ### 2.1. Objects
 
-The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of either vector or tensor volumes. Following the object oriented paradigm the domain specific entities are implemented as Blueprint Actors (see figure 2.1.):
+The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of either vector or tensor volumes. Following the object oriented paradigm the domain specific entities are implemented as Blueprint Actors (see figure 2.1.1.):
 
 * Scalar Volume SV
 * Values of Interest VOI
@@ -498,62 +498,39 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Default Value: `true`
   * Info: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
 
+*Table 4.3.1.1.: Look-Up Tables LUT*<br>
+| Index | Name | Colors | Index | Name | Colors |
+|------:|:-----|:-------|------:|:-----|:-------|
+| 0 | dGEMRIC3T | ![CartilegeMRIdGEMRIC3T.png](Docs/LUT/CartilegeMRIdGEMRIC3T.png "CartilegeMRIdGEMRIC3T.png") | 8 | DiscretefMRI | ![DiscretefMRIPA.png](Docs/LUT/DiscretefMRIPA.png "DiscretefMRIPA.png") |
+| 1 | dGEMRIC15T | ![CartilegeMRIdGEMRIC15T.png](Docs/LUT/CartilegeMRIdGEMRIC15T.png "CartilegeMRIdGEMRIC15T.png") | 9 | DiscretefMRIPA | ![DiscretefMRI.png](Docs/LUT/DiscretefMRI.png "DiscretefMRI.png") |
+| 2 | DiscreteBlue | ![DiscreteBlue.png](Docs/LUT/DiscreteBlue.png "DiscreteBlue.png") | 10 | DiscreteFullRainbow | ![DiscreteFullRainbow.png](Docs/LUT/DiscreteFullRainbow.png "DiscreteFullRainbow.png") |
+| 3 | DiscreteCool1 | ![DiscreteCool1.png](Docs/LUT/DiscreteCool1.png "DiscreteCool1.png") | 11 | DiscreteGreen | ![DiscreteGreen.png](Docs/LUT/DiscreteGreen.png "DiscreteGreen.png") |
+| 4 | DiscreteCool2 | ![DiscreteCool2.png](Docs/LUT/DiscreteCool2.png "DiscreteCool2.png") | 12 | DiscreteGrey | ![DiscreteGrey.png](Docs/LUT/DiscreteGrey.png "DiscreteGrey.png") |
+| 5 | DiscreteCool3 | ![DiscreteCool3.png](Docs/LUT/DiscreteCool3.png "DiscreteCool3.png") | 13 | DiscreteInvertedGrey | ![DiscreteInvertedGrey.png](Docs/LUT/DiscreteInvertedGrey.png "DiscreteInvertedGrey.png") |
+| 6 | DiscreteCyan | ![DiscreteCyan.png](Docs/LUT/DiscreteCyan.png "DiscreteCyan.png") | 14 | DiscreteIron | ![DiscreteIron.png](Docs/LUT/DiscreteIron.png "DiscreteIron.png") |
+| 7 | DiscreteDesert | ![DiscreteDesert.png](Docs/LUT/DiscreteDesert.png "DiscreteDesert.png") | 15 | Discretelabels | ![Discretelabels.png](Docs/LUT/Discretelabels.png "Discretelabels.png") |
+
 <div style='page-break-after: always'></div>
 
-*Table 4.3.1.1.: Look-Up Tables LUT*<br>
-| Index | Name | Colors |
-|------:|:-----|:-------|
-| 0 | dGEMRIC15 | ![CartilegeMRIdGEMRIC15T.png](Docs/LUT/CartilegeMRIdGEMRIC15T.png "CartilegeMRIdGEMRIC15T.png") |
-| 1 | dGEMRIC3 | ![CartilegeMRIdGEMRIC3T.png](Docs/LUT/CartilegeMRIdGEMRIC3T.png "CartilegeMRIdGEMRIC3T.png") |
-| 2 | BlueRed | ![FreeSurferBlueRed.png](Docs/LUT/FreeSurferBlueRed.png "FreeSurferBlueRed.png") |
-| 3 | Brain1 | ![SlicerBrainLUT2010.png](Docs/LUT/SlicerBrainLUT2010.png "SlicerBrainLUT2010.png") |
-| 4 | Brain2 | ![SlicerShortLUT.png](Docs/LUT/SlicerShortLUT.png "SlicerShortLUT.png") |
-| 5 | DiscreteBlue | ![DiscreteBlue.png](Docs/LUT/DiscreteBlue.png "DiscreteBlue.png") |
-| 6 | DiscreteCool1 | ![DiscreteCool1.png](Docs/LUT/DiscreteCool1.png "DiscreteCool1.png") |
-| 7 | DiscreteCool2 | ![DiscreteCool2.png](Docs/LUT/DiscreteCool2.png "DiscreteCool2.png") |
-| 8 | DiscreteCool3 | ![DiscreteCool3.png](Docs/LUT/DiscreteCool3.png "DiscreteCool3.png") |
-| 9 | DiscreteCyan | ![DiscreteCyan.png](Docs/LUT/DiscreteCyan.png "DiscreteCyan.png") |
-| 10 | DiscreteDeserLUT | ![DiscreteDesert.png](Docs/LUT/DiscreteDesert.png "DiscreteDesert.png") |
-| 11 | DiscreteFullRainbow | ![DiscreteFullRainbow.png](Docs/LUT/DiscreteFullRainbow.png "DiscreteFullRainbow.png") |
-| 12 | DiscreteGreen | ![DiscreteGreen.png](Docs/LUT/DiscreteGreen.png "DiscreteGreen.png") |
-| 13 | DiscreteGrey | ![DiscreteGrey.png](Docs/LUT/DiscreteGrey.png "DiscreteGrey.png") |
-| 14 | DiscreteInvertedGrey | ![DiscreteInvertedGrey.png](Docs/LUT/DiscreteInvertedGrey.png "DiscreteInvertedGrey.png") |
-| 15 | DiscreteIron | ![DiscreteIron.png](Docs/LUT/DiscreteIron.png "DiscreteIron.png") |
-| 16 | DiscreteMagenta | ![DiscreteMagenta.png](Docs/LUT/DiscreteMagenta.png "DiscreteMagenta.png") |
-| 17 | DiscreteOcean | ![DiscreteOcean.png](Docs/LUT/DiscreteOcean.png "DiscreteOcean.png") |
-| 18 | DiscreteRainbow | ![DiscreteRainbow.png](Docs/LUT/DiscreteRainbow.png "DiscreteRainbow.png") |
-| 19 | DiscreteRandomIntegers | ![DiscreteRandom.png](Docs/LUT/DiscreteRandom.png "DiscreteRandom.png") |
-| 20 | DiscreteRandom | ![DiscreteRandomIntegers.png](Docs/LUT/DiscreteRandomIntegers.png "DiscreteRandomIntegers.png") |
-| 21 | DiscreteRed | ![DiscreteRed.png](Docs/LUT/DiscreteRed.png "DiscreteRed.png") |
-| 22 | DiscreteReverseRainbow | ![DiscreteReverseRainbow.png](Docs/LUT/DiscreteReverseRainbow.png "DiscreteReverseRainbow.png") |
-| 23 | DiscreteWarm1 | ![DiscreteWarm1.png](Docs/LUT/DiscreteWarm1.png "DiscreteWarm1.png") |
-| 24 | DiscreteWarm2 | ![DiscreteWarm2.png](Docs/LUT/DiscreteWarm2.png "DiscreteWarm2.png") |
-| 25 | DiscreteWarm3 | ![DiscreteWarm3.png](Docs/LUT/DiscreteWarm3.png "DiscreteWarm3.png") |
-| 26 | DiscreteYellow | ![DiscreteYellow.png](Docs/LUT/DiscreteYellow.png "DiscreteYellow.png") |
-| 27 | DiscretefMRIPA | ![DiscretefMRI.png](Docs/LUT/DiscretefMRI.png "DiscretefMRI.png") |
-| 28 | DiscretefMRI | ![DiscretefMRIPA.png](Docs/LUT/DiscretefMRIPA.png "DiscretefMRIPA.png") |
-| 29 | Discretelabels | ![Discretelabels.png](Docs/LUT/Discretelabels.png "Discretelabels.png") |
-| 30 | GreenRed | ![FreeSurferGreenRed.png](Docs/LUT/FreeSurferGreenRed.png "FreeSurferGreenRed.png") |
-| 31 | HeaLUT | ![FreeSurferHeat.png](Docs/LUT/FreeSurferHeat.png "FreeSurferHeat.png") |
+| Index | Name | Colors | Index | Name | Colors |
+|------:|:-----|:-------|------:|:-----|:-------|
+| 16 | DiscreteMagenta | ![DiscreteMagenta.png](Docs/LUT/DiscreteMagenta.png "DiscreteMagenta.png") | 33 | LabelsPelvis | ![LabelsPelvis.png](Docs/LUT/LabelsPelvis.png "LabelsPelvis.png") |
+| 17 | DiscreteOcean | ![DiscreteOcean.png](Docs/LUT/DiscreteOcean.png "DiscreteOcean.png") | 34 | PETHeat | ![PetPETHeat.png](Docs/LUT/PetPETHeat.png "PetPETHeat.png") |
+| 18 | DiscreteRainbow | ![DiscreteRainbow.png](Docs/LUT/DiscreteRainbow.png "DiscreteRainbow.png") | 35 | PETMIP | ![PetPETMIP.png](Docs/LUT/PetPETMIP.png "PetPETMIP.png") |
+| 19 | DiscreteRandom | ![DiscreteRandomIntegers.png](Docs/LUT/DiscreteRandomIntegers.png "DiscreteRandomIntegers.png") | 36 | PETRainbow | ![PetPETRainbow.png](Docs/LUT/PetPETRainbow.png "PetPETRainbow.png") |
+| 20 | DiscreteRandomIntegers | ![DiscreteRandom.png](Docs/LUT/DiscreteRandom.png "DiscreteRandom.png") | 37 | ShadeCoolShade1 | ![ShadeCoolShade1.png](Docs/LUT/ShadeCoolShade1.png "ShadeCoolShade1.png") |
+| 21 | DiscreteRed | ![DiscreteRed.png](Docs/LUT/DiscreteRed.png "DiscreteRed.png") | 38 | ShadeCoolShade2 | ![ShadeCoolShade2.png](Docs/LUT/ShadeCoolShade2.png "ShadeCoolShade2.png") |
+| 22 | DiscreteReverseRainbow | ![DiscreteReverseRainbow.png](Docs/LUT/DiscreteReverseRainbow.png "DiscreteReverseRainbow.png") | 39 | ShadeCoolShade3 | ![ShadeCoolShade3.png](Docs/LUT/ShadeCoolShade3.png "ShadeCoolShade3.png") |
+| 23 | DiscreteWarm1 | ![DiscreteWarm1.png](Docs/LUT/DiscreteWarm1.png "DiscreteWarm1.png") | 40 | ShadeWarmShade1 | ![ShadeWarmShade1.png](Docs/LUT/ShadeWarmShade1.png "ShadeWarmShade1.png") |
+| 24 | DiscreteWarm2 | ![DiscreteWarm2.png](Docs/LUT/DiscreteWarm2.png "DiscreteWarm2.png") | 41 | ShadeWarmShade2 | ![ShadeWarmShade2.png](Docs/LUT/ShadeWarmShade2.png "ShadeWarmShade2.png") |
+| 25 | DiscreteWarm3 | ![DiscreteWarm3.png](Docs/LUT/DiscreteWarm3.png "DiscreteWarm3.png") | 42 | ShadeWarmShade3 | ![ShadeWarmShade3.png](Docs/LUT/ShadeWarmShade3.png "ShadeWarmShade3.png") |
+| 26 | DiscreteYellow | ![DiscreteYellow.png](Docs/LUT/DiscreteYellow.png "DiscreteYellow.png") | 43 | TintCoolTint1 | ![TintCoolTint1.png](Docs/LUT/TintCoolTint1.png "TintCoolTint1.png") |
+| 27 | BlueRed | ![FreeSurferBlueRed.png](Docs/LUT/FreeSurferBlueRed.png "FreeSurferBlueRed.png") | 44 | TintCoolTint2 | ![TintCoolTint2.png](Docs/LUT/TintCoolTint2.png "TintCoolTint2.png") |
+| 28 | GreenRed | ![FreeSurferGreenRed.png](Docs/LUT/FreeSurferGreenRed.png "FreeSurferGreenRed.png") | 45 | TintCoolTint3 | ![TintCoolTint3.png](Docs/LUT/TintCoolTint3.png "TintCoolTint3.png") |
+| 29 | Heat | ![FreeSurferHeat.png](Docs/LUT/FreeSurferHeat.png "FreeSurferHeat.png") | 46 | TintWarmTint1 | ![TintWarmTint1.png](Docs/LUT/TintWarmTint1.png "TintWarmTint1.png") |
+| 30 | RedBlue | ![FreeSurferRedBlue.png](Docs/LUT/FreeSurferRedBlue.png "FreeSurferRedBlue.png") | 47 | TintWarmTint2 | ![TintWarmTint2.png](Docs/LUT/TintWarmTint2.png "TintWarmTint2.png") |
+| 31 | RedGreen | ![FreeSurferRedGreen.png](Docs/LUT/FreeSurferRedGreen.png "FreeSurferRedGreen.png") | 48 | TintWarmTint3 | ![TintWarmTint3.png](Docs/LUT/TintWarmTint3.png "TintWarmTint3.png") |
 | 32 | LabelsNonSemantic | ![LabelsNonSemantic.png](Docs/LUT/LabelsNonSemantic.png "LabelsNonSemantic.png") |
-| 33 | LabelsPelvis | ![LabelsPelvis.png](Docs/LUT/LabelsPelvis.png "LabelsPelvis.png") |
-| 34 | PETHeaLUT | ![PetPETHeat.png](Docs/LUT/PetPETHeat.png "PetPETHeat.png") |
-| 35 | PETMIP | ![PetPETMIP.png](Docs/LUT/PetPETMIP.png "PetPETMIP.png") |
-| 36 | PETRainbow | ![PetPETRainbow.png](Docs/LUT/PetPETRainbow.png "PetPETRainbow.png") |
-| 37 | RedBlue | ![FreeSurferRedBlue.png](Docs/LUT/FreeSurferRedBlue.png "FreeSurferRedBlue.png") |
-| 38 | RedGreen | ![FreeSurferRedGreen.png](Docs/LUT/FreeSurferRedGreen.png "FreeSurferRedGreen.png") |
-| 39 | ShadeCoolShade1 | ![ShadeCoolShade1.png](Docs/LUT/ShadeCoolShade1.png "ShadeCoolShade1.png") |
-| 40 | ShadeCoolShade2 | ![ShadeCoolShade2.png](Docs/LUT/ShadeCoolShade2.png "ShadeCoolShade2.png") |
-| 41 | ShadeCoolShade3 | ![ShadeCoolShade3.png](Docs/LUT/ShadeCoolShade3.png "ShadeCoolShade3.png") |
-| 42 | ShadeWarmShade1 | ![ShadeWarmShade1.png](Docs/LUT/ShadeWarmShade1.png "ShadeWarmShade1.png") |
-| 43 | ShadeWarmShade2 | ![ShadeWarmShade2.png](Docs/LUT/ShadeWarmShade2.png "ShadeWarmShade2.png") |
-| 44 | ShadeWarmShade3 | ![ShadeWarmShade3.png](Docs/LUT/ShadeWarmShade3.png "ShadeWarmShade3.png") |
-| 45 | TintCoolTint1 | ![TintCoolTint1.png](Docs/LUT/TintCoolTint1.png "TintCoolTint1.png") |
-| 46 | TintCoolTint2 | ![TintCoolTint2.png](Docs/LUT/TintCoolTint2.png "TintCoolTint2.png") |
-| 47 | TintCoolTint3 | ![TintCoolTint3.png](Docs/LUT/TintCoolTint3.png "TintCoolTint3.png") |
-| 48 | TintWarmTint1 | ![TintWarmTint1.png](Docs/LUT/TintWarmTint1.png "TintWarmTint1.png") |
-| 49 | TintWarmTint2 | ![TintWarmTint2.png](Docs/LUT/TintWarmTint2.png "TintWarmTint2.png") |
-| 50 | TintWarmTint3 | ![TintWarmTint3.png](Docs/LUT/TintWarmTint3.png "TintWarmTint3.png") |
 
 <div style='page-break-after: always'></div>
 
@@ -721,7 +698,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 #### 4.4.2. DVR User Widget
 
-Plugin "Volume Creator" provides with an DVR User Widget (Blueprint Class: `WBP_DVR`).
+Plugin "Volume Creator" provides with a DVR User Widget (Blueprint Class: `WBP_DVR`).
 
 ![User Widget Blueprint WBP_DVR](Docs/WBP_DVR.png "User Widget Blueprint WBP_DVR")<br>*Fig. 4.4.2.1.: User Widget Blueprint WBP_DVR*
 
