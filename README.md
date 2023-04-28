@@ -45,7 +45,8 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
   * [3.2. Import User Widget Actor](#33-import-user-widget-actor)
   * [3.4. Content File Name](#34-content-file-name)
   * [3.5. File Size](#35-file-size)
-  * [3.6. Data Processing](#36-data-processing)
+  * [3.6. Size in Memory](#36-size-in-memory)
+  * [3.7. Data Processing](#37-data-processing)
 * [4. Rendering](#4-rendering)
   * [4.1. Scalar Volume SV](#41-scalar-volume-sv)
     * [4.1.1. SV Actor](#411-sv-actor)
@@ -226,36 +227,37 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 
 ### 3.5. File Size
 
-CT image data is expected to come in Hounsfield Units HU. DICOM image data is stored as 12 bit data, sometimes one also meet 16 bit. A twelve-digit binary number can represent 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). The imported data is clamped to 4096 values in a range of [-1000, 3096]. Let's assume we have a scalar volume as follows (cp. [DICOM, FAQ]):
+CT image data is expected to come in Hounsfield Units HU, where the use of 4096 values in a range of [-1000, 3096] is documented (cp. [DICOM, FAQ]). A twelve-digit binary number can represent these 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let's assume we have a scalar volume as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
-* A single grayscale 12 bit channel
+* A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3076]; Dimension from Import
 
-The size of ScalarVolume<sub>1</sub> becomes 192 MB. If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of ScalarVolume<sub>2</sub> increases to 1.5 GB.
+The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of ScalarVolume<sub>2</sub> increases to 2 GB.
 
-* *ScalarVolume<sub>1</sub> = 512<sup>3</sup> x 12 bit = 1'610'612'736 bit = 1.611 Gigabit = 192 MB*
-* *ScalarVolume<sub>2</sub> = 1024<sup>3</sup> x 12 bit = 12'884'901'888 bit = 12.885 Gigabit =  1'536 MB = 1.5 GB*
+* *ScalarVolume<sub>1</sub> `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134'217'728 voxel x 16 bit/voxel = 2’147’483’648 bit = 268’435’456 Byte = 256 MB*
+* *ScalarVolume<sub>2</sub> `T_SV_Volume` = 1024<sup>3</sup> px x 1 x 16 bit/voxel = 1’073’741’824 voxel x 16 bit/voxel = 17’179’869’184 bit = 2’147’483’648 Byte = 2 GB*
 
-### 3.6. Data Processing
+### 3.6. Size in Memory
 
-The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data:
+The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data, e.g., from ScalarVolume<sub>1</sub> `T_SV_Volume` from above:
 
-* SV: `T_SV_Volume`, <br>Grayscale G16 (single channel, 16 bit); G: Hounsfield Units [-1000, 3076], <br>Width/Height/Depth from Import<br>*Example: Width/Height/Depth 512 x 512 x 141 px, 72'192 Kb*
-* VOI: `RT_VOI_Volume`, <br>Linear RG8 (dual channel, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1], <br>Width/Height/Depth inherited from `T_SV_Volume`<br>*Example: Width/Height/Depth 512 x 512 x 141 px, 144'384 Kb*
-* DVR: `RT_Lightmap_Volume`, <br>Linear Color RGBA8 (quad channel, 8 bit); RGBA: Color [0, 255], <br>Width/Height/Depth inherited from `RT_VOI_Volume` but with half Resolution<br>*Example: Width/Height/Depth 256 x 256 x 70 px, 17'920 Kb*
+* **VOI** &ndash; `RT_VOI_Volume`: Linear RG8 (2 channels, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from `T_SV_Volume`
+<br>*Example: 512<sup>3</sup> px x 2 x 8 bit/voxel = 134'217'728 voxel x 16 bit/voxel = 2’147’483’648 bit = 268’435’456 Byte = 256 MB**
 
-*Example, size in Memory: 72'192 Kb + 144'384 Kb + 17'920 Kb = 234'496 Kb*
+* **DVR** &ndash; `RT_Lightmap_Volume`: Linear Color RGBA8 (4 channels, 8 bit); RGBA: Color [0, 255]; Dimension inherited from `RT_VOI_Volume` but half Resolution
+<br>*Example: 256<sup>3</sup> px x 4 x 8 bit/voxel = 16’777’216 voxel x 32 bit/voxel = 536’870’912 bit = 67’108’864 Byte = 64 MB**
 
-The MPR Render Targets do not inherit, they are always the same size:
+* **MPR** &ndash; `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (single channel, 8 bit); R: VOI [0, 255]; The MPR Render Targets do not inherit, they are always the same size
+<br>*1024<sup>2</sup> px x 1 x 8 bit/voxel = 1’048’576 voxel x 8 bit/voxel = 8’388’608 bit = 1’048’576 Byte = 1 MB** each; Sum: 3 MB*
 
-* MPR: `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`, <br>Linear R8 (single channel, 8 bit); R: VOI [0, 255], <br>Width/Height 1024 x 1024 px each, 1'024 Kb each (Sum: 3'072 Kb)
+*Example, size in Memory: 256 MB + 256 MB + 64 MB + 3 MB = 579 MB*
 
-*Example, total size in Memory: 234'496 Kb + 3'072 Kb = 237'568 Kb*
+### 3.7. Data Processing
 
-For a use case of DVR, the Render Textures `RT_VOI_Volume` and `RT_Lightmap_Volume` are used for data processing. With rendering, e.g., 30 fps (cp. [Lindberg]), this results in a rate of 4.87 Gigabit/s:
+For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. With rendering, e.g., 30 fps this results in a rate of 80.52 Gigabit/s:
 
-* *144'384 Kb + 17'920 Kb = 162'304 Kb = 0.162 Gigabit*
-* *ProcessedData = 0.162 Gigabit/frame x 30 frames/s = 4.87 Gigabit/s*
+* *2’147’483’648 bit + 536’870’912 bit = 2’684’354’560 bit = 2.684 Gigabit*
+* *ProcessedData = 2.684 Gigabit/frame x 30 frames/s = 80.52 Gigabit/s*
 
 ## 4. Rendering
 
@@ -1005,7 +1007,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   <!--* [Piper et al.] Piper S., Finet J., Yarmarkovich A., Aucoin N.: **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation:* [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)*-->
   <!--* [Finet et al.] Finet J., Yarmarkovich A., Liu Y., Freudling A., Kikinis R.: **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: *[https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html)*; Transfer Function Presets on GitHub: *[https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)*-->
   * [Radiopaedia] : **Radiopaedia**. Online: *[https://radiopaedia.org/](https://radiopaedia.org/)*
-  * [Lindberg] Kjell Lindberg: **How can a processor handle 10 Gigabit per second or more data rate?**. In: Quora. Nov 2021. Online: *[https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate](https://www.quora.com/How-can-a-processor-handle-10-Gigabit-per-second-or-more-data-rate)*
 * Lighting:
   * [21] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: *[https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)*
   <!--* [22] **The Different Colors Of Operating Theatre Lights**. In: Website "Forum Theatre". September 15, 2022. Online: *[https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/](https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/)*-->
