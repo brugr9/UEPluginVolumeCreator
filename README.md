@@ -230,11 +230,11 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 CT image data is expected to come in Hounsfield Units HU, where the use of 4096 values in a range of [-1000, 3096] is documented (cp. [DICOM, FAQ]). A twelve-digit binary number can represent these 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let's assume we have a scalar volume as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
-* A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3076]; Dimension from Import
-
-The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of ScalarVolume<sub>2</sub> increases to 2 GB.
-
+* A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3076]
 * *ScalarVolume<sub>1</sub> `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134'217'728 voxel x 16 bit/voxel = 2’147’483’648 bit = 268’435’456 Byte = 256 MB*
+
+The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of ScalarVolume<sub>2</sub> increases to 2 GB:
+
 * *ScalarVolume<sub>2</sub> `T_SV_Volume` = 1024<sup>3</sup> px x 1 x 16 bit/voxel = 1’073’741’824 voxel x 16 bit/voxel = 17’179’869’184 bit = 2’147’483’648 Byte = 2 GB*
 
 ### 3.6. Size in Memory
@@ -243,10 +243,8 @@ The delivered assets make use of Render Targets. The Volume Render Targets size 
 
 * **VOI** &ndash; `RT_VOI_Volume`: Linear RG8 (2 channels, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from `T_SV_Volume`
 <br>*Example: 512<sup>3</sup> px x 2 x 8 bit/voxel = 134'217'728 voxel x 16 bit/voxel = 2’147’483’648 bit = 268’435’456 Byte = 256 MB**
-
 * **DVR** &ndash; `RT_Lightmap_Volume`: Linear Color RGBA8 (4 channels, 8 bit); RGBA: Color [0, 255]; Dimension inherited from `RT_VOI_Volume` but half Resolution
 <br>*Example: 256<sup>3</sup> px x 4 x 8 bit/voxel = 16’777’216 voxel x 32 bit/voxel = 536’870’912 bit = 67’108’864 Byte = 64 MB**
-
 * **MPR** &ndash; `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (single channel, 8 bit); R: VOI [0, 255]; The MPR Render Targets do not inherit, they are always the same size
 <br>*1024<sup>2</sup> px x 1 x 8 bit/voxel = 1’048’576 voxel x 8 bit/voxel = 8’388’608 bit = 1’048’576 Byte = 1 MB** each; Sum: 3 MB*
 
@@ -258,6 +256,8 @@ For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightm
 
 * *2’147’483’648 bit + 536’870’912 bit = 2’684’354’560 bit = 2.684 Gigabit*
 * *ProcessedData = 2.684 Gigabit/frame x 30 frames/s = 80.52 Gigabit/s*
+
+<div style='page-break-after: always'></div>
 
 ## 4. Rendering
 
@@ -501,38 +501,26 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Info: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
 
 *Table 4.3.1.1.: Look-Up Tables LUT*<br>
-| Index | Name | Colors | Index | Name | Colors |
-|------:|:-----|:-------|------:|:-----|:-------|
-| 0 | dGEMRIC3T | ![CartilegeMRIdGEMRIC3T.png](Docs/LUT/CartilegeMRIdGEMRIC3T.png "CartilegeMRIdGEMRIC3T.png") | 8 | DiscretefMRI | ![DiscretefMRIPA.png](Docs/LUT/DiscretefMRIPA.png "DiscretefMRIPA.png") |
-| 1 | dGEMRIC15T | ![CartilegeMRIdGEMRIC15T.png](Docs/LUT/CartilegeMRIdGEMRIC15T.png "CartilegeMRIdGEMRIC15T.png") | 9 | DiscretefMRIPA | ![DiscretefMRI.png](Docs/LUT/DiscretefMRI.png "DiscretefMRI.png") |
-| 2 | DiscreteBlue | ![DiscreteBlue.png](Docs/LUT/DiscreteBlue.png "DiscreteBlue.png") | 10 | DiscreteFullRainbow | ![DiscreteFullRainbow.png](Docs/LUT/DiscreteFullRainbow.png "DiscreteFullRainbow.png") |
-| 3 | DiscreteCool1 | ![DiscreteCool1.png](Docs/LUT/DiscreteCool1.png "DiscreteCool1.png") | 11 | DiscreteGreen | ![DiscreteGreen.png](Docs/LUT/DiscreteGreen.png "DiscreteGreen.png") |
-| 4 | DiscreteCool2 | ![DiscreteCool2.png](Docs/LUT/DiscreteCool2.png "DiscreteCool2.png") | 12 | DiscreteGrey | ![DiscreteGrey.png](Docs/LUT/DiscreteGrey.png "DiscreteGrey.png") |
-| 5 | DiscreteCool3 | ![DiscreteCool3.png](Docs/LUT/DiscreteCool3.png "DiscreteCool3.png") | 13 | DiscreteInvertedGrey | ![DiscreteInvertedGrey.png](Docs/LUT/DiscreteInvertedGrey.png "DiscreteInvertedGrey.png") |
-| 6 | DiscreteCyan | ![DiscreteCyan.png](Docs/LUT/DiscreteCyan.png "DiscreteCyan.png") | 14 | DiscreteIron | ![DiscreteIron.png](Docs/LUT/DiscreteIron.png "DiscreteIron.png") |
-| 7 | DiscreteDesert | ![DiscreteDesert.png](Docs/LUT/DiscreteDesert.png "DiscreteDesert.png") | 15 | Discretelabels | ![Discretelabels.png](Docs/LUT/Discretelabels.png "Discretelabels.png") |
-
-<div style='page-break-after: always'></div>
-
-| Index | Name | Colors | Index | Name | Colors |
-|------:|:-----|:-------|------:|:-----|:-------|
+| Index | Name | Colors | Index | Name | Colors | Index | Name | Colors |
+|------:|:-----|:-------|------:|:-----|:-------|------:|:-----|:-------|
+| 0 | dGEMRIC3T | ![CartilegeMRIdGEMRIC3T.png](Docs/LUT/CartilegeMRIdGEMRIC3T.png "CartilegeMRIdGEMRIC3T.png") | 17 | DiscreteOcean | ![DiscreteOcean.png](Docs/LUT/DiscreteOcean.png "DiscreteOcean.png") | 34 | PETHeat | ![PetPETHeat.png](Docs/LUT/PetPETHeat.png "PetPETHeat.png") |
+| 1 | dGEMRIC15T | ![CartilegeMRIdGEMRIC15T.png](Docs/LUT/CartilegeMRIdGEMRIC15T.png "CartilegeMRIdGEMRIC15T.png") | 18 | DiscreteRainbow | ![DiscreteRainbow.png](Docs/LUT/DiscreteRainbow.png "DiscreteRainbow.png") | 35 | PETMIP | ![PetPETMIP.png](Docs/LUT/PetPETMIP.png "PetPETMIP.png") |
+| 2 | DiscreteBlue | ![DiscreteBlue.png](Docs/LUT/DiscreteBlue.png "DiscreteBlue.png") | 19 | DiscreteRandom | ![DiscreteRandomIntegers.png](Docs/LUT/DiscreteRandomIntegers.png "DiscreteRandomIntegers.png") | 36 | PETRainbow | ![PetPETRainbow.png](Docs/LUT/PetPETRainbow.png "PetPETRainbow.png") |
+| 3 | DiscreteCool1 | ![DiscreteCool1.png](Docs/LUT/DiscreteCool1.png "DiscreteCool1.png") | 20 | DiscreteRandomIntegers | ![DiscreteRandom.png](Docs/LUT/DiscreteRandom.png "DiscreteRandom.png") | 37 | ShadeCoolShade1 | ![ShadeCoolShade1.png](Docs/LUT/ShadeCoolShade1.png "ShadeCoolShade1.png") |
+| 4 | DiscreteCool2 | ![DiscreteCool2.png](Docs/LUT/DiscreteCool2.png "DiscreteCool2.png") | 21 | DiscreteRed | ![DiscreteRed.png](Docs/LUT/DiscreteRed.png "DiscreteRed.png") | 38 | ShadeCoolShade2 | ![ShadeCoolShade2.png](Docs/LUT/ShadeCoolShade2.png "ShadeCoolShade2.png") |
+| 5 | DiscreteCool3 | ![DiscreteCool3.png](Docs/LUT/DiscreteCool3.png "DiscreteCool3.png") | 22 | DiscreteReverseRainbow | ![DiscreteReverseRainbow.png](Docs/LUT/DiscreteReverseRainbow.png "DiscreteReverseRainbow.png") | 39 | ShadeCoolShade3 | ![ShadeCoolShade3.png](Docs/LUT/ShadeCoolShade3.png "ShadeCoolShade3.png") |
+| 6 | DiscreteCyan | ![DiscreteCyan.png](Docs/LUT/DiscreteCyan.png "DiscreteCyan.png") | 23 | DiscreteWarm1 | ![DiscreteWarm1.png](Docs/LUT/DiscreteWarm1.png "DiscreteWarm1.png") | 40 | ShadeWarmShade1 | ![ShadeWarmShade1.png](Docs/LUT/ShadeWarmShade1.png "ShadeWarmShade1.png") |
+| 7 | DiscreteDesert | ![DiscreteDesert.png](Docs/LUT/DiscreteDesert.png "DiscreteDesert.png") | 24 | DiscreteWarm2 | ![DiscreteWarm2.png](Docs/LUT/DiscreteWarm2.png "DiscreteWarm2.png") | 41 | ShadeWarmShade2 | ![ShadeWarmShade2.png](Docs/LUT/ShadeWarmShade2.png "ShadeWarmShade2.png") |
+| 8 | DiscretefMRI | ![DiscretefMRIPA.png](Docs/LUT/DiscretefMRIPA.png "DiscretefMRIPA.png") | 25 | DiscreteWarm3 | ![DiscreteWarm3.png](Docs/LUT/DiscreteWarm3.png "DiscreteWarm3.png") | 42 | ShadeWarmShade3 | ![ShadeWarmShade3.png](Docs/LUT/ShadeWarmShade3.png "ShadeWarmShade3.png") |
+| 9 | DiscretefMRIPA | ![DiscretefMRI.png](Docs/LUT/DiscretefMRI.png "DiscretefMRI.png") | 26 | DiscreteYellow | ![DiscreteYellow.png](Docs/LUT/DiscreteYellow.png "DiscreteYellow.png") | 43 | TintCoolTint1 | ![TintCoolTint1.png](Docs/LUT/TintCoolTint1.png "TintCoolTint1.png") |
+| 10 | DiscreteFullRainbow | ![DiscreteFullRainbow.png](Docs/LUT/DiscreteFullRainbow.png "DiscreteFullRainbow.png") | 27 | BlueRed | ![FreeSurferBlueRed.png](Docs/LUT/FreeSurferBlueRed.png "FreeSurferBlueRed.png") | 44 | TintCoolTint2 | ![TintCoolTint2.png](Docs/LUT/TintCoolTint2.png "TintCoolTint2.png") |
+| 11 | DiscreteGreen | ![DiscreteGreen.png](Docs/LUT/DiscreteGreen.png "DiscreteGreen.png") | 28 | GreenRed | ![FreeSurferGreenRed.png](Docs/LUT/FreeSurferGreenRed.png "FreeSurferGreenRed.png") | 45 | TintCoolTint3 | ![TintCoolTint3.png](Docs/LUT/TintCoolTint3.png "TintCoolTint3.png") |
+| 12 | DiscreteGrey | ![DiscreteGrey.png](Docs/LUT/DiscreteGrey.png "DiscreteGrey.png") | 29 | Heat | ![FreeSurferHeat.png](Docs/LUT/FreeSurferHeat.png "FreeSurferHeat.png") | 46 | TintWarmTint1 | ![TintWarmTint1.png](Docs/LUT/TintWarmTint1.png "TintWarmTint1.png") |
+| 13 | DiscreteInvertedGrey | ![DiscreteInvertedGrey.png](Docs/LUT/DiscreteInvertedGrey.png "DiscreteInvertedGrey.png") | 30 | RedBlue | ![FreeSurferRedBlue.png](Docs/LUT/FreeSurferRedBlue.png "FreeSurferRedBlue.png") | 47 | TintWarmTint2 | ![TintWarmTint2.png](Docs/LUT/TintWarmTint2.png "TintWarmTint2.png") |
+| 14 | DiscreteIron | ![DiscreteIron.png](Docs/LUT/DiscreteIron.png "DiscreteIron.png") | 31 | RedGreen | ![FreeSurferRedGreen.png](Docs/LUT/FreeSurferRedGreen.png "FreeSurferRedGreen.png") | 48 | TintWarmTint3 | ![TintWarmTint3.png](Docs/LUT/TintWarmTint3.png "TintWarmTint3.png") |
+| 15 | Discretelabels | ![Discretelabels.png](Docs/LUT/Discretelabels.png "Discretelabels.png") | 32 | LabelsNonSemantic | ![LabelsNonSemantic.png](Docs/LUT/LabelsNonSemantic.png "LabelsNonSemantic.png") |
 | 16 | DiscreteMagenta | ![DiscreteMagenta.png](Docs/LUT/DiscreteMagenta.png "DiscreteMagenta.png") | 33 | LabelsPelvis | ![LabelsPelvis.png](Docs/LUT/LabelsPelvis.png "LabelsPelvis.png") |
-| 17 | DiscreteOcean | ![DiscreteOcean.png](Docs/LUT/DiscreteOcean.png "DiscreteOcean.png") | 34 | PETHeat | ![PetPETHeat.png](Docs/LUT/PetPETHeat.png "PetPETHeat.png") |
-| 18 | DiscreteRainbow | ![DiscreteRainbow.png](Docs/LUT/DiscreteRainbow.png "DiscreteRainbow.png") | 35 | PETMIP | ![PetPETMIP.png](Docs/LUT/PetPETMIP.png "PetPETMIP.png") |
-| 19 | DiscreteRandom | ![DiscreteRandomIntegers.png](Docs/LUT/DiscreteRandomIntegers.png "DiscreteRandomIntegers.png") | 36 | PETRainbow | ![PetPETRainbow.png](Docs/LUT/PetPETRainbow.png "PetPETRainbow.png") |
-| 20 | DiscreteRandomIntegers | ![DiscreteRandom.png](Docs/LUT/DiscreteRandom.png "DiscreteRandom.png") | 37 | ShadeCoolShade1 | ![ShadeCoolShade1.png](Docs/LUT/ShadeCoolShade1.png "ShadeCoolShade1.png") |
-| 21 | DiscreteRed | ![DiscreteRed.png](Docs/LUT/DiscreteRed.png "DiscreteRed.png") | 38 | ShadeCoolShade2 | ![ShadeCoolShade2.png](Docs/LUT/ShadeCoolShade2.png "ShadeCoolShade2.png") |
-| 22 | DiscreteReverseRainbow | ![DiscreteReverseRainbow.png](Docs/LUT/DiscreteReverseRainbow.png "DiscreteReverseRainbow.png") | 39 | ShadeCoolShade3 | ![ShadeCoolShade3.png](Docs/LUT/ShadeCoolShade3.png "ShadeCoolShade3.png") |
-| 23 | DiscreteWarm1 | ![DiscreteWarm1.png](Docs/LUT/DiscreteWarm1.png "DiscreteWarm1.png") | 40 | ShadeWarmShade1 | ![ShadeWarmShade1.png](Docs/LUT/ShadeWarmShade1.png "ShadeWarmShade1.png") |
-| 24 | DiscreteWarm2 | ![DiscreteWarm2.png](Docs/LUT/DiscreteWarm2.png "DiscreteWarm2.png") | 41 | ShadeWarmShade2 | ![ShadeWarmShade2.png](Docs/LUT/ShadeWarmShade2.png "ShadeWarmShade2.png") |
-| 25 | DiscreteWarm3 | ![DiscreteWarm3.png](Docs/LUT/DiscreteWarm3.png "DiscreteWarm3.png") | 42 | ShadeWarmShade3 | ![ShadeWarmShade3.png](Docs/LUT/ShadeWarmShade3.png "ShadeWarmShade3.png") |
-| 26 | DiscreteYellow | ![DiscreteYellow.png](Docs/LUT/DiscreteYellow.png "DiscreteYellow.png") | 43 | TintCoolTint1 | ![TintCoolTint1.png](Docs/LUT/TintCoolTint1.png "TintCoolTint1.png") |
-| 27 | BlueRed | ![FreeSurferBlueRed.png](Docs/LUT/FreeSurferBlueRed.png "FreeSurferBlueRed.png") | 44 | TintCoolTint2 | ![TintCoolTint2.png](Docs/LUT/TintCoolTint2.png "TintCoolTint2.png") |
-| 28 | GreenRed | ![FreeSurferGreenRed.png](Docs/LUT/FreeSurferGreenRed.png "FreeSurferGreenRed.png") | 45 | TintCoolTint3 | ![TintCoolTint3.png](Docs/LUT/TintCoolTint3.png "TintCoolTint3.png") |
-| 29 | Heat | ![FreeSurferHeat.png](Docs/LUT/FreeSurferHeat.png "FreeSurferHeat.png") | 46 | TintWarmTint1 | ![TintWarmTint1.png](Docs/LUT/TintWarmTint1.png "TintWarmTint1.png") |
-| 30 | RedBlue | ![FreeSurferRedBlue.png](Docs/LUT/FreeSurferRedBlue.png "FreeSurferRedBlue.png") | 47 | TintWarmTint2 | ![TintWarmTint2.png](Docs/LUT/TintWarmTint2.png "TintWarmTint2.png") |
-| 31 | RedGreen | ![FreeSurferRedGreen.png](Docs/LUT/FreeSurferRedGreen.png "FreeSurferRedGreen.png") | 48 | TintWarmTint3 | ![TintWarmTint3.png](Docs/LUT/TintWarmTint3.png "TintWarmTint3.png") |
-| 32 | LabelsNonSemantic | ![LabelsNonSemantic.png](Docs/LUT/LabelsNonSemantic.png "LabelsNonSemantic.png") |
+
 
 <div style='page-break-after: always'></div>
 
@@ -565,8 +553,6 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, Assign an MPR Actor Instance to manage
 
-<div style='page-break-after: always'></div>
-
 #### 4.3.3. MPR User Widget Actor
 
 Plugin "Volume Creator" provides with an MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (Blueprint Class: `WBP_MPR`).
@@ -594,6 +580,8 @@ Plugin "Volume Creator" provides with a Direct Volume Rendering DVR Actor (Bluep
 
 ![Blueprint Actor BP_DVR Details Panel](Docs/BP_DVR-DetailsPanel.png "Blueprint Actor BP_DVR Details Panel")<br>*Fig. 4.4.1.2.: Blueprint Actor BP_DVR &ndash; Details Panel*
 
+<div style='page-break-after: always'></div>
+
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Data:
@@ -615,9 +603,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Type: `Float`
     * Default Value: `1.0`
     * Range: [`0.1`, `2.0`]
-    * Info: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cp. [Luecke 2005], "Fragmented Line Ray-Casting":
-      > *To lower the number of operations necessary for computing a single frame, [...] the distance between two successive resampling locations, i.e the sampling distance, could be increased, thereby decreasing the number of actual locations used for volume reconstruction.*
-      > *However, it is worth mentioning, that incorporating any of these optimization approaches usually tends to result in generated images of less quality compared to an unoptimized ray-casting volume renderer.*
+    * Info: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cp. [Luecke 2005], "Fragmented Line Ray-Casting").
       * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
       * With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
   * Resampling Steps:
@@ -662,39 +648,19 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Range: [`1`, `50`]
     * Info: Phong Shading Parameter
 
-<div style='page-break-after: always'></div>
-
 *Table 4.4.1.1.: Transfer Functions TF*<br>
-| Index | Name | Colors |
-|------:|:-----|:-------|
-| 0 | Default | ![Curve_Default_TF_Color](Docs/Curve/Curve_Default_TF_Color.png "Curve_Default_TF_Color") |
-| 1 | CT-AAA | ![Curve_CT-AAA_TF_Color](Docs/Curve/Curve_CT-AAA_TF_Color.png "Curve_CT-AAA_TF_Color") |
-| 2 | CT-AAA2 | ![Curve_CT-AAA2_TF_Color](Docs/Curve/Curve_CT-AAA2_TF_Color.png "Curve_CT-AAA2_TF_Color") |
-| 3 | CT-Air | ![Curve_CT-Air_TF_Color](Docs/Curve/Curve_CT-Air_TF_Color.png "Curve_CT-Air_TF_Color") |
-| 4 | CT-Bone | ![Curve_CT-Bone_TF_Color](Docs/Curve/Curve_CT-Bone_TF_Color.png "Curve_CT-Bone_TF_Color") |
-| 5 | CT-Bones | ![Curve_CT-Bones_TF_Color](Docs/Curve/Curve_CT-Bones_TF_Color.png "Curve_CT-Bones_TF_Color") |
-| 6 | CT-Cardiac | ![Curve_CT-Cardiac_TF_Color](Docs/Curve/Curve_CT-Cardiac_TF_Color.png "Curve_CT-Cardiac_TF_Color") |
-| 7 | CT-Cardiac2 | ![Curve_CT-Cardiac2_TF_Color](Docs/Curve/Curve_CT-Cardiac2_TF_Color.png "Curve_CT-Cardiac2_TF_Color") |
-| 8 | CT-Cardiac3 | ![Curve_CT-Cardiac3_TF_Color](Docs/Curve/Curve_CT-Cardiac3_TF_Color.png "Curve_CT-Cardiac3_TF_Color") |
-| 9 | CT-Chest-Contrast-Enhanced | ![Curve_CT-Chest-Contrast-Enhanced_TF_Color](Docs/Curve/Curve_CT-Chest-Contrast-Enhanced_TF_Color.png "Curve_CT-Chest-Contrast-Enhanced_TF_Color") |
-| 10 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_TF_Color](Docs/Curve/Curve_CT-Chest-Vessels_TF_Color.png "Curve_CT-Chest-Vessels_TF_Color") |
-| 11 | CT-Coronary-Arteries | ![Curve_CT-Coronary-Arteries_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries_TF_Color.png "Curve_CT-Coronary-Arteries_TF_Color") |
-| 12 | CT-Coronary-Arteries2 | ![Curve_CT-Coronary-Arteries2_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries2_TF_Color.png "Curve_CT-Coronary-Arteries2_TF_Color") |
-| 13 | CT-Coronary-Arteries3 | ![Curve_CT-Coronary-Arteries3_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries3_TF_Color.png "Curve_CT-Coronary-Arteries3_TF_Color") |
-| 14 | CT-Cropped-Volume-Bone | ![Curve_CT-Cropped-Volume-Bone_TF_Color](Docs/Curve/Curve_CT-Cropped-Volume-Bone_TF_Color.png "Curve_CT-Cropped-Volume-Bone_TF_Color") |
-| 15 | CT-Fat | ![Curve_CT-Fat_TF_Color](Docs/Curve/Curve_CT-Fat_TF_Color.png "Curve_CT-Fat_TF_Color") |
-| 16 | CT-Liver-Vasculature | ![Curve_CT-Liver-Vasculature_TF_Color](Docs/Curve/Curve_CT-Liver-Vasculature_TF_Color.png "Curve_CT-Liver-Vasculature_TF_Color") |
-| 17 | CT-Lung | ![Curve_CT-Lung_TF_Color](Docs/Curve/Curve_CT-Lung_TF_Color.png "Curve_CT-Lung_TF_Color") |
-| 18 | CT-MIP | ![Curve_CT-MIP_TF_Color](Docs/Curve/Curve_CT-MIP_TF_Color.png "Curve_CT-MIP_TF_Color") |
-| 19 | CT-Muscle | ![Curve_CT-Muscle_TF_Color](Docs/Curve/Curve_CT-Muscle_TF_Color.png "Curve_CT-Muscle_TF_Color") |
-| 20 | CT-Pulmonary-Arteries | ![Curve_CT-Pulmonary-Arteries_TF_Color](Docs/Curve/Curve_CT-Pulmonary-Arteries_TF_Color.png "Curve_CT-Pulmonary-Arteries_TF_Color") |
-| 21 | CT-Soft-Tissue | ![Curve_CT-Soft-Tissue_TF_Color](Docs/Curve/Curve_CT-Soft-Tissue_TF_Color.png "Curve_CT-Soft-Tissue_TF_Color") |
-| 22 | CT-XRay | ![Curve_CT-XRay_TF_Color](Docs/Curve/Curve_CT-XRay_TF_Color.png "Curve_CT-XRay_TF_Color") |
-| 23 | MR-Angio | ![Curve_MR-Angio_TF_Color](Docs/Curve/Curve_MR-Angio_TF_Color.png "Curve_MR-Angio_TF_Color") |
-| 24 | MR-Default | ![Curve_MR-Default_TF_Color](Docs/Curve/Curve_MR-Default_TF_Color.png "Curve_MR-Default_TF_Color") |
-| 25 | MR-MIP | ![Curve_MR-MIP_TF_Color](Docs/Curve/Curve_MR-MIP_TF_Color.png "Curve_MR-MIP_TF_Color") |
-| 26 | MR-T2-Brain | ![Curve_MR-T2-Brain_TF_Color](Docs/Curve/Curve_MR-T2-Brain_TF_Color.png "Curve_MR-T2-Brain_TF_Color") |
-| 27 | US-Fetal | ![Curve_US-Fetal_TF_Color](Docs/Curve/Curve_US-Fetal_TF_Color.png "Curve_US-Fetal_TF_Color") |
+| Index | Name | Colors | Index | Name | Colors | Index | Name | Colors |
+|------:|:-----|:-------|------:|:-----|:-------|------:|:-----|:-------|
+| 0 | Default | ![Curve_Default_TF_Color](Docs/Curve/Curve_Default_TF_Color.png "Curve_Default_TF_Color") | 9 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_TF_Color](Docs/Curve/Curve_CT-Chest-Vessels_TF_Color.png "Curve_CT-Chest-Vessels_TF_Color") | 19 | CT-Pulmonary-Arteries | ![Curve_CT-Pulmonary-Arteries_TF_Color](Docs/Curve/Curve_CT-Pulmonary-Arteries_TF_Color.png "Curve_CT-Pulmonary-Arteries_TF_Color") |
+| 1 | CT-AAA | ![Curve_CT-AAA_TF_Color](Docs/Curve/Curve_CT-AAA_TF_Color.png "Curve_CT-AAA_TF_Color") | 10 | CT-Coronary-Arteries | ![Curve_CT-Coronary-Arteries_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries_TF_Color.png "Curve_CT-Coronary-Arteries_TF_Color") | 20 | CT-Soft-Tissue | ![Curve_CT-Soft-Tissue_TF_Color](Docs/Curve/Curve_CT-Soft-Tissue_TF_Color.png "Curve_CT-Soft-Tissue_TF_Color") |
+| 2 | CT-AAA2 | ![Curve_CT-AAA2_TF_Color](Docs/Curve/Curve_CT-AAA2_TF_Color.png "Curve_CT-AAA2_TF_Color") | 11 | CT-Coronary-Arteries2 | ![Curve_CT-Coronary-Arteries2_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries2_TF_Color.png "Curve_CT-Coronary-Arteries2_TF_Color") | 21 | CT-Air | ![Curve_CT-Air_TF_Color](Docs/Curve/Curve_CT-Air_TF_Color.png "Curve_CT-Air_TF_Color") |
+| 3 | CT-Bone | ![Curve_CT-Bone_TF_Color](Docs/Curve/Curve_CT-Bone_TF_Color.png "Curve_CT-Bone_TF_Color") | 12 | CT-Coronary-Arteries3 | ![Curve_CT-Coronary-Arteries3_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries3_TF_Color.png "Curve_CT-Coronary-Arteries3_TF_Color") | 22 | CT-XRay | ![Curve_CT-XRay_TF_Color](Docs/Curve/Curve_CT-XRay_TF_Color.png "Curve_CT-XRay_TF_Color") |
+| 4 | CT-Bones | ![Curve_CT-Bones_TF_Color](Docs/Curve/Curve_CT-Bones_TF_Color.png "Curve_CT-Bones_TF_Color") | 13 | CT-Cropped-Volume-Bone | ![Curve_CT-Cropped-Volume-Bone_TF_Color](Docs/Curve/Curve_CT-Cropped-Volume-Bone_TF_Color.png "Curve_CT-Cropped-Volume-Bone_TF_Color") | 23 | MR-Default | ![Curve_MR-Default_TF_Color](Docs/Curve/Curve_MR-Default_TF_Color.png "Curve_MR-Default_TF_Color") |
+| 5 | CT-Cardiac | ![Curve_CT-Cardiac_TF_Color](Docs/Curve/Curve_CT-Cardiac_TF_Color.png "Curve_CT-Cardiac_TF_Color") | 14 | CT-Fat | ![Curve_CT-Fat_TF_Color](Docs/Curve/Curve_CT-Fat_TF_Color.png "Curve_CT-Fat_TF_Color") | 24 | MR-Angio | ![Curve_MR-Angio_TF_Color](Docs/Curve/Curve_MR-Angio_TF_Color.png "Curve_MR-Angio_TF_Color") |
+| 6 | CT-Cardiac2 | ![Curve_CT-Cardiac2_TF_Color](Docs/Curve/Curve_CT-Cardiac2_TF_Color.png "Curve_CT-Cardiac2_TF_Color") | 15 | CT-Liver-Vasculature | ![Curve_CT-Liver-Vasculature_TF_Color](Docs/Curve/Curve_CT-Liver-Vasculature_TF_Color.png "Curve_CT-Liver-Vasculature_TF_Color") | 25 | MR-T2-Brain | ![Curve_MR-T2-Brain_TF_Color](Docs/Curve/Curve_MR-T2-Brain_TF_Color.png "Curve_MR-T2-Brain_TF_Color") |
+| 7 | CT-Cardiac3 | ![Curve_CT-Cardiac3_TF_Color](Docs/Curve/Curve_CT-Cardiac3_TF_Color.png "Curve_CT-Cardiac3_TF_Color") | 16 | CT-Lung | ![Curve_CT-Lung_TF_Color](Docs/Curve/Curve_CT-Lung_TF_Color.png "Curve_CT-Lung_TF_Color") | 26 | MR-MIP | ![Curve_MR-MIP_TF_Color](Docs/Curve/Curve_MR-MIP_TF_Color.png "Curve_MR-MIP_TF_Color") |
+| 8 | CT-Chest-Contrast-Enhanced | ![Curve_CT-Chest-Contrast-Enhanced_TF_Color](Docs/Curve/Curve_CT-Chest-Contrast-Enhanced_TF_Color.png "Curve_CT-Chest-Contrast-Enhanced_TF_Color") | 17 | CT-MIP | ![Curve_CT-MIP_TF_Color](Docs/Curve/Curve_CT-MIP_TF_Color.png "Curve_CT-MIP_TF_Color") | 27 | US-Fetal | ![Curve_US-Fetal_TF_Color](Docs/Curve/Curve_US-Fetal_TF_Color.png "Curve_US-Fetal_TF_Color") |
+| 9 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_TF_Color](Docs/Curve/Curve_CT-Chest-Vessels_TF_Color.png "Curve_CT-Chest-Vessels_TF_Color") | 18 | CT-Muscle | ![Curve_CT-Muscle_TF_Color](Docs/Curve/Curve_CT-Muscle_TF_Color.png "Curve_CT-Muscle_TF_Color") |
 
 <div style='page-break-after: always'></div>
 
@@ -725,8 +691,6 @@ Create Parameter:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, Assign a DVR Actor Instance to manage
-
-<div style='page-break-after: always'></div>
 
 #### 4.4.3. DVR User Widget Actor
 
@@ -790,7 +754,7 @@ Parameter, Category 'Volume Creator':
 
 #### 4.4.5. Light Source Actor
 
-Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor will serve as static lighting source to illuminate the volume rendering. Its `SpotLightComponent` *Light* parameters are simulating an operating theatre light (see figure 4.4.5.2.). By default, the lighting is intended only for the DVR. It is up to the game developer whether the light should also affect the world and ray tracing.
+Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor will serve as static lighting source to illuminate the volume rendering. Its `SpotLightComponent` parameters are simulating an operating theatre light (see figure 4.4.5.2.). By default, the lighting is intended only for the DVR. It is up to the game developer whether the light should also affect the world and ray tracing.
 
 ![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.5.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
@@ -813,8 +777,6 @@ Parameter (see figure 'Details Panel'):
   * Affect Ray Tracing Global Illumination: `false`
 * Category 'Volume Creator':
   * none
-
-<div style='page-break-after: always'></div>
 
 #### 4.4.6. Orientation Guide Actor
 
@@ -923,15 +885,15 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 
 ![Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-OrientationGuide.png "Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
 
-<div style='page-break-after: always'></div>
-
 Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G.2.):
 
-* **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows)<br>with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
-* **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows)<br>with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
-* **Axial AXE**: Horizontal **XY-Plane** (red/green arrows)<br>with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
+* **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
+* **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
+* **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
 
 ![ROI-Handles Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-ROIHandles.png "ROI-Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with UE Left handed Location-Gizmo Arrows*
+
+<div style='page-break-after: always'></div>
 
 #### Asset Naming Convention
 
@@ -956,9 +918,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture: `T`
   * Texture Render Target: `RT`
   * Widget Blueprint: `WBP`
-
-<div style='page-break-after: always'></div>
-
 * `[AssetName]` (Domain Specific):
   * Data Type:
     * Scalar Volume: `SV`
@@ -1028,6 +987,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
 
+<div style='page-break-after: always'></div>
+
 ### B. Readings
 
 * Ikits M., Kniss J., Lefohn A., Hansen C.: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques)
@@ -1039,8 +1000,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 * **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
 * **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
-
-<div style='page-break-after: always'></div>
 
 ### D. Attribution
 
