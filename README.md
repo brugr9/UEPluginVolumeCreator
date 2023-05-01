@@ -14,18 +14,18 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 ![Featured Image](Docs/FeaturedImage894x488.png "Featured Image")
 
-Adds Blueprint Support for Real-time Rendering from DICOM&reg; based Medical Imaging Data.
+Adds Blueprint Support for Real-time Rendering from Medical Imaging Data.
 
 ## Description
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may crop the rendered volume interactively. The plugin acts as a framework which allows game developers to create VR/AR solutions which can be used as serious games, e.g., for teaching and training in medical education.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may crop the rendered volume interactively. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
 <!-- UE Marketplace : End 1/2 -->
 
 * Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
-* Technology: DICOM, Unreal Engine, Blueprint Visual Scripting System, Code Plugin, C++, HLSL
+* Technology: Unreal Engine, Blueprint Visual Scripting, Code Plugin, C++, HLSL, DICOM
 
 <div style='page-break-after: always'></div>
 
@@ -421,10 +421,10 @@ The VOI range can also be set by clicking one of the VOI range buttons (see figu
 | Default     | `-1000` |  `3096` |  `1048` | `4096` |
 | Air         | `-1000` | `-1000` | `-1000` |    `1` |
 | Water       |     `0` |     `0` |     `0` |    `1` |
-| Lung        |  `-600` |  `-400` |  `-500` |  `200` |
-| Fat         |  `-100` |   `-60` |   `-80` |   `40` |
 | Bone        |   `400` |  `1000` |   `700` |  `600` |
 | Soft Tissue |    `40` |    `80` |    `60` |   `40` |
+| Fat         |  `-100` |   `-60` |   `-80` |   `40` |
+| Lung        |  `-600` |  `-400` |  `-500` |  `200` |
 | Mediastinum |    `50` |   `500` |   `275` |  `450` |
 | PE          |   `100` |   `700` |   `400` |  `600` |
 
@@ -441,6 +441,7 @@ Widget Input Entries:
 * Window Center (Slider)
 * Window Width (Slider)
 * Window Mask (Check Box)
+* Presets VOI Ranges (Buttons, cp. Table 4.2.1.1.)
 
 ![Level Blueprint Example, Create VOI User Widget](Docs/WBP_VOI-LevelBP.png "Level Blueprint Example, Create VOI User Widget")<br>*Fig. 4.2.2.2.: Level Blueprint Example, Create VOI User Widget*
 
@@ -893,7 +894,7 @@ DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S
 
 ##### *Unreal Engine*
 
-Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in a **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (see figure G.1.):
+Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in an **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (see figure G.1.):
 
 * X: Increases from Back to Front, color code **Red**; anatomical from Posterior P to **Anterior A**
 * Y: Increases from Left to Right, color code **Green**; anatomical from Left L to **Right R**
