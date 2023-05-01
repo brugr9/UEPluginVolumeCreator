@@ -8,6 +8,8 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 ---
 
+**Warning** Plugin not yet deployed &ndash; Documentation not yet complete
+
 <!-- UE Marketplace : Begin 1/2 -->
 
 ![Featured Image](Docs/FeaturedImage894x488.png "Featured Image")
@@ -139,6 +141,8 @@ To access and change parameters of the Blueprint Actors in runtime, the plugin p
 
 ![Content Browser, VolumeCreator Content, Folder Classes - User Widget Actor Blueprints](Docs/VolumeCreator-Content-Classes-UI.png "Content Browser, VolumeCreator Content, Folder Classes - User Widget Actor Blueprints")<br>*Fig. 2.1.3.: Content Browser, VolumeCreator Content, Folder Classes &ndash; User Widget Actor Blueprints*
 
+<div style='page-break-after: always'></div>
+
 ### 2.2. Domain Model
 
 Domain Model Description:
@@ -192,17 +196,25 @@ See also section "Content File Name" below.
 
 * Reads from DICOM files, file name extension `*.dcm`
 
+TODO:
+
 #### 3.1.2. Import MetaImage
 
 * Reads from MetaImage files, file name extension `*.mhds`
+
+TODO:
 
 <div style='page-break-after: always'></div>
 
 ### 3.2. Import User Widget
 
+TODO:
+
 <div style='page-break-after: always'></div>
 
 ### 3.3. Import User Widget Actor
+
+TODO:
 
 <div style='page-break-after: always'></div>
 
@@ -314,6 +326,8 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 #### 4.1.2. SV User Widget
 
+TODO:
+
 Plugin "Volume Creator" provides with an SV User Widget (Blueprint Class: `WBP_SV`).
 
 ![User Widget Blueprint WBP_SV](Docs/WBP_SV.png "User Widget Blueprint WBP_SV")<br>*Fig. 4.1.2.1.: User Widget Blueprint WBP_SV*
@@ -334,9 +348,9 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, Assign an SV Actor Instance to manage
 
-<div style='page-break-after: always'></div>
-
 #### 4.1.3. SV User Widget Actor
+
+TODO:
 
 Plugin "Volume Creator" provides with SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an SV User Widget assigned (Blueprint Class: `WBP_SV`).
 
@@ -406,11 +420,11 @@ The VOI range can also be set by clicking one of the VOI range buttons (see figu
 |-------------|--------:|--------:|--------:|-------:|
 | Default     | `-1000` |  `3096` |  `1048` | `4096` |
 | Air         | `-1000` | `-1000` | `-1000` |    `1` |
+| Water       |     `0` |     `0` |     `0` |    `1` |
 | Lung        |  `-600` |  `-400` |  `-500` |  `200` |
 | Fat         |  `-100` |   `-60` |   `-80` |   `40` |
-| Water       |     `0` |     `0` |     `0` |    `1` |
-| Soft Tissue |    `40` |    `80` |    `60` |   `40` |
 | Bone        |   `400` |  `1000` |   `700` |  `600` |
+| Soft Tissue |    `40` |    `80` |    `60` |   `40` |
 | Mediastinum |    `50` |   `500` |   `275` |  `450` |
 | PE          |   `100` |   `700` |   `400` |  `600` |
 
@@ -647,6 +661,8 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Default Value: `10`
     * Range: [`1`, `50`]
     * Info: Phong Shading Parameter
+
+TODO: Curves Images
 
 *Table 4.4.1.1.: Transfer Functions TF*<br>
 | Index | Name | Colors | Index | Name | Colors | Index | Name | Colors |
@@ -998,8 +1014,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 ### C. Acknowledgements
 
-* **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
-* **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
+* **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1, Unreal&reg; Marketplace. Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved. TODO: URL <!--URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator)-->
+<!-- * **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)) -->
 
 ### D. Attribution
 
