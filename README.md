@@ -258,13 +258,13 @@ The delivered assets make use of Render Targets. The Volume Render Targets size 
 * **DVR** &ndash; `RT_Lightmap_Volume`: Linear Color RGBA8 (4 channels, 8 bit); RGBA: Color [0, 255]; Dimension inherited from `RT_VOI_Volume` but half Resolution
 <br>*Example: 256<sup>3</sup> px x 4 x 8 bit/voxel = 16’777’216 voxel x 32 bit/voxel = 536’870’912 bit = 67’108’864 Byte = 64 MB*
 * **MPR** &ndash; `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (single channel, 8 bit); R: VOI [0, 255]; The MPR Render Targets do not inherit, they are always the same size
-<br>*Example: 1024<sup>2</sup> px x 1 x 8 bit/voxel = 1’048’576 voxel x 8 bit/voxel = 8’388’608 bit = 1’048’576 Byte = 1 MB** each; Sum: 3 MB*
+<br>*Example: 1024<sup>2</sup> px x 1 x 8 bit/voxel = 1’048’576 voxel x 8 bit/voxel = 8’388’608 bit = 1’048’576 Byte = 1 MB each; Sum: 3 MB*
 
-*Example, size in Memory: 256 MB + 256 MB + 64 MB + 3 MB = 579 MB*
+*Example, size in Memory: <br>`T_SV_Volume` + `RT_VOI_Volume` + `RT_Lightmap_Volume` + `RT_VOI_COR` + `RT_VOI_SAG` + `RT_VOI_AXE` = 256 MB + 256 MB + 64 MB + 1 MB + 1 MB + 1 MB = 579 MB*
 
 ### 3.7. Data Processing
 
-For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. With rendering, e.g., 30 fps this results in a rate of 80.52 Gigabit/s:
+For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. With rendering, e.g., 30 fps this results in an access rate of 80.52 Gigabit/s:
 
 * *2’147’483’648 bit + 536’870’912 bit = 2’684’354’560 bit = 2.684 Gigabit*
 * *ProcessedData = 2.684 Gigabit/frame x 30 frames/s = 80.52 Gigabit/s*
