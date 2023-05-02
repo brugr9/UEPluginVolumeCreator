@@ -8,7 +8,9 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 ---
 
-**Warning** Plugin not yet deployed &ndash; Documentation not yet complete
+**Warning**
+
+Plugin not yet deployed &ndash; Documentation not yet complete
 
 <!-- UE Marketplace : Begin 1/2 -->
 
