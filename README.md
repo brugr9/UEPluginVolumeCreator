@@ -172,6 +172,8 @@ Domain Model Description:
   * **Light Source Actor**: The volume rendering actor can optionally be illuminated with static light sources from Light Source Actors.
   * **Orientation Guide Actor**: The volume rendering actor can optionally be attached a rotation synchronized orientation guide.
 
+<div style='page-break-after: always'></div>
+
 ![Domain Model Diagram - Multiplanar Rendering MPR](Docs/DMD-MPR.png "Domain Model Diagram - Multiplanar Rendering MPR")<br>*Fig. 2.2.1.: Domain Model Diagram &ndash; Multiplanar Rendering MPR*
 
 ![Domain Model Diagram - Direct Volume Rendering DVR](Docs/DMD-DVR.png "Domain Model Diagram - Direct Volume Rendering DVR")<br>*Fig. 2.2.2.: Domain Model Diagram &ndash; Direct Volume Rendering DVR*
@@ -239,7 +241,7 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 
 ### 3.5. File Size
 
-CT image data is expected to come in Hounsfield Units HU, where the use of 4096 values in a range of [-1000, 3096] is documented (cp. [DICOM, FAQ]). A twelve-digit binary number can represent these 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let's assume we have a scalar volume as follows:
+CT image data is expected to come in Hounsfield Units HU, where the use of 4096 values in a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). A twelve-digit binary number can represent these 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let's assume we have a scalar volume as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
 * A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3076]
@@ -322,6 +324,15 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Range: [`0`, `10`]
   * Info: DICOM Spacing Between Slices Attribute: Spacing between slices. The spacing is measured from the center-to-center of each slice
 
+![Level Blueprint, SpawnActor SV Actor](Docs/BP_SV-SpawnActor.png "Level Blueprint, SpawnActor SV Actor")<br>*Fig. 4.1.1.2.: Level Blueprint, SpawnActor SV Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Scalar Volume Texture
+  * Type: `Volume Texture`
+  * Default Value: `T_SV_Volume`
+  * Info: Scalar Volume, Hounsfield Units encoded Volume Texture
+
 <div style='page-break-after: always'></div>
 
 #### 4.1.2. SV User Widget
@@ -332,27 +343,29 @@ Plugin "Volume Creator" provides with an SV User Widget (Blueprint Class: `WBP_S
 
 ![User Widget Blueprint WBP_SV](Docs/WBP_SV.png "User Widget Blueprint WBP_SV")<br>*Fig. 4.1.2.1.: User Widget Blueprint WBP_SV*
 
-Widget Input Entries:
+Widget Input:
 
 * Import... (Dialog)
 * Open... (Dialog)
 * Save
 * Save As... (Dialog)
 
-![Level Blueprint Example, Create SV User Widget](Docs/WBP_SV-LevelBP.png "Level Blueprint Example, Create SV User Widget")<br>*Fig. 4.1.2.2.: Level Blueprint Example, Create SV User Widget*
+![Level Blueprint, Create SV User Widget](Docs/WBP_SV-LevelBP.png "Level Blueprint, Create SV User Widget")<br>*Fig. 4.1.2.2.: Level Blueprint, Create SV User Widget*
 
 Create Parameter:
 
 * Scalar Volume Actor:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Assign an SV Actor Instance to manage
+  * Info: Mandatory, assign an SV Actor Instance to manage
+
+<div style='page-break-after: always'></div>
 
 #### 4.1.3. SV User Widget Actor
 
 TODO:
 
-Plugin "Volume Creator" provides with SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an SV User Widget assigned (Blueprint Class: `WBP_SV`).
+Plugin "Volume Creator" provides with an "SV User Widget Actor" (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an "SV User Widget" assigned (Blueprint Class: `WBP_SV`).
 
 ![Blueprint Actor BP_SV_UI in Viewport](Docs/BP_SV_UI.png "Blueprint Actor BP_SV_UI in Viewport")<br>*Fig. 4.1.3.1.: Blueprint Actor BP_SV_UI &ndash; Viewport &ndash; Viewport*
 
@@ -363,7 +376,16 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Scalar Volume Actor:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Assign an SV Actor Instance to manage
+  * Info: Mandatory, assign an SV Actor Instance to manage
+
+![Level Blueprint, SpawnActor SV User Widget Actor](Docs/BP_SV_UI-SpawnActor.png "Level Blueprint, SpawnActor SV User Widget Actor")<br>*Fig. 4.1.3.3: Level Blueprint, SpawnActor SV User Widget Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Scalar Volume Actor:
+  * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, assign an SV Actor Instance to manage
 
 <div style='page-break-after: always'></div>
 
@@ -371,7 +393,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 #### 4.2.1. VOI Actor
 
-CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3096] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp).
+CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp).
 
 If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and width.
 
@@ -388,7 +410,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Window Center
   * Type: `Float`
   * Default Value: `1048.0`
-  * Range: [`-1000.0`, `3096.0`]
+  * Range: [`-1000.0`, `3095.0`]
   * Info: Window Center in Hounsfield Units (aka level or brightness)
 * Window Width
   * Type: `Float`
@@ -399,12 +421,12 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Left
     * Type: `Float`
     * Default Value: `-1000.0`
-    * Range: [`-1000.0`, `3096.0`]
+    * Range: [`-1000.0`, `3095.0`]
     * Info: Window Left (lower) Border Value; which is calculated (not editable, for information only).
   * Right
     * Type: `Float`
-    * Default Value: `3096.0`
-    * Range: [`-1000.0`, `3096.0`]
+    * Default Value: `3095.0`
+    * Range: [`-1000.0`, `3095.0`]
     * Info: Window Right (upper) Border Value; which is calculated (not editable, for information only).
 * Window Mask
   * Type: `Boolean`
@@ -418,7 +440,7 @@ The VOI range can also be set by clicking one of the VOI range buttons (see figu
 *Table 4.2.1.1.: VOI Ranges*<br>
 | VOI Range Name | Left Border | Right Border | Window Center | Window Width |
 |-------------|--------:|--------:|--------:|-------:|
-| Default     | `-1000` |  `3096` |  `1048` | `4096` |
+| Default     | `-1000` |  `3095` |  `1048` | `4096` |
 | Air         | `-1000` | `-1000` | `-1000` |    `1` |
 | Water       |     `0` |     `0` |     `0` |    `1` |
 | Bone        |   `400` |  `1000` |   `700` |  `600` |
@@ -428,6 +450,15 @@ The VOI range can also be set by clicking one of the VOI range buttons (see figu
 | Mediastinum |    `50` |   `500` |   `275` |  `450` |
 | PE          |   `100` |   `700` |   `400` |  `600` |
 
+![Level Blueprint, SpawnActor VOI Actor](Docs/BP_VOI-SpawnActor.png "Level Blueprint, SpawnActor VOI Actor")<br>*Fig. 4.2.1.2.: Level Blueprint, SpawnActor VOI Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Scalar Volume Actor
+  * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, Hounsfield Units data source
+
 <div style='page-break-after: always'></div>
 
 #### 4.2.2. VOI User Widget
@@ -436,21 +467,21 @@ Plugin "Volume Creator" provides with an VOI User Widget (Blueprint Class: `WBP_
 
 ![User Widget Blueprint WBP_VOI](Docs/WBP_VOI.png "User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.1.: User Widget Blueprint WBP_VOI*
 
-Widget Input Entries:
+Widget Input:
 
 * Window Center (Slider)
 * Window Width (Slider)
 * Window Mask (Check Box)
 * Presets VOI Ranges (Buttons, cp. Table 4.2.1.1.)
 
-![Level Blueprint Example, Create VOI User Widget](Docs/WBP_VOI-LevelBP.png "Level Blueprint Example, Create VOI User Widget")<br>*Fig. 4.2.2.2.: Level Blueprint Example, Create VOI User Widget*
+![Level Blueprint, Create VOI User Widget](Docs/WBP_VOI-LevelBP.png "Level Blueprint, Create VOI User Widget")<br>*Fig. 4.2.2.2.: Level Blueprint, Create VOI User Widget*
 
 Create Parameter:
 
-* Values Of Interest:
-  * Type: Values Of Interest `BP_VOI` instance as Object Reference
+* Values Of Interest Actor:
+  * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Assign an VOI Actor Instance to manage
+  * Info: Mandatory, assign an VOI Actor Instance to manage
 
 <div style='page-break-after: always'></div>
 
@@ -467,7 +498,16 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Assign a VOI Actor Instance to manage
+  * Info: Mandatory, assign a VOI Actor Instance to manage
+
+![Level Blueprint, SpawnActor VOI User Widget Actor](Docs/BP_VOI_UI-SpawnActor.png "Level Blueprint, SpawnActor VOI User Widget Actor")<br>*Fig. 4.2.3.3: Level Blueprint, SpawnActor VOI User Widget Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Values Of Interest Actor:
+  * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, assign a VOI Actor Instance to manage
 
 <div style='page-break-after: always'></div>
 
@@ -484,9 +524,9 @@ Plugin "Volume Creator" provides with an Multiplanar Rendering MPR Actor (Bluepr
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Values Of Interest Actor:
-  * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
+  * Type: VOI Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory
+  * Info: Mandatory, data to which the transfer function LUT is applied
 * LUT Index:
   * Type: `Integer`
   * Default Value: `0`
@@ -536,6 +576,14 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 | 15 | Discretelabels | ![Discretelabels.png](Docs/LUT/Discretelabels.png "Discretelabels.png") | 32 | LabelsNonSemantic | ![LabelsNonSemantic.png](Docs/LUT/LabelsNonSemantic.png "LabelsNonSemantic.png") |
 | 16 | DiscreteMagenta | ![DiscreteMagenta.png](Docs/LUT/DiscreteMagenta.png "DiscreteMagenta.png") | 33 | LabelsPelvis | ![LabelsPelvis.png](Docs/LUT/LabelsPelvis.png "LabelsPelvis.png") |
 
+![Level Blueprint, SpawnActor MPR Actor](Docs/BP_MPR-SpawnActor.png "Level Blueprint, SpawnActor MPR Actor")<br>*Fig. 4.3.1.3.: Level Blueprint, SpawnActor MPR Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Values Of Interest Actor:
+  * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, data to which the transfer function LUT is applied
 
 <div style='page-break-after: always'></div>
 
@@ -545,7 +593,7 @@ Plugin "Volume Creator" provides with an MPR User Widget (Blueprint Class: `WBP_
 
 ![User Widget Blueprint WBP_MPR](Docs/WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
-Widget Input Entries:
+Widget Input:
 
 * LUT (Select)
 * Brightness (Slider)
@@ -559,14 +607,16 @@ Widget Input Entries:
   * Location Inferior/Superior I&ndash;S (Slider)
   * Visibility (Check Box)
 
-![Level Blueprint Example, Create MPR User Widget](Docs/WBP_MPR-LevelBP.png "Level Blueprint Example, Create MPR User Widget")<br>*Fig. 4.3.2.2.: Level Blueprint Example, Create MPR User Widget*
+![Level Blueprint, Create MPR User Widget](Docs/WBP_MPR-LevelBP.png "Level Blueprint, Create MPR User Widget")<br>*Fig. 4.3.2.2.: Level Blueprint, Create MPR User Widget*
 
 Create Parameter:
 
 * Multiplanar Rendering Actor:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Assign an MPR Actor Instance to manage
+  * Info: Mandatory, assign an MPR Actor Instance to manage
+
+<div style='page-break-after: always'></div>
 
 #### 4.3.3. MPR User Widget Actor
 
@@ -581,7 +631,16 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Multiplanar Rendering Actor:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Assign an MPR Actor Instance to manage
+  * Info: Mandatory, assign an MPR Actor Instance to manage
+
+![Level Blueprint, SpawnActor MPR User Widget Actor](Docs/BP_MPR_UI-SpawnActor.png "Level Blueprint, SpawnActor MPR User Widget Actor")<br>*Fig. 4.3.3.3: Level Blueprint, SpawnActor MPR User Widget Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Multiplanar Rendering Actor:
+  * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, assign an MPR Actor Instance to manage
 
 <div style='page-break-after: always'></div>
 
@@ -601,12 +660,12 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Data:
   * Values Of Interest Actor:
-    * Type: VOI Actor `BP_VOI` instance as Object Reference
+    * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
     * Default Value: `none`
-    * Info: Mandatory, data to which the transfer function is applied
+    * Info: Mandatory, data to which the transfer function Curve is applied
 * Geometry:
   * Region Of Interest Actor:
-    * Type: ROI Actor `BP_ROI` instance as Object Reference
+    * Type: Region Of Interest Actor `BP_ROI` instance as Object Reference
     * Default Value: `none`
     * Info: Optional, used for geometry subtraction if set
   * Clip Plane Actor:
@@ -679,6 +738,15 @@ TODO: Curves Images
 | 8 | CT-Chest-Contrast-Enhanced | ![Curve_CT-Chest-Contrast-Enhanced_TF_Color](Docs/Curve/Curve_CT-Chest-Contrast-Enhanced_TF_Color.png "Curve_CT-Chest-Contrast-Enhanced_TF_Color") | 17 | CT-MIP | ![Curve_CT-MIP_TF_Color](Docs/Curve/Curve_CT-MIP_TF_Color.png "Curve_CT-MIP_TF_Color") | 27 | US-Fetal | ![Curve_US-Fetal_TF_Color](Docs/Curve/Curve_US-Fetal_TF_Color.png "Curve_US-Fetal_TF_Color") |
 | 9 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_TF_Color](Docs/Curve/Curve_CT-Chest-Vessels_TF_Color.png "Curve_CT-Chest-Vessels_TF_Color") | 18 | CT-Muscle | ![Curve_CT-Muscle_TF_Color](Docs/Curve/Curve_CT-Muscle_TF_Color.png "Curve_CT-Muscle_TF_Color") |
 
+![Level Blueprint, SpawnActor DVR Actor](Docs/BP_DVR-SpawnActor.png "Level Blueprint, SpawnActor DVR Actor")<br>*Fig. 4.4.1.3.: Level Blueprint, SpawnActor DVR Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Values Of Interest Actor:
+  * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, data to which the transfer function Curve is applied
+
 <div style='page-break-after: always'></div>
 
 #### 4.4.2. DVR User Widget
@@ -687,7 +755,7 @@ Plugin "Volume Creator" provides with a DVR User Widget (Blueprint Class: `WBP_D
 
 ![User Widget Blueprint WBP_DVR](Docs/WBP_DVR.png "User Widget Blueprint WBP_DVR")<br>*Fig. 4.4.2.1.: User Widget Blueprint WBP_DVR*
 
-Widget Input Entries:
+Widget Input:
 
 * DVR:
   * Distance Power (Slider)
@@ -700,14 +768,16 @@ Widget Input Entries:
   * Specular (Slider)
   * Specular Power (Slider)
 
-![Level Blueprint Example, Create DVR User Widget](Docs/WBP_DVR-LevelBP.png "Level Blueprint Example, Create DVR User Widget")<br>*Fig. 4.4.2.2.: Level Blueprint Example, Create DVR User Widget*
+![Level Blueprint, Create DVR User Widget](Docs/WBP_DVR-LevelBP.png "Level Blueprint, Create DVR User Widget")<br>*Fig. 4.4.2.2.: Level Blueprint, Create DVR User Widget*
 
 Create Parameter:
 
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Assign a DVR Actor Instance to manage
+  * Info: Mandatory, assign a DVR Actor Instance to manage
+
+<div style='page-break-after: always'></div>
 
 #### 4.4.3. DVR User Widget Actor
 
@@ -722,7 +792,16 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Assign a DVR Actor Instance to manage
+  * Info: Mandatory, assign a DVR Actor Instance to manage
+
+![Level Blueprint, SpawnActor DVR User Widget Actor](Docs/BP_DVR_UI-SpawnActor.png "Level Blueprint, SpawnActor DVR User Widget Actor")<br>*Fig. 4.4.3.3: Level Blueprint, SpawnActor DVR User Widget Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Direct Volume Rendering Actor:
+  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, assign a DVR Actor Instance to manage
 
 <div style='page-break-after: always'></div>
 
@@ -735,6 +814,12 @@ Plugin "Volume Creator" provides with a Region Of Interest ROI Actor (Blueprint 
 ![Blueprint Actor BP_ROI in Viewport](Docs/BP_ROI.png "DetailsBlueprint Actor BP_ROI in Viewport")<br>*Fig. 4.4.3.1.1.: Blueprint Actor BP_ROI &ndash; Viewport*
 
 Parameter, Category 'Volume Creator':
+
+* none
+
+![Level Blueprint, SpawnActor ROI Actor](Docs/BP_ROI-SpawnActor.png "Level Blueprint, SpawnActor ROI Actor")<br>*Fig. 4.4.3.1.2.: Level Blueprint, SpawnActor ROI Actor*
+
+Spawn Parameter from Category 'Volume Creator':
 
 * none
 
@@ -753,7 +838,16 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Region Of Interest:
   * Type: Array of ROI Actor `BP_ROI` instances as Object References
   * Default Value: `none`
-  * Info: Mandatory, Region(s) of Interest to Manage
+  * Info: Mandatory, Region(s) of Interest to manage
+
+![Level Blueprint, SpawnActor ROI Handles Actor](Docs/BP_RoiHandles-SpawnActor.png "Level Blueprint, SpawnActor ROI Handles Actor")<br>*Fig. 4.4.3.2.3.: Level Blueprint, SpawnActor ROI Handles Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Region Of Interest:
+  * Type: Array of ROI Actor `BP_ROI` instances as Object References
+  * Default Value: `none`
+  * Info: Mandatory, Region(s) of Interest to manage
 
 <div style='page-break-after: always'></div>
 
@@ -764,6 +858,12 @@ Plugin "Volume Creator" provides with a Clip Plane Actor (Blueprint Class: `BP_C
 ![Blueprint Actor BP_ClipPlane in Viewport](Docs/BP_ClipPlane.png "DetailsBlueprint Actor BP_ClipPlane in Viewport")<br>*Fig. 4.4.4.1.: Blueprint Actor BP_ClipPlane &ndash; Viewport*
 
 Parameter, Category 'Volume Creator':
+
+* none
+
+![Level Blueprint, SpawnActor Clip Plane Actor](Docs/BP_ClipPlane-SpawnActor.png "Level Blueprint, SpawnActor Clip Plane Actor")<br>*Fig. 4.4.4.2.: Level Blueprint, SpawnActor Clip Plane Actor*
+
+Spawn Parameter from Category 'Volume Creator':
 
 * none
 
@@ -795,6 +895,14 @@ Parameter (see figure 'Details Panel'):
 * Category 'Volume Creator':
   * none
 
+![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.5.3.: Level Blueprint, SpawnActor Light Source Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* none
+
+<div style='page-break-after: always'></div>
+
 #### 4.4.6. Orientation Guide Actor
 
 Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
@@ -805,7 +913,16 @@ Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
-* DVR Actor:
+* Volume Rendering Actor:
+  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, DVR Actor Instance to synchronize rotation from
+
+![Level Blueprint, SpawnActor Orientation Guide Actor](Docs/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, DVR Actor Instance to synchronize rotation from
