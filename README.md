@@ -42,15 +42,13 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
   * [2.1. Objects](#21-objects)
   * [2.2. Domain Model](#22-domain-model)
 * [3. Medical Imaging Data Import](#3-medical-imaging-data-import)
-  * [3.1. Import Actor](#31-import-actor)
+  * [3.1. Import in Editor](#31-import-in-editor)
     * [3.1.1. Import DICOM](#311-import-dicom)
     * [3.2.2. Import MetaImage](#312-import-metaimage)
-  * [3.2. Import User Widget](#32-import-user-widget)
-  * [3.2. Import User Widget Actor](#33-import-user-widget-actor)
-  * [3.4. Content File Name](#34-content-file-name)
-  * [3.5. File Size](#35-file-size)
-  * [3.6. Size in Memory](#36-size-in-memory)
-  * [3.7. Data Processing](#37-data-processing)
+  * [3.2. Content File Name](#32-content-file-name)
+  * [3.3. File Size](#33-file-size)
+  * [3.4. Size in Memory](#34-size-in-memory)
+  * [3.5. Data Processing](#35-data-processing)
 * [4. Rendering](#4-rendering)
   * [4.1. Scalar Volume SV](#41-scalar-volume-sv)
     * [4.1.1. SV Actor](#411-sv-actor)
@@ -68,12 +66,12 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
     * [4.4.1. DVR Actor](#441-dvr-actor)
     * [4.4.2. DVR User Widget](#442-dvr-user-widget)
     * [4.4.3. DVR User Widget Actor](#443-dvr-user-widget-actor)
-    * [4.4.3. Region Of Interest ROI](#443-region-of-interest-roi)
-      * [4.4.3.1. ROI Actor](#4431-roi-actor)
-      * [4.4.3.2. ROI Handles Actor](#4432-roi-handles-actor)
-    * [4.4.4. Clip Plane Actor](#444-clip-plane-actor)
-    * [4.4.5. Light Source Actor](#445-light-source-actor)
-    * [4.4.6. Orientation Guide Actor](#446-orientation-guide-actor)
+    * [4.4.4. Region Of Interest ROI](#444-region-of-interest-roi)
+      * [4.4.4.1. ROI Actor](#4441-roi-actor)
+      * [4.4.4.2. ROI Handles Actor](#4442-roi-handles-actor)
+    * [4.4.5. Clip Plane Actor](#445-clip-plane-actor)
+    * [4.4.6. Light Source Actor](#446-light-source-actor)
+    * [4.4.7. Orientation Guide Actor](#447-orientation-guide-actor)
 
 <div style='page-break-after: always'></div>
 
@@ -149,11 +147,6 @@ To access and change parameters of the Blueprint Actors in runtime, the plugin p
 
 Domain Model Description:
 
-<!--
-* **Medical Imaging Data Import**:
-  * **Import Actor**: Medical Medical imaging data is imported from DICOM or MetaImage files and stored as Hounsfield Units encoded Volume Texture.
-  * **Import User Widget and Import User Widget Actor**: To access and change parameters of an Import Actor in runtime, the plugin provides with an Import User Widget and an Import User Widget Actor.
-  -->
 * **Scalar Volume SV**:
   * **SV Actor**: A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
   * **SV User Widget and SV User Widget Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget and an SV User Widget Actor.
@@ -184,17 +177,21 @@ Domain Model Description:
 
 ## 3. Medical Imaging Data Import
 
-### 3.1. Import Actor
+### 3.1. Import in Editor
 
 Workflow: Read from DICOM&reg; or MetaImage&trade; files and
 
 * Write the scalar volume image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_Volume`
 * Save the Volume Texture Render Target persistently as Volume Texture asset `T_MyDataName_SV_Volume`
-* Create a Blueprint asset `BP_MyDataName` deriving from Scalar Volume Actor `BP_SV` and
+* Create a Blueprint asset `BP_MyDataName` (deriving from Scalar Volume Actor `BP_SV`) and
   * Assign the just created Volume Texture asset `T_MyDataName_SV_Volume`
   * Set meta data, e.g., DICOM Pixel Spacing
 
 See also section "Content File Name" below.
+
+Documentation:
+
+* [UEdoc, How To Import Content] [https://docs.unrealengine.com/4.26/en-US/WorkingWithContent/Importing/HowTo/](https://docs.unrealengine.com/4.26/en-US/WorkingWithContent/Importing/HowTo/)
 
 #### 3.1.1. Import DICOM
 
@@ -210,21 +207,9 @@ TODO:
 
 <div style='page-break-after: always'></div>
 
-### 3.2. Import User Widget
+### 3.2. Content File Name
 
-TODO:
-
-<div style='page-break-after: always'></div>
-
-### 3.3. Import User Widget Actor
-
-TODO:
-
-<div style='page-break-after: always'></div>
-
-### 3.4. Content File Name
-
-The created content file name derives from the file which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.4.1.):
+The created content file name derives from the file which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.2.1.):
 
 * `AssetTypePrefix`: `T_`
 * `AssetName`:
@@ -237,11 +222,11 @@ Example: With importing imaging data from a file named `My_0123456789_ImageFile.
 
 When setting the `AssetName Maximum Length`, note that an assets pathname may be limited by the operating system, e.g. to 260 characters.
 
-![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.4.1.: Screenshot of Project Settings > Plugin > Volume Creator*
+![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.2.1.: Screenshot of Project Settings > Plugin > Volume Creator*
 
 <div style='page-break-after: always'></div>
 
-### 3.5. File Size
+### 3.3. File Size
 
 CT image data is expected to come in Hounsfield Units HU, where the use of 4096 values in a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). A twelve-digit binary number can represent these 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let's assume we have a scalar volume as follows:
 
@@ -253,7 +238,7 @@ The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double th
 
 * *ScalarVolume<sub>2</sub> `T_SV_Volume` = 1024<sup>3</sup> px x 1 x 16 bit/voxel = 1’073’741’824 voxel x 16 bit/voxel = 17’179’869’184 bit = 2’147’483’648 Byte = 2 GB*
 
-### 3.6. Size in Memory
+### 3.4. Size in Memory
 
 The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data, e.g., from ScalarVolume<sub>1</sub> `T_SV_Volume` from above:
 
@@ -266,7 +251,7 @@ The delivered assets make use of Render Targets. The Volume Render Targets size 
 
 *Example, size in Memory: <br>`T_SV_Volume` + `RT_VOI_Volume` + `RT_Lightmap_Volume` + `RT_VOI_COR` + `RT_VOI_SAG` + `RT_VOI_AXE` = 256 MB + 256 MB + 64 MB + 1 MB + 1 MB + 1 MB = 579 MB*
 
-### 3.7. Data Processing
+### 3.5. Data Processing
 
 For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. With rendering, e.g., 30 fps this results in an access rate of 80.52 Gigabit/s:
 
@@ -650,7 +635,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.1. DVR Actor
 
-Plugin "Volume Creator" provides with a Direct Volume Rendering DVR Actor (Blueprint Class: `BP_DVR`) to visualize a 3D representation of a scalar volume. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
+Plugin "Volume Creator" provides with a Direct Volume Rendering DVR Actor (Blueprint Class: `BP_DVR`) to visualize a 3D representation of a scalar volume. The DVR Actor extent is shown with a bounding box.
 
 ![Blueprint Actor BP_DVR in Viewport](Docs/BP_DVR.png "Blueprint Actor BP_DVR in Viewport")<br>*Fig. 4.4.1.1.: Blueprint Actor BP_DVR  &ndash; Viewport*
 
@@ -807,19 +792,19 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.3. Region Of Interest ROI
+#### 4.4.4. Region Of Interest ROI
 
-##### 4.4.3.1. ROI Actor
+##### 4.4.4.1. ROI Actor
 
 Plugin "Volume Creator" provides with a Region Of Interest ROI Actor (Blueprint Class: `BP_ROI`), with which a volume rendering actor geometry can be cropped in real-time. An ROI Actor instance can be assigned as to a DVR Actor instance by specifying it there as a parameter. In the Unreal Editor Outline Hierarchy a ROI Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
 
-![Blueprint Actor BP_ROI in Viewport](Docs/BP_ROI.png "DetailsBlueprint Actor BP_ROI in Viewport")<br>*Fig. 4.4.3.1.1.: Blueprint Actor BP_ROI &ndash; Viewport*
+![Blueprint Actor BP_ROI in Viewport](Docs/BP_ROI.png "DetailsBlueprint Actor BP_ROI in Viewport")<br>*Fig. 4.4.4.1.1.: Blueprint Actor BP_ROI &ndash; Viewport*
 
 Parameter, Category 'Volume Creator':
 
 * none
 
-![Level Blueprint, SpawnActor ROI Actor](Docs/BP_ROI-SpawnActor.png "Level Blueprint, SpawnActor ROI Actor")<br>*Fig. 4.4.3.1.2.: Level Blueprint, SpawnActor ROI Actor*
+![Level Blueprint, SpawnActor ROI Actor](Docs/BP_ROI-SpawnActor.png "Level Blueprint, SpawnActor ROI Actor")<br>*Fig. 4.4.4.1.2.: Level Blueprint, SpawnActor ROI Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
@@ -827,13 +812,13 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-##### 4.4.3.2. ROI Handles Actor
+##### 4.4.4.2. ROI Handles Actor
 
 Plugin "Volume Creator" provides with a Region Of Interest ROI Handles Actor (Blueprint Class: `BP_RoiHandles`), with which a ROI Actor geometry can be modified interactively in real-time.
 
-![Blueprint Actor BP_RoiHandles](Docs/BP_RoiHandles.png "DetailsBlueprint Actor BP_RoiHandles in Viewport")<br>*Fig. 4.4.3.2.1.: Blueprint Actor BP_RoiHandles &ndash; Viewport*
+![Blueprint Actor BP_RoiHandles](Docs/BP_RoiHandles.png "DetailsBlueprint Actor BP_RoiHandles in Viewport")<br>*Fig. 4.4.4.2.1.: Blueprint Actor BP_RoiHandles &ndash; Viewport*
 
-![Blueprint Actor BP_RoiHandles &ndash; Details Panel](Docs/BP_RoiHandles-DetailsPanel.png "Blueprint Actor BP_RoiHandles &ndash; Details Panel")<br>*Fig. 4.4.3.2.2.: Blueprint Actor BP_RoiHandles &ndash; Details Panel*
+![Blueprint Actor BP_RoiHandles &ndash; Details Panel](Docs/BP_RoiHandles-DetailsPanel.png "Blueprint Actor BP_RoiHandles &ndash; Details Panel")<br>*Fig. 4.4.4.2.2.: Blueprint Actor BP_RoiHandles &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -842,7 +827,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Default Value: `none`
   * Info: Mandatory, Region(s) of Interest to manage
 
-![Level Blueprint, SpawnActor ROI Handles Actor](Docs/BP_RoiHandles-SpawnActor.png "Level Blueprint, SpawnActor ROI Handles Actor")<br>*Fig. 4.4.3.2.3.: Level Blueprint, SpawnActor ROI Handles Actor*
+![Level Blueprint, SpawnActor ROI Handles Actor](Docs/BP_RoiHandles-SpawnActor.png "Level Blueprint, SpawnActor ROI Handles Actor")<br>*Fig. 4.4.4.2.3.: Level Blueprint, SpawnActor ROI Handles Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
@@ -853,17 +838,17 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.4. Clip Plane Actor
+#### 4.4.5. Clip Plane Actor
 
 Plugin "Volume Creator" provides with a Clip Plane Actor (Blueprint Class: `BP_ClipPlane`), with which a volume rendering actor geometry can be cropped in real-time.
 
-![Blueprint Actor BP_ClipPlane in Viewport](Docs/BP_ClipPlane.png "DetailsBlueprint Actor BP_ClipPlane in Viewport")<br>*Fig. 4.4.4.1.: Blueprint Actor BP_ClipPlane &ndash; Viewport*
+![Blueprint Actor BP_ClipPlane in Viewport](Docs/BP_ClipPlane.png "DetailsBlueprint Actor BP_ClipPlane in Viewport")<br>*Fig. 4.4.5.1.: Blueprint Actor BP_ClipPlane &ndash; Viewport*
 
 Parameter, Category 'Volume Creator':
 
 * none
 
-![Level Blueprint, SpawnActor Clip Plane Actor](Docs/BP_ClipPlane-SpawnActor.png "Level Blueprint, SpawnActor Clip Plane Actor")<br>*Fig. 4.4.4.2.: Level Blueprint, SpawnActor Clip Plane Actor*
+![Level Blueprint, SpawnActor Clip Plane Actor](Docs/BP_ClipPlane-SpawnActor.png "Level Blueprint, SpawnActor Clip Plane Actor")<br>*Fig. 4.4.5.2.: Level Blueprint, SpawnActor Clip Plane Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
@@ -871,13 +856,13 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.5. Light Source Actor
+#### 4.4.6. Light Source Actor
 
-Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor will serve as static lighting source to illuminate the volume rendering. Its `SpotLightComponent` parameters are simulating an operating theatre light (see figure 4.4.5.2.). By default, the lighting is intended only for the DVR. It is up to the game developer whether the light should also affect the world and ray tracing.
+Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor will serve as static lighting source to illuminate the volume rendering. Its `SpotLightComponent` parameters are simulating an operating theatre light (see figure 4.4.6.2.). By default, the lighting is intended only for the DVR. It is up to the game developer whether the light should also affect the world and ray tracing.
 
-![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.5.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
+![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
-![Blueprint Actor BP_LightSource Details Panel](Docs/BP_LightSource-DetailsPanel.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.5.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
+![Blueprint Actor BP_LightSource Details Panel](Docs/BP_LightSource-DetailsPanel.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
 
 Parameter (see figure 'Details Panel'):
 
@@ -897,7 +882,7 @@ Parameter (see figure 'Details Panel'):
 * Category 'Volume Creator':
   * none
 
-![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.5.3.: Level Blueprint, SpawnActor Light Source Actor*
+![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Light Source Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
@@ -905,13 +890,13 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.6. Orientation Guide Actor
+#### 4.4.7. Orientation Guide Actor
 
 Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
 
-![Blueprint Actor BP_OrientationGuide in Viewport](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
+![Blueprint Actor BP_OrientationGuide in Viewport](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.7.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
 
-![Blueprint Actor BP_OrientationGuide Details Panel](Docs/BP_OrientationGuide-DetailsPanel.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
+![Blueprint Actor BP_OrientationGuide Details Panel](Docs/BP_OrientationGuide-DetailsPanel.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.7.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -920,7 +905,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Default Value: `none`
   * Info: Mandatory, DVR Actor Instance to synchronize rotation from
 
-![Level Blueprint, SpawnActor Orientation Guide Actor](Docs/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
+![Level Blueprint, SpawnActor Orientation Guide Actor](Docs/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.7.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
