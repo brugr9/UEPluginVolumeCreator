@@ -396,7 +396,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Info: Mandatory, Hounsfield Units data source
 * Window Center
   * Type: `Float`
-  * Default Value: `1048.0`
+  * Default Value: `1047.0`
   * Range: [`-1000.0`, `3095.0`]
   * Info: Window Center in Hounsfield Units (aka level or brightness)
 * Window Width
@@ -427,7 +427,7 @@ The VOI range can also be set by clicking one of the VOI range buttons (see figu
 *Table 4.2.1.1.: VOI Ranges*<br>
 | VOI Range Name | Left Border | Right Border | Window Center | Window Width |
 |-------------|--------:|--------:|--------:|-------:|
-| Default     | `-1000` |  `3095` |  `1048` | `4096` |
+| Default     | `-1000` |  `3095` |  `1047` | `4096` |
 | Air         | `-1000` | `-1000` | `-1000` |    `1` |
 | Water       |     `0` |     `0` |     `0` |    `1` |
 | Bone        |   `400` |  `1000` |   `700` |  `600` |
