@@ -228,7 +228,7 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 
 ### 3.3. File Size
 
-CT image data is expected to come in Hounsfield Units HU, where the use of 4096 values in a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). A twelve-digit binary number can represent these 4096 values or Hounsfield Units resp. (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let's assume we have a scalar volume as follows:
+CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let's assume we have a scalar volume as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
 * A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3076]
@@ -382,7 +382,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp).
 
-If the whole range of 4096 Hounsfield data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and width.
+If the whole range of 4096 Hounsfield Units data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and width.
 
 Plugin "Volume Creator" provides with a Values Of Interest VOI Actor (Blueprint Class: `BP_VOI`) to handle a DICOM Window. The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from a Scalar Volume SV Actor and applies a DICOM Window. In the background, the result is hold in a VOI Volume Texture.
 
@@ -399,22 +399,21 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Default Value: `1047.0`
   * Range: [`-1000.0`, `3095.0`]
   * Info: Window Center in Hounsfield Units (aka level or brightness)
+* Window Border Left
+  * Type: `Float`
+  * Default Value: `-1000.0`
+  * Range: [`-1000.0`, `3095.0`]
+  * Info: Window Left (lower) Border in Hounsfield Units; which is calculated (not editable, for information only)
+* Window Border Right
+  * Type: `Float`
+  * Default Value: `3095.0`
+  * Range: [`-1000.0`, `3095.0`]
+  * Info: Window Right (upper) Border in Hounsfield Units; which is calculated (not editable, for information only)
 * Window Width
   * Type: `Float`
   * Default Value: `4096.0`
   * Range: [`1.0`, `4096.0`]
   * Info: Window Width in Hounsfield Units (aka range or contrast)
-* Window Border
-  * Left
-    * Type: `Float`
-    * Default Value: `-1000.0`
-    * Range: [`-1000.0`, `3095.0`]
-    * Info: Window Left (lower) Border Value; which is calculated (not editable, for information only).
-  * Right
-    * Type: `Float`
-    * Default Value: `3095.0`
-    * Range: [`-1000.0`, `3095.0`]
-    * Info: Window Right (upper) Border Value; which is calculated (not editable, for information only).
 * Window Mask
   * Type: `Boolean`
   * Default Value: `true`
@@ -430,12 +429,12 @@ The VOI range can also be set by clicking one of the VOI range buttons (see figu
 | Default     | `-1000` |  `3095` |  `1047` | `4096` |
 | Air         | `-1000` | `-1000` | `-1000` |    `1` |
 | Water       |     `0` |     `0` |     `0` |    `1` |
-| Bone        |   `400` |  `1000` |   `700` |  `600` |
-| Soft Tissue |    `40` |    `80` |    `60` |   `40` |
-| Fat         |  `-100` |   `-60` |   `-80` |   `40` |
-| Lung        |  `-600` |  `-400` |  `-500` |  `200` |
-| Mediastinum |    `50` |   `500` |   `275` |  `450` |
-| PE          |   `100` |   `700` |   `400` |  `600` |
+| Bone        |   `400` |  `1000` |   `700` |  `601` |
+| Soft Tissue |    `40` |    `80` |    `60` |   `41` |
+| Fat         |  `-100` |   `-60` |   `-80` |   `41` |
+| Lung        |  `-600` |  `-400` |  `-500` |  `201` |
+| Mediastinum |    `50` |   `500` |   `275` |  `451` |
+| PE          |   `100` |   `700` |   `400` |  `601` |
 
 ![Level Blueprint, SpawnActor VOI Actor](Docs/BP_VOI-SpawnActor.png "Level Blueprint, SpawnActor VOI Actor")<br>*Fig. 4.2.1.2.: Level Blueprint, SpawnActor VOI Actor*
 
@@ -457,6 +456,8 @@ Plugin "Volume Creator" provides with an VOI User Widget (Blueprint Class: `WBP_
 Widget Input:
 
 * Window Center (Slider)
+* Window Left Border (Slider)
+* Window Right Border (Slider)
 * Window Width (Slider)
 * Window Mask (Check Box)
 * Presets VOI Ranges (Buttons, cp. Table 4.2.1.1.)
@@ -640,8 +641,6 @@ Plugin "Volume Creator" provides with a Direct Volume Rendering DVR Actor (Bluep
 ![Blueprint Actor BP_DVR in Viewport](Docs/BP_DVR.png "Blueprint Actor BP_DVR in Viewport")<br>*Fig. 4.4.1.1.: Blueprint Actor BP_DVR  &ndash; Viewport*
 
 ![Blueprint Actor BP_DVR Details Panel](Docs/BP_DVR-DetailsPanel.png "Blueprint Actor BP_DVR Details Panel")<br>*Fig. 4.4.1.2.: Blueprint Actor BP_DVR &ndash; Details Panel*
-
-<div style='page-break-after: always'></div>
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -858,29 +857,52 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.6. Light Source Actor
 
-Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor will serve as static lighting source to illuminate the volume rendering. Its `SpotLightComponent` parameters are simulating an operating theatre light (see figure 4.4.6.2.). By default, the lighting is intended only for the DVR. It is up to the game developer whether the light should also affect the world and ray tracing.
+Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor serves as static lighting source to illuminate the volume rendering.
 
 ![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
+
+Its `SpotLightComponent` parameters are simulating an operating theatre light source (see figure 4.4.6.2.). By default
+
+* A temperature of 5'000K is used (cp. [VivoSurgical])
+* Lumen is used as Intensity Units (cp. [UEDoc, Physical Lighting Units])
+* As light field diameter D50 parameter "Inner Cone Angle" and as light field diameter D10 parameter "Outer Cone Angle" are used (cp. [21], see also [Wikipedia, Surgical lighting])
 
 ![Blueprint Actor BP_LightSource Details Panel](Docs/BP_LightSource-DetailsPanel.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
 
 Parameter (see figure 'Details Panel'):
 
 * Category 'Transform':
-  * Mobility: Static
+  * Mobility: `Static`
 * Category 'Light':
   * Intensity (Brightness): `1700.0` lm
   * Attenuation Radius: `250.0`
+  * Inner Cone Angle: `5.0`
   * Outer Cone Angle: `10.0`
-  * Temperature: `5100.0` K (cp. [21])
+  * Temperature: `5100.0` K
   * User Temperature: `true`
-  * Affects World: `false`
-  * Intensity Units: `Lumen` (see [UEDoc, Physical Lighting Units])
-  * Cast Ray Tracing Shadows: `false`
-  * Affect Ray Tracing Reflections: `false`
-  * Affect Ray Tracing Global Illumination: `false`
+  * Intensity Units: `Lumen`
 * Category 'Volume Creator':
   * none
+
+
+From [UEDoc, Physical Lighting Units]:
+> Spot Lights can select between the following lighting units:
+> * Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter.
+> * Lumen (lm) is a measure of the luminous flux emitted into the angle of one steradian. In photometry, luminous flux (or luminous power) is the measure of the perceived power of light. No matter its distribution (wide or narrow spot), the total amount of energy emitted will be the same.
+>
+> [...]
+> Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle. Otherwise, when the light intensity is defined in Lumens, its luminous power only applies to the solid angle affected by the light, in Steradians (sr).
+>
+> For Spot Lights, the solid angle is defined by 2π * (1 - cos(θ)), where θ is the light cone half angle:
+> * Illuminance (1 lm) ≈ 99.5 / (1 - cos(θ)) * Illuminance (1 unitless) 
+>
+> For the default cone, θ = 44° and the solid angle is about 1.76 sr :
+> * Illuminance (1 lm) ≈ 354 * Illuminance (1 unitless) for default Spot Lights.
+> * Illuminance (1 cd) ≈ 1.76 * Illuminance (1 lm) for default Spot Lights. 
+>
+> The smaller the cone angle, the stronger the surface illumination from the light will be when the light intensity is expressed in Lumens.
+
+Notes: By default, the light does affect the world and also ray tracing shadows, reflections and global illumination. It is up to the game developer to disable these parameters.
 
 ![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Light Source Actor*
 
@@ -892,7 +914,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.7. Orientation Guide Actor
 
-Plugin "Volume Creator" provides with a Orientation Guide Actor (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
+Plugin "Volume Creator" provides with an Orientation Guide Actor (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
 
 ![Blueprint Actor BP_OrientationGuide in Viewport](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.7.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
 
@@ -1088,8 +1110,10 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   <!--* [Finet et al.] Finet J., Yarmarkovich A., Liu Y., Freudling A., Kikinis R.: **3D Slicer Module "Volume Rendering"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: *[https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html](https://slicer.readthedocs.io/en/latest/developer_guide/modules/volumerendering.html)*; Transfer Function Presets on GitHub: *[https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml](https://github.com/Slicer/Slicer/blob/main/Modules/Loadable/VolumeRendering/Resources/presets.xml)*-->
   * [Radiopaedia] : **Radiopaedia**. Online: *[https://radiopaedia.org/](https://radiopaedia.org/)*
 * Lighting:
-  * [21] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: *[https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)*
+  * [VivoSurgical] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: *[https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)*
   <!--* [22] **The Different Colors Of Operating Theatre Lights**. In: Website "Forum Theatre". September 15, 2022. Online: *[https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/](https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/)*-->
+  * [Wikipedia, Surgical lighting] Article **Surgical lighting**. In: Wikipedia. URL: [https://en.wikipedia.org/w/index.php?oldid=1143957583](https://en.wikipedia.org/w/index.php?oldid=1143957583)
+  * [21] **Surgical Lights Buyer's Guide For Medical Professionals, Surgery Centers, Medical Offices and Hospitals**. In: USA Medical and Surgical Supplies. Posted on 07/24/2018 URL: [https://www.usamedicalsurgical.com/blog/surgical-lights-buyers-guide/](https://www.usamedicalsurgical.com/blog/surgical-lights-buyers-guide/)
 
 #### A.2. Unreal Engine
 
