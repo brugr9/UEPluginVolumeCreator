@@ -396,7 +396,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Info: Mandatory, Hounsfield Units data source
 * Window Center
   * Type: `Float`
-  * Default Value: `1047.0`
+  * Default Value: `1047.5`
   * Range: [`-1000.0`, `3095.0`]
   * Info: Window Center in Hounsfield Units (aka level or brightness)
 * Window Border Left
@@ -425,16 +425,16 @@ The VOI range can also be set by clicking one of the VOI range buttons (see figu
 
 *Table 4.2.1.1.: VOI Ranges*<br>
 | VOI Range Name | Left Border | Right Border | Window Center | Window Width |
-|-------------|--------:|--------:|--------:|-------:|
-| Default     | `-1000` |  `3095` |  `1047` | `4096` |
-| Air         | `-1000` | `-1000` | `-1000` |    `1` |
-| Water       |     `0` |     `0` |     `0` |    `1` |
-| Bone        |   `400` |  `1000` |   `700` |  `601` |
-| Soft Tissue |    `40` |    `80` |    `60` |   `41` |
-| Fat         |  `-100` |   `-60` |   `-80` |   `41` |
-| Lung        |  `-600` |  `-400` |  `-500` |  `201` |
-| Mediastinum |    `50` |   `500` |   `275` |  `451` |
-| PE          |   `100` |   `700` |   `400` |  `601` |
+|-------------|----------:|----------:|----------:|---------:|
+| Default     | `-1000.0` |  `3095.0` |  `1047.5` | `4096.0` |
+| Air         | `-1000.0` | `-1000.0` | `-1000.0` |    `1.0` |
+| Water       |     `0.0` |     `0.0` |     `0.0` |    `1.0` |
+| Bone        |   `400.0` |  `1000.0` |   `700.0` |  `601.0` |
+| Soft Tissue |    `40.0` |    `80.0` |    `60.0` |   `41.0` |
+| Fat         |  `-100.0` |   `-60.0` |   `-80.0` |   `41.0` |
+| Lung        |  `-600.0` |  `-400.0` |  `-500.0` |  `201.0` |
+| Mediastinum |    `50.0` |   `500.0` |   `275.0` |  `451.0` |
+| PE          |   `100.0` |   `700.0` |   `400.0` |  `601.0` |
 
 ![Level Blueprint, SpawnActor VOI Actor](Docs/BP_VOI-SpawnActor.png "Level Blueprint, SpawnActor VOI Actor")<br>*Fig. 4.2.1.2.: Level Blueprint, SpawnActor VOI Actor*
 
