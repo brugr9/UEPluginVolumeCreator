@@ -24,7 +24,7 @@ Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and dir
 
 The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, coloured from look-up tables or color-gradient based transfer functions. With a clipping plane and a region of interest the user may crop a rendered volume, which can also be illuminated with CRI-R9 compliant operating theatre light sources.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from look-up tables or color-gradient based transfer functions. With a clipping plane and a region of interest the rendered volume may be cropped. Using CRI-R9 compliant operating theatre light sources the volume can also be illuminated.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -867,7 +867,7 @@ Plugin "Volume Creator" provides with a "Light Source Actor" (Blueprint Class: `
 
 Its `SpotLightComponent` parameters are simulating an operating theatre light LED source. By default parameters are set as follows (see figure 4.4.6.2.).
 
-To provide a good colour rendering index CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5'000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
+To provide a good color rendering index CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5'000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
 
 We like to achieve a depth of illumination with a full spot of 100'000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* and *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle."* Therefore parameter "Intensity" is set to `100'000.0 cd` (Intensity Units: `Candelas`).
 
@@ -966,7 +966,7 @@ Spawn Parameter from Category 'Volume Creator':
 * S &mdash; Superior
 * SAG &mdash; Sagittal
 * SV &mdash; Scalar Volume
-* TCS &mdash; Test Colour Samples
+* TCS &mdash; Test Color Samples
 * TF &mdash; Transfer Function
 * UE &mdash; Unreal Engine
 * UI &mdash; User Interface
