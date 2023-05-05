@@ -8,9 +8,7 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 ---
 
-**Warning**
-
-Plugin not yet deployed &ndash; Documentation not yet complete
+***Plugin is not yet deployed &ndash; Documentation is not yet complete***
 
 <!-- UE Marketplace : Begin 1/2 -->
 
@@ -20,9 +18,7 @@ Adds Blueprint Support for Medical Imaging Data Rendering.
 
 ## Description
 
-Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system.
-
-The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
+Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
 The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from look-up tables or color-gradient based transfer functions. With a clipping plane and a region of interest the rendered volume may be cropped. Using CRI-R9 compliant operating theatre light sources the volume can also be illuminated.
 
@@ -232,26 +228,26 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 
 ### 3.3. File Size
 
-CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let's assume we have a scalar volume as follows:
+CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let,s assume we have a scalar volume as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
 * A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3076]
-* *ScalarVolume<sub>1</sub> `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134'217'728 voxel x 16 bit/voxel = 2’147’483’648 bit = 268’435’456 Byte = 256 MB*
+* *ScalarVolume<sub>1</sub> `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
 
 The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of ScalarVolume<sub>2</sub> increases to 2 GB:
 
-* *ScalarVolume<sub>2</sub> `T_SV_Volume` = 1024<sup>3</sup> px x 1 x 16 bit/voxel = 1’073’741’824 voxel x 16 bit/voxel = 17’179’869’184 bit = 2’147’483’648 Byte = 2 GB*
+* *ScalarVolume<sub>2</sub> `T_SV_Volume` = 1024<sup>3</sup> px x 1 x 16 bit/voxel = 1,073,741,824 voxel x 16 bit/voxel = 17,179,869,184 bit = 2,147,483,648 Byte = 2 GB*
 
 ### 3.4. Size in Memory
 
 The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data, e.g., from ScalarVolume<sub>1</sub> `T_SV_Volume` from above:
 
 * VOI: Texture Render Target `RT_VOI_Volume`, Linear RG8 (2 channels, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from Texture `T_SV_Volume`
-<br>*Example: 512<sup>3</sup> px x 2 x 8 bit/voxel = 134'217'728 voxel x 16 bit/voxel = 2’147’483’648 bit = 268’435’456 Byte = 256 MB*
+<br>*Example: 512<sup>3</sup> px x 2 x 8 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
 * DVR: Texture Render Target `RT_Lightmap_Volume`, Linear Color RGBA8 (4 channels, 8 bit); RGBA: Color [0, 255]; Dimension inherited from Texture Render Target `RT_VOI_Volume` but half Resolution
-<br>*Example: 256<sup>3</sup> px x 4 x 8 bit/voxel = 16’777’216 voxel x 32 bit/voxel = 536’870’912 bit = 67’108’864 Byte = 64 MB*
+<br>*Example: 256<sup>3</sup> px x 4 x 8 bit/voxel = 16,777,216 voxel x 32 bit/voxel = 536,870,912 bit = 67,108,864 Byte = 64 MB*
 * MPR: Texture Render Targets `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (single channel, 8 bit); R: VOI [0, 255]; The MPR Texture Render Targets do not inherit, they are always the same size
-<br>*Example: 1024<sup>2</sup> px x 1 x 8 bit/voxel = 1’048’576 voxel x 8 bit/voxel = 8’388’608 bit = 1’048’576 Byte = 1 MB each; Sum: 3 MB*
+<br>*Example: 1024<sup>2</sup> px x 1 x 8 bit/voxel = 1,048,576 voxel x 8 bit/voxel = 8,388,608 bit = 1,048,576 Byte = 1 MB each; Sum: 3 MB*
 
 *Example, size in Memory: <br>`T_SV_Volume` + `RT_VOI_Volume` + `RT_Lightmap_Volume` + `RT_VOI_COR` + `RT_VOI_SAG` + `RT_VOI_AXE` = 256 MB + 256 MB + 64 MB + 1 MB + 1 MB + 1 MB = 579 MB*
 
@@ -259,7 +255,7 @@ The delivered assets make use of Render Targets. The Volume Render Targets size 
 
 For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. With rendering, e.g., 30 fps this results in an access rate of 80.52 Gigabit/s:
 
-* *2’147’483’648 bit + 536’870’912 bit = 2’684’354’560 bit = 2.684 Gigabit*
+* *2,147,483,648 bit + 536,870,912 bit = 2,684,354,560 bit = 2.684 Gigabit*
 * *ProcessedData = 2.684 Gigabit/frame x 30 frames/s = 80.52 Gigabit/s*
 
 <div style='page-break-after: always'></div>
@@ -388,7 +384,7 @@ CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3
 
 If the whole range of 4096 Hounsfield Units data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and width.
 
-Plugin "Volume Creator" provides with a "Values Of Interest Actor" or VOI Actor (Blueprint Class: `BP_VOI`) to handle a DICOM Window. The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from a Scalar Volume SV Actor and applies a DICOM Window. In the background, the result is hold in a VOI Volume Texture.
+Plugin "Volume Creator" provides with a "Values Of Interest Actor" or VOI Actor (Blueprint Class: `BP_VOI`). The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from an SV Actor and applies a DICOM Window.
 
 ![Blueprint Actor BP_VOI Details Panel](Docs/BP_VOI-DetailsPanel.png "Blueprint Actor BP_VOI Details Panel")<br>*Fig. 4.2.1.1.: Blueprint Actor BP_VOI &ndash; Details Panel*
 
@@ -861,15 +857,15 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.6. Light Source Actor
 
-Plugin "Volume Creator" provides with a "Light Source Actor" (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor serves as a lighting source to illuminate the volume rendering.
+Plugin "Volume Creator" provides with a "Light Source Actor" (Blueprint Class: `BP_LightSource`), which can optionally be attached to a DVR Actor and act as a lighting source to illuminate the volume rendering.
 
 ![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
-Its `SpotLightComponent` parameters are simulating an operating theatre light LED source. By default parameters are set as follows (see figure 4.4.6.2.).
+The Light Source Actors `SpotLightComponent` is simulating an operating theatre light LED source. By default its parameters are set as follows (see figure 4.4.6.2.).
 
-To provide a good color rendering index CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5'000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
+To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
 
-We like to achieve a depth of illumination with a full spot of 100'000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* and *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle."* Therefore parameter "Intensity" is set to `100'000.0 cd` (Intensity Units: `Candelas`).
+We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
 
 To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cp. [UEDoc, Lighting Basics]).
 
@@ -884,13 +880,20 @@ Parameter (see figure 'Details Panel'):
   * Temperature: `5100.0`
   * [...]
   * Intensity Units: `Candelas`
-  * Intensity: `100'000.0 cd`
+  * Intensity: `100000.0 cd`
   * [...]
   * Attenuation Radius: `120.0`
 * Category 'Volume Creator':
   * none
 
 Notes: By default, the spot light component is set to affect the world (Affects World: `true`) and also casts ray tracing shadows, reflections and global illumination. It is up to the game developer to manage these parameters. The same applies to source radius and length which define specular highlights on surfaces.
+
+The Light Source Actor implements interface `BPI_LightSource`. A DVR Actor consumes values of a Light Source Actor by calling these interface functions:
+
+* GetWorldLocation (returns: `Vector`)
+* GetWorldRotation (returns: `Rotator`)
+* GetIntensity (returns: `Float`)
+* GetColor (returns: `Linear Color Structure`)
 
 ![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Light Source Actor*
 
