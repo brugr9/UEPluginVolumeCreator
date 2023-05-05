@@ -270,7 +270,7 @@ For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightm
 
 #### 4.1.1. SV Actor
 
-Plugin "Volume Creator" provides with an SV Actor (Blueprint Class: `BP_SV`) to handle a Hounsfield Units encoded Volume Texture and its pixel spacing. The SV Actor is an empty Actor and has no mesh.
+Plugin "Volume Creator" provides with a "Scalar Volume Actor" or SV Actor (Blueprint Class: `BP_SV`) to handle a Hounsfield Units encoded Volume Texture and its pixel spacing. The SV Actor is an empty Actor and has no mesh.
 
 ![Blueprint Actor BP_SV Details Panel](Docs/BP_SV-DetailsPanel.png "Blueprint Actor BP_SV Details Panel")<br>*Fig. 4.1.1.1.: Blueprint Actor BP_SV &ndash; Details Panel*
 
@@ -330,7 +330,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 TODO:
 
-Plugin "Volume Creator" provides with an SV User Widget (Blueprint Class: `WBP_SV`).
+Plugin "Volume Creator" provides with a "Scalar Volume User Widget" or SV User Widget (Blueprint Class: `WBP_SV`).
 
 ![User Widget Blueprint WBP_SV](Docs/WBP_SV.png "User Widget Blueprint WBP_SV")<br>*Fig. 4.1.2.1.: User Widget Blueprint WBP_SV*
 
@@ -356,7 +356,7 @@ Create Parameter:
 
 TODO:
 
-Plugin "Volume Creator" provides with an "SV User Widget Actor" (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an "SV User Widget" assigned (Blueprint Class: `WBP_SV`).
+Plugin "Volume Creator" provides with a "Scalar Volume User Widget Actor" or SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an "SV User Widget" assigned (Blueprint Class: `WBP_SV`).
 
 ![Blueprint Actor BP_SV_UI in Viewport](Docs/BP_SV_UI.png "Blueprint Actor BP_SV_UI in Viewport")<br>*Fig. 4.1.3.1.: Blueprint Actor BP_SV_UI &ndash; Viewport &ndash; Viewport*
 
@@ -388,7 +388,7 @@ CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3
 
 If the whole range of 4096 Hounsfield Units data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and width.
 
-Plugin "Volume Creator" provides with a Values Of Interest VOI Actor (Blueprint Class: `BP_VOI`) to handle a DICOM Window. The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from a Scalar Volume SV Actor and applies a DICOM Window. In the background, the result is hold in a VOI Volume Texture.
+Plugin "Volume Creator" provides with a "Values Of Interest Actor" or VOI Actor (Blueprint Class: `BP_VOI`) to handle a DICOM Window. The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from a Scalar Volume SV Actor and applies a DICOM Window. In the background, the result is hold in a VOI Volume Texture.
 
 ![Blueprint Actor BP_VOI Details Panel](Docs/BP_VOI-DetailsPanel.png "Blueprint Actor BP_VOI Details Panel")<br>*Fig. 4.2.1.1.: Blueprint Actor BP_VOI &ndash; Details Panel*
 
@@ -453,7 +453,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.2.2. VOI User Widget
 
-Plugin "Volume Creator" provides with an VOI User Widget (Blueprint Class: `WBP_VOI`).
+Plugin "Volume Creator" provides with a "Values Of Interest User Widget" or VOI User Widget (Blueprint Class: `WBP_VOI`).
 
 ![User Widget Blueprint WBP_VOI](Docs/WBP_VOI.png "User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.1.: User Widget Blueprint WBP_VOI*
 
@@ -479,7 +479,7 @@ Create Parameter:
 
 #### 4.2.3. VOI User Widget Actor
 
-Plugin "Volume Creator" provides with a VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned (Blueprint Class: `WBP_VOI`).
+Plugin "Volume Creator" provides with a "Values Of Interest User Widget Actor" or VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned (Blueprint Class: `WBP_VOI`).
 
 ![Blueprint Actor BP_VOI_UI in Viewport](Docs/BP_VOI_UI.png "Blueprint Actor BP_VOI_UI in Viewport")<br>*Fig. 4.2.3.1.: Blueprint Actor BP_VOI_UI &ndash; Viewport*
 
@@ -507,7 +507,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.3.1. MPR Actor
 
-Plugin "Volume Creator" provides with an Multiplanar Rendering MPR Actor (Blueprint Class: `BP_MPR`) to visualize a 3D representation of a scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
+Plugin "Volume Creator" provides with a "Multiplanar Rendering Actor" or MPR Actor (Blueprint Class: `BP_MPR`) to visualize a 3D representation of a scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
 
 ![Blueprint Actor BP_MPR in Viewport](Docs/BP_MPR.png "Blueprint Actor BP_MPR in Viewport")<br>*Fig. 4.3.1.1.: Blueprint Actor BP_MPR &ndash; Viewport*
 
@@ -581,7 +581,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.3.2. MPR User Widget
 
-Plugin "Volume Creator" provides with an MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side.
+Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side.
 
 ![User Widget Blueprint WBP_MPR](Docs/WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
@@ -612,7 +612,7 @@ Create Parameter:
 
 #### 4.3.3. MPR User Widget Actor
 
-Plugin "Volume Creator" provides with an MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (Blueprint Class: `WBP_MPR`).
+Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (Blueprint Class: `WBP_MPR`).
 
 ![Blueprint Actor BP_MPR_UI in Viewport](Docs/BP_MPR_UI.png "Blueprint Actor BP_MPR_UI in Viewport")<br>*Fig. 4.3.3.1.: Blueprint Actor BP_MPR_UI &ndash; Viewport*
 
@@ -640,7 +640,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.1. DVR Actor
 
-Plugin "Volume Creator" provides with a Direct Volume Rendering DVR Actor (Blueprint Class: `BP_DVR`) to visualize a 3D representation of a scalar volume. The DVR Actor extent is shown with a bounding box.
+Plugin "Volume Creator" provides with a "Direct Volume Rendering Actor" or DVR Actor (Blueprint Class: `BP_DVR`) to visualize a 3D representation of a scalar volume. The DVR Actor extent is shown with a bounding box.
 
 ![Blueprint Actor BP_DVR in Viewport](Docs/BP_DVR.png "Blueprint Actor BP_DVR in Viewport")<br>*Fig. 4.4.1.1.: Blueprint Actor BP_DVR  &ndash; Viewport*
 
@@ -741,7 +741,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.2. DVR User Widget
 
-Plugin "Volume Creator" provides with a DVR User Widget (Blueprint Class: `WBP_DVR`).
+Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget" or DVR User Widget (Blueprint Class: `WBP_DVR`).
 
 ![User Widget Blueprint WBP_DVR](Docs/WBP_DVR.png "User Widget Blueprint WBP_DVR")<br>*Fig. 4.4.2.1.: User Widget Blueprint WBP_DVR*
 
@@ -771,7 +771,7 @@ Create Parameter:
 
 #### 4.4.3. DVR User Widget Actor
 
-Plugin "Volume Creator" provides with a DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned (Blueprint Class: `WBP_DVR`).
+Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget Actor" or DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned (Blueprint Class: `WBP_DVR`).
 
 ![Blueprint Actor BP_DVR_UI in Viewport](Docs/BP_DVR_UI.png "Blueprint Actor BP_DVR_UI in Viewport")<br>*Fig. 4.4.3.1.: Blueprint Actor BP_DVR_UI &ndash; Viewport*
 
@@ -799,7 +799,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 ##### 4.4.4.1. ROI Actor
 
-Plugin "Volume Creator" provides with a Region Of Interest ROI Actor (Blueprint Class: `BP_ROI`), with which a volume rendering actor geometry can be cropped in real-time. An ROI Actor instance can be assigned as to a DVR Actor instance by specifying it there as a parameter. In the Unreal Editor Outline Hierarchy a ROI Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
+Plugin "Volume Creator" provides with a "Region Of Interest Actor" or ROI Actor (Blueprint Class: `BP_ROI`), with which a volume rendering actor geometry can be cropped in real-time. An ROI Actor instance can be assigned as to a DVR Actor instance by specifying it there as a parameter. In the Unreal Editor Outline Hierarchy a ROI Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
 
 ![Blueprint Actor BP_ROI in Viewport](Docs/BP_ROI.png "DetailsBlueprint Actor BP_ROI in Viewport")<br>*Fig. 4.4.4.1.1.: Blueprint Actor BP_ROI &ndash; Viewport*
 
@@ -817,7 +817,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 ##### 4.4.4.2. ROI Handles Actor
 
-Plugin "Volume Creator" provides with a Region Of Interest ROI Handles Actor (Blueprint Class: `BP_RoiHandles`), with which a ROI Actor geometry can be modified interactively in real-time.
+Plugin "Volume Creator" provides with a "Region Of Interest Handles Actor" or ROI Handles Actor (Blueprint Class: `BP_RoiHandles`), with which a ROI Actor geometry can be modified interactively in real-time.
 
 ![Blueprint Actor BP_RoiHandles](Docs/BP_RoiHandles.png "DetailsBlueprint Actor BP_RoiHandles in Viewport")<br>*Fig. 4.4.4.2.1.: Blueprint Actor BP_RoiHandles &ndash; Viewport*
 
@@ -843,7 +843,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.5. Clip Plane Actor
 
-Plugin "Volume Creator" provides with a Clip Plane Actor (Blueprint Class: `BP_ClipPlane`), with which a volume rendering actor geometry can be cropped in real-time.
+Plugin "Volume Creator" provides with a "Clip Plane Actor" (Blueprint Class: `BP_ClipPlane`), with which a volume rendering actor geometry can be cropped in real-time.
 
 ![Blueprint Actor BP_ClipPlane in Viewport](Docs/BP_ClipPlane.png "DetailsBlueprint Actor BP_ClipPlane in Viewport")<br>*Fig. 4.4.5.1.: Blueprint Actor BP_ClipPlane &ndash; Viewport*
 
@@ -861,7 +861,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.6. Light Source Actor
 
-Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor serves as a lighting source to illuminate the volume rendering.
+Plugin "Volume Creator" provides with a "Light Source Actor" (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor serves as a lighting source to illuminate the volume rendering.
 
 ![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
@@ -902,7 +902,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.7. Orientation Guide Actor
 
-Plugin "Volume Creator" provides with an Orientation Guide Actor (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
+Plugin "Volume Creator" provides with an "Orientation Guide Actor" (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
 
 ![Blueprint Actor BP_OrientationGuide in Viewport](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.7.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
 
