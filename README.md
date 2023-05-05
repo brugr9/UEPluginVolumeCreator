@@ -16,13 +16,15 @@ Plugin not yet deployed &ndash; Documentation not yet complete
 
 ![Featured Image](Docs/FeaturedImage894x488.png "Featured Image")
 
-Adds Blueprint Support for Real-time Rendering from Medical Imaging Data.
+Adds Blueprint Support for Medical Imaging Data Rendering.
 
 ## Description
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest&mdash;aka DICOM Window&mdash;and coloring from look-up tables and color-gradient based transferfunctions. With a clipping plane or a region of interest the user may crop the rendered volume interactively. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
+The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
+
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, coloured from look-up tables or color-gradient based transfer functions. With a clipping plane and a region of interest the user may crop a rendered volume, which can also be illuminated with CRI-R9 compliant operating theatre light sources.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -148,24 +150,26 @@ To access and change parameters of the Blueprint Actors in runtime, the plugin p
 Domain Model Description:
 
 * **Scalar Volume SV**:
-  * **SV Actor**: A Scalar Volume Actor holds a reference to the latter and stores also DICOM pixel spacing attribute values.
-  * **SV User Widget and SV User Widget Actor**: To access and change parameters of an SV Actor in runtime, the plugin provides with an SV User Widget and an SV User Widget Actor.
+  * **Scalar Volume Texture**: A "Scalar Volume Texture" represents a Hounsfield Units encoded Volume Texture.
+    Houn stores in a Volume Texture.
+  * **Scalar Volume Actor**: A "Scalar Volume Actor" holds a reference to a "Scalar Volume Texture" and stores related DICOM pixel spacing attribute values.
+  * **Scalar Volume User Widget and Scalar Volume User Widget Actor**: To access and change parameters of a "Scalar Volume Actor" in runtime, the plugin provides with a "Scalar Volume User Widget" and a "Scalar Volume User Widget Actor".
 * **Values Of Interest VOI**
-  * **VOI Actor**: A Values Of Interest VOI Actor consumes the Volume Texture from a Scalar Volume Actor and applies DICOM Window Attributes 'Center' and 'Width'.
-  * **VOI User Widget and VOI User Widget Actor**: To access and change parameters of a VOI Actor in runtime, the plugin provides with a VOI User Widget and a VOI User Widget Actor.
+  * **Values Of Interest Actor**: A "Values Of Interest Actor" consumes the volume texture from a "Scalar Volume Actor", manages and applies DICOM Window Attributes 'Center' and 'Width'.
+  * **Values Of Interest User Widget and Values Of Interest User Widget Actor**: To access and change parameters of a "Values Of Interest Actor" in runtime, the plugin provides with a "Values Of Interest User Widget" and a "Values Of Interest User Widget Actor".
 * **Multiplanar Rendering MPR**
-  * **MPR Actor**: The Values Of Interest may be visualized by multiplanar rendering in an MPR Actor. The MPR Actor&mdash;as a 3D representation of MPR&mdash;holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane.
-  * **MPR User Widget and MPR User Widget Actor**: The MPR Actor produces planar rendering, which is also consumed by an MPR User Widget and an MPR User Widget Actor, which are 2D representations of MPR. The anatomical planes can be moved in the direction of their corresponding axes interactively in real-time.
+  * **Multiplanar Rendering Actor**: The Values Of Interest may be visualized by multiplanar rendering in a "Multiplanar Rendering Actor", which holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane as a 3D representation.
+  * **Multiplanar Rendering User Widget and Multiplanar Rendering User Widget Actor**: The "Multiplanar Rendering Actor" produces planar rendering, which is also consumed by a "Multiplanar Rendering User Widget" and a "Multiplanar Rendering User Widget Actor", which are 2D representations of MPR. The anatomical planes can be moved in the direction of their corresponding axes interactively in real-time.
 * **Volume Rendering**
   * **Direct Volume Rendering DVR**
-    * **DVR Actor**: The Values Of Interest may be visualized by direct volume rendering in a DVR Actor. The DVR Actor extent is shown with a bounding box. Its dimension derives from the scalar volume pixel spacing.
-    * **DVR User Widget and DVR User Widget Actor**: To access and change parameters of a DVR Actor in runtime, the plugin provides with a DVR User Widget and a DVR User Widget Actor.
+    * **Direct Volume Rendering Actor**: The Values Of Interest may be visualized by direct volume rendering in a "Direct Volume Rendering Actor". The "Direct Volume Rendering Actor" extent is visualised by a bounding box.
+    * **Direct Volume Rendering User Widget and Direct Volume Rendering User Widget Actor**: To access and change parameters of a "Direct Volume Rendering Actor" in runtime, the plugin provides with a "Direct Volume Rendering User Widget" and a "Direct Volume Rendering User Widget Actor".
   * **Region Of Interest ROI**
-    * **ROI Actor**: The volume rendering actor geometry can optionally be cropped in real-time using a region of interest ROI Actor.
-    * **ROI Handles Actor**: A ROI geometry can optionally be modified with a ROI Handles Actor interactively in real-time.
-  * **Clip Plane Actor**: The volume rendering actor geometry can optionally be cropped in real-time using a Clip Plane Actor.
-  * **Light Source Actor**: The volume rendering actor can optionally be illuminated with static light sources from Light Source Actors.
-  * **Orientation Guide Actor**: The volume rendering actor can optionally be attached a rotation synchronized orientation guide.
+    * **Region Of Interest Actor**: The "Direct Volume Rendering Actor" geometry can optionally be cropped in real-time using a "Region Of Interest Actor".
+    * **Region Of Interest Handles Actor**: A "Region Of Interest Actor" geometry can optionally be modified with a "Region Of Interest Handles Actor" interactively in real-time.
+  * **Clip Plane Actor**: The "Direct Volume Rendering Actor" geometry can optionally be cropped in real-time using a "Clip Plane Actor".
+  * **Light Source Actor**: The "Direct Volume Rendering Actor" can optionally be illuminated with spot light sources from one or more "Light Source Actors".
+  * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronized orientation guide.
 
 <div style='page-break-after: always'></div>
 
@@ -181,8 +185,8 @@ Domain Model Description:
 
 Workflow: Read from DICOM&reg; or MetaImage&trade; files and
 
-* Write the scalar volume image data temporarely to a Houndsfield Units encoded Volume Texture Render Target `RT_SV_Volume`
-* Save the Volume Texture Render Target persistently as Volume Texture asset `T_MyDataName_SV_Volume`
+* Write the scalar volume image data temporarely to a Houndsfield Units encoded Texture Render Target Volume `RT_SV_Volume`
+* Save the Texture Render Target Volume persistently as Volume Texture asset `T_MyDataName_SV_Volume`
 * Create a Blueprint asset `BP_MyDataName` (deriving from Scalar Volume Actor `BP_SV`) and
   * Assign the just created Volume Texture asset `T_MyDataName_SV_Volume`
   * Set meta data, e.g., DICOM Pixel Spacing
@@ -242,11 +246,11 @@ The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double th
 
 The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data, e.g., from ScalarVolume<sub>1</sub> `T_SV_Volume` from above:
 
-* **VOI** &ndash; `RT_VOI_Volume`: Linear RG8 (2 channels, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from `T_SV_Volume`
+* VOI: Texture Render Target `RT_VOI_Volume`, Linear RG8 (2 channels, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from Texture `T_SV_Volume`
 <br>*Example: 512<sup>3</sup> px x 2 x 8 bit/voxel = 134'217'728 voxel x 16 bit/voxel = 2’147’483’648 bit = 268’435’456 Byte = 256 MB*
-* **DVR** &ndash; `RT_Lightmap_Volume`: Linear Color RGBA8 (4 channels, 8 bit); RGBA: Color [0, 255]; Dimension inherited from `RT_VOI_Volume` but half Resolution
+* DVR: Texture Render Target `RT_Lightmap_Volume`, Linear Color RGBA8 (4 channels, 8 bit); RGBA: Color [0, 255]; Dimension inherited from Texture Render Target `RT_VOI_Volume` but half Resolution
 <br>*Example: 256<sup>3</sup> px x 4 x 8 bit/voxel = 16’777’216 voxel x 32 bit/voxel = 536’870’912 bit = 67’108’864 Byte = 64 MB*
-* **MPR** &ndash; `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (single channel, 8 bit); R: VOI [0, 255]; The MPR Render Targets do not inherit, they are always the same size
+* MPR: Texture Render Targets `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (single channel, 8 bit); R: VOI [0, 255]; The MPR Texture Render Targets do not inherit, they are always the same size
 <br>*Example: 1024<sup>2</sup> px x 1 x 8 bit/voxel = 1’048’576 voxel x 8 bit/voxel = 8’388’608 bit = 1’048’576 Byte = 1 MB each; Sum: 3 MB*
 
 *Example, size in Memory: <br>`T_SV_Volume` + `RT_VOI_Volume` + `RT_Lightmap_Volume` + `RT_VOI_COR` + `RT_VOI_SAG` + `RT_VOI_AXE` = 256 MB + 256 MB + 64 MB + 1 MB + 1 MB + 1 MB = 579 MB*
@@ -857,52 +861,36 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.6. Light Source Actor
 
-Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor serves as static lighting source to illuminate the volume rendering.
+Plugin "Volume Creator" provides with a Light Source Actor (Blueprint Class: `BP_LightSource`), which can optionally be attached to a volume rendering actor. The Light Source Actor serves as a lighting source to illuminate the volume rendering.
 
 ![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
-Its `SpotLightComponent` parameters are simulating an operating theatre light source (see figure 4.4.6.2.). By default
+Its `SpotLightComponent` parameters are simulating an operating theatre light LED source. By default parameters are set as follows (see figure 4.4.6.2.).
 
-* A temperature of 5'000K is used (cp. [VivoSurgical])
-* Lumen is used as Intensity Units (cp. [UEDoc, Physical Lighting Units])
-* As light field diameter D50 parameter "Inner Cone Angle" and as light field diameter D10 parameter "Outer Cone Angle" are used (cp. [21], see also [Wikipedia, Surgical lighting])
+To provide a good colour rendering index CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5'000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
+
+We like to achieve a depth of illumination with a full spot of 100'000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* and *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle."* Therefore parameter "Intensity" is set to `100'000.0 cd` (Intensity Units: `Candelas`).
+
+To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cp. [UEDoc, Lighting Basics]).
 
 ![Blueprint Actor BP_LightSource Details Panel](Docs/BP_LightSource-DetailsPanel.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
 
 Parameter (see figure 'Details Panel'):
 
 * Category 'Transform':
-  * Mobility: `Static`
+  * Mobility: `Movable`
 * Category 'Light':
-  * Intensity (Brightness): `1700.0` lm
-  * Attenuation Radius: `250.0`
-  * Inner Cone Angle: `5.0`
-  * Outer Cone Angle: `10.0`
-  * Temperature: `5100.0` K
-  * User Temperature: `true`
-  * Intensity Units: `Lumen`
+  * Use Temperature: `true`
+  * Temperature: `5100.0`
+  * [...]
+  * Intensity Units: `Candelas`
+  * Intensity: `100'000.0 cd`
+  * [...]
+  * Attenuation Radius: `120.0`
 * Category 'Volume Creator':
   * none
 
-
-From [UEDoc, Physical Lighting Units]:
-> Spot Lights can select between the following lighting units:
-> * Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter.
-> * Lumen (lm) is a measure of the luminous flux emitted into the angle of one steradian. In photometry, luminous flux (or luminous power) is the measure of the perceived power of light. No matter its distribution (wide or narrow spot), the total amount of energy emitted will be the same.
->
-> [...]
-> Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle. Otherwise, when the light intensity is defined in Lumens, its luminous power only applies to the solid angle affected by the light, in Steradians (sr).
->
-> For Spot Lights, the solid angle is defined by 2π * (1 - cos(θ)), where θ is the light cone half angle:
-> * Illuminance (1 lm) ≈ 99.5 / (1 - cos(θ)) * Illuminance (1 unitless) 
->
-> For the default cone, θ = 44° and the solid angle is about 1.76 sr :
-> * Illuminance (1 lm) ≈ 354 * Illuminance (1 unitless) for default Spot Lights.
-> * Illuminance (1 cd) ≈ 1.76 * Illuminance (1 lm) for default Spot Lights. 
->
-> The smaller the cone angle, the stronger the surface illumination from the light will be when the light intensity is expressed in Lumens.
-
-Notes: By default, the light does affect the world and also ray tracing shadows, reflections and global illumination. It is up to the game developer to disable these parameters.
+Notes: By default, the spot light component is set to affect the world (Affects World: `true`) and also casts ray tracing shadows, reflections and global illumination. It is up to the game developer to manage these parameters. The same applies to source radius and length which define specular highlights on surfaces.
 
 ![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Light Source Actor*
 
@@ -947,6 +935,7 @@ Spawn Parameter from Category 'Volume Creator':
 * AXE &mdash; Axial
 * BB &mdash; Bounding Box
 * COR &mdash; Coronal
+* CRI &mdash; Color Rendering Index
 * CS &mdash; Compute Shader
 * CT &mdash; Computed Tomography (X-ray)
 * DICOM &mdash; Digital Imaging and Communications in Medicine
@@ -956,6 +945,7 @@ Spawn Parameter from Category 'Volume Creator':
 * HU &mdash; Hounsfield Units
 * I &mdash; Inferior
 * L &mdash; Left
+* LED &mdash; Light-emitting Diode
 * LhS &mdash; Left-handed System
 * L&ndash;A&ndash;S &mdash; Left&ndash;Anterior&ndash;Superior
 * L&ndash;P&ndash;S &mdash; Left&ndash;Posterior&ndash;Superior
@@ -976,6 +966,7 @@ Spawn Parameter from Category 'Volume Creator':
 * S &mdash; Superior
 * SAG &mdash; Sagittal
 * SV &mdash; Scalar Volume
+* TCS &mdash; Test Colour Samples
 * TF &mdash; Transfer Function
 * UE &mdash; Unreal Engine
 * UI &mdash; User Interface
@@ -984,7 +975,6 @@ Spawn Parameter from Category 'Volume Creator':
 
 <!--
 * AAA &mdash; Abdominal Aortic Aneurysm
-* CRI &mdash; Color Rendering Index
 * CRS &mdash; Coordinate Reference System
 * CTA &mdash; Computed Tomography Angiography
 * dGEMRIC &mdash; delayed Gadolinium-Enhanced MRI of Cartilage
@@ -1112,8 +1102,9 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * Lighting:
   * [VivoSurgical] **Why Colour Matters in Surgical Lighting**. In: Website of Vivo Surgical. Jul 27, 2021. Online: *[https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature](https://www.vivo-surgical.com/post/why-colour-matters-the-importance-of-colour-temperature)*
   <!--* [22] **The Different Colors Of Operating Theatre Lights**. In: Website "Forum Theatre". September 15, 2022. Online: *[https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/](https://forum-theatre.com/the-different-colors-of-operating-theatre-lights/)*-->
+  * [WaveformLighting] **What is CRI R9 and Why is it Important?** In: Waveform Lighting Blog, Tech & Color Science. Waveform Lighting, LLC. Online: [https://www.waveformlighting.com/tech/what-is-cri-r9-and-why-is-it-important](https://www.waveformlighting.com/tech/what-is-cri-r9-and-why-is-it-important)
   * [Wikipedia, Surgical lighting] Article **Surgical lighting**. In: Wikipedia. URL: [https://en.wikipedia.org/w/index.php?oldid=1143957583](https://en.wikipedia.org/w/index.php?oldid=1143957583)
-  * [21] **Surgical Lights Buyer's Guide For Medical Professionals, Surgery Centers, Medical Offices and Hospitals**. In: USA Medical and Surgical Supplies. Posted on 07/24/2018 URL: [https://www.usamedicalsurgical.com/blog/surgical-lights-buyers-guide/](https://www.usamedicalsurgical.com/blog/surgical-lights-buyers-guide/)
+  * [USAMedicalSurgical] **Surgical Lights Buyer's Guide For Medical Professionals, Surgery Centers, Medical Offices and Hospitals**. In: USA Medical and Surgical Supplies. Posted on 07/24/2018. Online: [https://www.usamedicalsurgical.com/blog/surgical-lights-buyers-guide/](https://www.usamedicalsurgical.com/blog/surgical-lights-buyers-guide/)
 
 #### A.2. Unreal Engine
 
@@ -1131,8 +1122,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. June 19, 2021. Online: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
-
-<div style='page-break-after: always'></div>
 
 ### B. Readings
 
