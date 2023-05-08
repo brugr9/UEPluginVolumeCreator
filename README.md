@@ -147,8 +147,8 @@ Domain Model Description:
 
 * **Scalar Volume SV**:
   * **Scalar Volume Texture**: A "Scalar Volume Texture" represents a Hounsfield Units encoded Volume Texture.
-    Houn stores in a Volume Texture.
-  * **Scalar Volume Actor**: A "Scalar Volume Actor" holds a reference to a "Scalar Volume Texture" and stores related DICOM pixel spacing attribute values.
+  * **Scalar Volume Context**: A "Scalar Volume Context" represents a JSON encoded Data asset holding metadata like pixel spacing values.
+  * **Scalar Volume Actor**: A "Scalar Volume Actor" holds a reference to a "Scalar Volume Texture" and its related "Scalar Volume Context".
   * **Scalar Volume User Widget and Scalar Volume User Widget Actor**: To access and change parameters of a "Scalar Volume Actor" in runtime, the plugin provides with a "Scalar Volume User Widget" and a "Scalar Volume User Widget Actor".
 * **Values Of Interest VOI**
   * **Values Of Interest Actor**: A "Values Of Interest Actor" consumes the volume texture from a "Scalar Volume Actor", manages and applies DICOM Window Attributes 'Center' and 'Width'.
@@ -181,11 +181,15 @@ Domain Model Description:
 
 Workflow: Read from DICOM&reg; or MetaImage&trade; files and
 
-* Write the scalar volume image data temporarely to a Houndsfield Units encoded Texture Render Target Volume `RT_SV_Volume`
-* Save the Texture Render Target Volume persistently as Volume Texture asset `T_MyDataName_SV_Volume`
+* Read / Write
+  * Read the scalar volume image data and write it to a Houndsfield Units encoded Texture Render Target Volume `RT_SV_Volume`
+  * Read the scalar volume image meta data and write it to a JSON encoded Data asset `DA_SV`
+* Save
+  * Save the Texture Render Target Volume persistently as "Scalar Volume Texture" asset `T_SV_MyDataName_Volume`
+  * Save the JSON persistently as "Scalar Volume Context" asset `DA_SV_MyDataName`
 * Create a Blueprint asset `BP_MyDataName` (deriving from Scalar Volume Actor `BP_SV`) and
-  * Assign the just created Volume Texture asset `T_MyDataName_SV_Volume`
-  * Set meta data, e.g., DICOM Pixel Spacing
+  * Assign the just created "Scalar Volume Texture" asset `T_SV_MyDataName_Volume`
+  * Assign the just created "Scalar Volume Context" asset `DA_SV_MyDataName`
 
 See also section "Content File Name" below.
 
@@ -1045,6 +1049,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Blueprint: `BP`
   * Blueprint Interface: `BPI`
   * Curve: `Curve`
+  * Data: `DA`
   * Enum(eration): `E`
   * Material: `M`
   * Material Instance: `MI`
