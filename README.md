@@ -27,8 +27,6 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
 * Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
 * Technology: Unreal Engine, Blueprint Visual Scripting, Code Plugin, C++, HLSL, DICOM
 
-<div style='page-break-after: always'></div>
-
 ## Table of Contents
 
 <!-- Start Document Outline -->
@@ -70,9 +68,6 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
     * [4.4.5. Clip Plane Actor](#445-clip-plane-actor)
     * [4.4.6. Light Source Actor](#446-light-source-actor)
     * [4.4.7. Orientation Guide Actor](#447-orientation-guide-actor)
-
-<div style='page-break-after: always'></div>
-
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
@@ -88,8 +83,6 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
   * [F. Citation](#f-citation)
 
 <!-- End Document Outline -->
-
-<div style='page-break-after: always'></div>
 
 ## 1. Setup
 
@@ -107,13 +100,8 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 > Before you can use Volume Textures in your Unreal Engine 4 (UE4) project, you will need to enable them. In the following How-To, we will take a look at setting up your UE4 project to use Volume Textures.
 >
 > 1. First, make sure that the Editor is closed, and then locate your project's DefaultEngine.ini file and open it.
-> 2. Locate the Script/Engine.RendererSettings section and add the following variable, then save the file when you have added it:
->
-> ```r.AllowVolumeTextureAssetCreation=1```
->
+> 2. Locate the Script/Engine.RendererSettings section and add the following variable, then save the file when you have added it: ```r.AllowVolumeTextureAssetCreation=1```
 > 3. Re-launch the Editor
-
-<div style='page-break-after: always'></div>
 
 ## 2. Concept
 
@@ -138,8 +126,6 @@ To access and change parameters of the Blueprint Actors in runtime, the plugin p
 ![Content Browser, VolumeCreator Content, Folder Basic - User Widget Blueprints](Docs/VolumeCreator-Content-Basic-WBP.png "Content Browser, VolumeCreator Content, Folder Basic - User Widget Blueprints")<br>*Fig. 2.1.2.: Content Browser, VolumeCreator Content, Folder Basic &ndash; User Widget Blueprints*
 
 ![Content Browser, VolumeCreator Content, Folder Classes - User Widget Actor Blueprints](Docs/VolumeCreator-Content-Classes-UI.png "Content Browser, VolumeCreator Content, Folder Classes - User Widget Actor Blueprints")<br>*Fig. 2.1.3.: Content Browser, VolumeCreator Content, Folder Classes &ndash; User Widget Actor Blueprints*
-
-<div style='page-break-after: always'></div>
 
 ### 2.2. Domain Model
 
@@ -167,13 +153,9 @@ Domain Model Description:
   * **Light Source Actor**: The "Direct Volume Rendering Actor" can optionally be illuminated with spot light sources from one or more "Light Source Actors".
   * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronized orientation guide.
 
-<div style='page-break-after: always'></div>
-
 ![Domain Model Diagram - Multiplanar Rendering MPR](Docs/DMD-MPR.png "Domain Model Diagram - Multiplanar Rendering MPR")<br>*Fig. 2.2.1.: Domain Model Diagram &ndash; Multiplanar Rendering MPR*
 
 ![Domain Model Diagram - Direct Volume Rendering DVR](Docs/DMD-DVR.png "Domain Model Diagram - Direct Volume Rendering DVR")<br>*Fig. 2.2.2.: Domain Model Diagram &ndash; Direct Volume Rendering DVR*
-
-<div style='page-break-after: always'></div>
 
 ## 3. Medical Imaging Data Import
 
@@ -209,8 +191,6 @@ TODO:
 
 TODO:
 
-<div style='page-break-after: always'></div>
-
 ### 3.2. Content File Name
 
 The created content file name derives from the file which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.2.1.):
@@ -227,8 +207,6 @@ Example: With importing imaging data from a file named `My_0123456789_ImageFile.
 When setting the `AssetName Maximum Length`, note that an assets pathname may be limited by the operating system, e.g. to 260 characters.
 
 ![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.2.1.: Screenshot of Project Settings > Plugin > Volume Creator*
-
-<div style='page-break-after: always'></div>
 
 ### 3.3. File Size
 
@@ -261,8 +239,6 @@ For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightm
 
 * *2,147,483,648 bit + 536,870,912 bit = 2,684,354,560 bit = 2.684 Gigabit*
 * *ProcessedData = 2.684 Gigabit/frame x 30 frames/s = 80.52 Gigabit/s*
-
-<div style='page-break-after: always'></div>
 
 ## 4. Rendering
 
@@ -324,8 +300,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `T_SV_Volume`
   * Info: Scalar Volume, Hounsfield Units encoded Volume Texture
 
-<div style='page-break-after: always'></div>
-
 #### 4.1.2. SV User Widget
 
 TODO:
@@ -349,8 +323,6 @@ Create Parameter:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, assign an SV Actor Instance to manage
-
-<div style='page-break-after: always'></div>
 
 #### 4.1.3. SV User Widget Actor
 
@@ -377,8 +349,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, assign an SV Actor Instance to manage
-
-<div style='page-break-after: always'></div>
 
 ### 4.2. Values Of Interest VOI
 
@@ -449,8 +419,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Info: Mandatory, Hounsfield Units data source
 
-<div style='page-break-after: always'></div>
-
 #### 4.2.2. VOI User Widget
 
 Plugin "Volume Creator" provides with a "Values Of Interest User Widget" or VOI User Widget (Blueprint Class: `WBP_VOI`).
@@ -475,8 +443,6 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, assign an VOI Actor Instance to manage
 
-<div style='page-break-after: always'></div>
-
 #### 4.2.3. VOI User Widget Actor
 
 Plugin "Volume Creator" provides with a "Values Of Interest User Widget Actor" or VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned (Blueprint Class: `WBP_VOI`).
@@ -500,8 +466,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, assign a VOI Actor Instance to manage
-
-<div style='page-break-after: always'></div>
 
 ### 4.3. Multiplanar Rendering MPR
 
@@ -577,8 +541,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Info: Mandatory, data to which the transfer function LUT is applied
 
-<div style='page-break-after: always'></div>
-
 #### 4.3.2. MPR User Widget
 
 Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side.
@@ -608,8 +570,6 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, assign an MPR Actor Instance to manage
 
-<div style='page-break-after: always'></div>
-
 #### 4.3.3. MPR User Widget Actor
 
 Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (Blueprint Class: `WBP_MPR`).
@@ -633,8 +593,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, assign an MPR Actor Instance to manage
-
-<div style='page-break-after: always'></div>
 
 ### 4.4. Direct Volume Rendering DVR
 
@@ -713,7 +671,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Info: Phong Shading Parameter
 
 TODO: Curves Images
-
+<!--
 *Table 4.4.1.1.: Transfer Functions TF*<br>
 | Index | Name | Colors | Index | Name | Colors | Index | Name | Colors |
 |------:|:-----|:-------|------:|:-----|:-------|------:|:-----|:-------|
@@ -727,6 +685,7 @@ TODO: Curves Images
 | 7 | CT-Cardiac3 | ![Curve_CT-Cardiac3_TF_Color](Docs/Curve/Curve_CT-Cardiac3_TF_Color.png "Curve_CT-Cardiac3_TF_Color") | 16 | CT-Lung | ![Curve_CT-Lung_TF_Color](Docs/Curve/Curve_CT-Lung_TF_Color.png "Curve_CT-Lung_TF_Color") | 26 | MR-MIP | ![Curve_MR-MIP_TF_Color](Docs/Curve/Curve_MR-MIP_TF_Color.png "Curve_MR-MIP_TF_Color") |
 | 8 | CT-Chest-Contrast-Enhanced | ![Curve_CT-Chest-Contrast-Enhanced_TF_Color](Docs/Curve/Curve_CT-Chest-Contrast-Enhanced_TF_Color.png "Curve_CT-Chest-Contrast-Enhanced_TF_Color") | 17 | CT-MIP | ![Curve_CT-MIP_TF_Color](Docs/Curve/Curve_CT-MIP_TF_Color.png "Curve_CT-MIP_TF_Color") | 27 | US-Fetal | ![Curve_US-Fetal_TF_Color](Docs/Curve/Curve_US-Fetal_TF_Color.png "Curve_US-Fetal_TF_Color") |
 | 9 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_TF_Color](Docs/Curve/Curve_CT-Chest-Vessels_TF_Color.png "Curve_CT-Chest-Vessels_TF_Color") | 18 | CT-Muscle | ![Curve_CT-Muscle_TF_Color](Docs/Curve/Curve_CT-Muscle_TF_Color.png "Curve_CT-Muscle_TF_Color") |
+-->
 
 ![Level Blueprint, SpawnActor DVR Actor](Docs/BP_DVR-SpawnActor.png "Level Blueprint, SpawnActor DVR Actor")<br>*Fig. 4.4.1.3.: Level Blueprint, SpawnActor DVR Actor*
 
@@ -736,8 +695,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, data to which the transfer function Curve is applied
-
-<div style='page-break-after: always'></div>
 
 #### 4.4.2. DVR User Widget
 
@@ -767,8 +724,6 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, assign a DVR Actor Instance to manage
 
-<div style='page-break-after: always'></div>
-
 #### 4.4.3. DVR User Widget Actor
 
 Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget Actor" or DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned (Blueprint Class: `WBP_DVR`).
@@ -793,8 +748,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Info: Mandatory, assign a DVR Actor Instance to manage
 
-<div style='page-break-after: always'></div>
-
 #### 4.4.4. Region Of Interest ROI
 
 ##### 4.4.4.1. ROI Actor
@@ -812,8 +765,6 @@ Parameter, Category 'Volume Creator':
 Spawn Parameter from Category 'Volume Creator':
 
 * none
-
-<div style='page-break-after: always'></div>
 
 ##### 4.4.4.2. ROI Handles Actor
 
@@ -839,8 +790,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Info: Mandatory, Region(s) of Interest to manage
 
-<div style='page-break-after: always'></div>
-
 #### 4.4.5. Clip Plane Actor
 
 Plugin "Volume Creator" provides with a "Clip Plane Actor" (Blueprint Class: `BP_ClipPlane`), with which a volume rendering actor geometry can be cropped in real-time.
@@ -856,8 +805,6 @@ Parameter, Category 'Volume Creator':
 Spawn Parameter from Category 'Volume Creator':
 
 * none
-
-<div style='page-break-after: always'></div>
 
 #### 4.4.6. Light Source Actor
 
@@ -897,15 +844,13 @@ The Light Source Actor implements interface `BPI_LightSource`. A DVR Actor consu
 * GetWorldLocation (returns: `Vector`)
 * GetWorldRotation (returns: `Rotator`)
 * GetIntensity (returns: `Float`)
-* GetColor (returns: `Linear Color Structure`)
+* GetColor (returns: `Linear Color Structure`, from Temperature if used or LightColor otherwise)
 
 ![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Light Source Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
 * none
-
-<div style='page-break-after: always'></div>
 
 #### 4.4.7. Orientation Guide Actor
 
@@ -930,8 +875,6 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, DVR Actor Instance to synchronize rotation from
-
-<div style='page-break-after: always'></div>
 
 ## Appendix
 
@@ -994,8 +937,6 @@ Spawn Parameter from Category 'Volume Creator':
 * WCS &mdash; World Coordinate System
 -->
 
-<div style='page-break-after: always'></div>
-
 ### Glossary
 
 #### Terms of Location and Coordinate Systems
@@ -1032,8 +973,6 @@ Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G
 * **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
 
 ![ROI-Handles Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-ROIHandles.png "ROI-Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with UE Left handed Location-Gizmo Arrows*
-
-<div style='page-break-after: always'></div>
 
 #### Asset Naming Convention
 
@@ -1086,8 +1025,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * User Widget Actor: `UI`
   * Volume Texture: `Volume`
 
-<div style='page-break-after: always'></div>
-
 ### A. References
 
 #### A.1. Medical Imaging
@@ -1135,12 +1072,12 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 * Ikits M., Kniss J., Lefohn A., Hansen C.: **Volume Rendering Techniques**. In: *GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39*. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques)
 * Engel K., Hadwiger M., Kniss J., Rezk Salama C., Weiskopf D. (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
-<!--* [Hadwiger et al. 18] Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering)-->
-<!--* Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.-->
+<!-- * [Hadwiger et al. 18] Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering) -->
+<!-- * Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397. -->
 
 ### C. Acknowledgements
 
-* **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1, Unreal&reg; Marketplace. Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved. TODO: URL <!--URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator)-->
+* **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1, Unreal&reg; Marketplace. Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved. TODO: URL <!-- URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator) -->
 <!-- * **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)) -->
 
 ### D. Attribution
@@ -1148,8 +1085,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * The word mark *Unreal* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, Online: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
 * The word mark *DICOM&mdash;Digital Imaging and Communication in Medicine* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
 * The word mark *MetaImage* is a trademark or registered trademark of Kitware, Inc.
-<!--* The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc.-->
-<!--* The word mark *3D Slicer* and its logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission.-->
+<!-- * The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc. -->
+<!-- * The word mark *3D Slicer* and its logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission -->
 
 ### E. Disclaimer
 
