@@ -354,9 +354,9 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.2.1. VOI Actor
 
-CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens only can visualize 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to the 256 screen gray scale levels. In plugin "Volume Creator" this is done by linear interpolation (Lerp).
+CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens can only display 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to 256 screen gray scale levels. In plugin "Volume Creator" the mapping is done by linear interpolation (Lerp).
 
-If the whole range of 4096 Hounsfield Units data is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield data to map. The window is defined by its center and width.
+If the whole range of 4096 Hounsfield Units is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield Units to map. The window is defined by its center and width.
 
 Plugin "Volume Creator" provides with a "Values Of Interest Actor" or VOI Actor (Blueprint Class: `BP_VOI`). The VOI Actor is an empty Actor and has no mesh. It consumes the Hounsfield Units encoded Volume Texture from an SV Actor and applies a DICOM Window.
 
@@ -377,12 +377,12 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Type: `Float`
   * Default Value: `-1000.0`
   * Range: [`-1000.0`, `3095.0`]
-  * Info: Window Left (lower) Border in Hounsfield Units; which is calculated (not editable, for information only)
+  * Info: Window Left (lower) Border in Hounsfield Units; which is calculated (not editable in the Details Panel)
 * Window Border Right
   * Type: `Float`
   * Default Value: `3095.0`
   * Range: [`-1000.0`, `3095.0`]
-  * Info: Window Right (upper) Border in Hounsfield Units; which is calculated (not editable, for information only)
+  * Info: Window Right (upper) Border in Hounsfield Units; which is calculated (not editable in the Details Panel)
 * Window Width
   * Type: `Float`
   * Default Value: `4096.0`
@@ -391,14 +391,14 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Window Mask
   * Type: `Boolean`
   * Default Value: `true`
-  * Info: With calculating the VOI Volume Texture, values between the window left and right border are linear interpolated (lerped) in a range of [`0`, `255`] by default. Values equal and lesser than the window left border are mapped to `0`, values equal and greater than the window right border are mapped to `255`. To render the lerped values only, a window mask is applied if parameter 'Window Mask' is set to `true`.
+  * Info: With calculating the "Texture Render Target VOI Volume", values between the window left and right border are linear interpolated (lerped) in a range of [`0`, `255`] by default. Values equal and lesser than the window left border are mapped to `0`, values equal and greater than the window right border are mapped to `255`. To render the lerped values only, a window mask is applied if parameter 'Window Mask' is set to `true`.
 
-If a parameter from above is changed in a VOI Actor instance from the Editor Details Panel, the VOI Volume Texture is not automatically recalculated. Clicking the `Compute Voi Volume Texture` button will trigger this (see figure 4.2.1.2.).
+If a parameter from above is changed in a VOI Actor instance from the Editor Details Panel, the "Texture Render Target VOI Volume" is not automatically recalculated. Clicking button `Compute RT Voi Volume` will trigger this (see figure 4.2.1.2.).
 
-The VOI range can also be set by clicking one of the VOI range buttons (see figure 4.2.1.2.). The window center and width are calculated from the specified left and right border values (see table 4.2.1.1.). Here the VOI Volume Texture is automatically recalculated.
+The VOI range can also be set by clicking one of the VOI range buttons (see figure 4.2.1.2.). The window center and width are calculated from the specified left and right border values (see table 4.2.1.1.). Here the "Texture Render Target VOI Volume" is automatically recalculated.
 
 *Table 4.2.1.1.: VOI Ranges*<br>
-| VOI Range Name | Left Border | Right Border | Window Center | Window Width |
+| VOI Range Name | Left Border | Right Border | Center | Width |
 |-------------|----------:|----------:|----------:|---------:|
 | Default     | `-1000.0` |  `3095.0` |  `1047.5` | `4096.0` |
 | Air         | `-1000.0` | `-1000.0` | `-1000.0` |    `1.0` |
