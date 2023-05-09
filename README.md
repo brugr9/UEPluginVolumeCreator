@@ -1077,8 +1077,18 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 ### C. Acknowledgements
 
-* **Software:** Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1, Unreal&reg; Marketplace. Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved. TODO: URL <!-- URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator) -->
-<!-- * **Data:** van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)) -->
+#### C.1. Software
+
+This documentation makes use of Unreal Engine Plugin "Volume Creator":
+
+* Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1, Unreal&reg; Marketplace. Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved. TODO: URL <!-- URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator) -->
+
+#### C.2. Data Set
+
+This documentation makes use of CT images "subset0" from LUNA2016, a "Grand Challenge" for medical image analysis at The Medical Image Computing and Computer Assisted Intervention Society MICCAI:
+
+* Grand Challenge *LUng Nodule Analysis 2016 (LUNA2016)*, URL: [https://luna16.grand-challenge.org](https://luna16.grand-challenge.org)
+* van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
 
 ### D. Attribution
 
