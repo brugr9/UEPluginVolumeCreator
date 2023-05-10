@@ -151,7 +151,7 @@ Domain Model Description:
     * **Region Of Interest Handles Actor**: A "Region Of Interest Actor" geometry can optionally be modified with a "Region Of Interest Handles Actor" interactively in real-time.
   * **Clip Plane Actor**: The "Direct Volume Rendering Actor" geometry can optionally be cropped in real-time using a "Clip Plane Actor".
   * **Light Source Actor**: The "Direct Volume Rendering Actor" can optionally be illuminated with spot light sources from one or more "Light Source Actors".
-  * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronized orientation guide.
+  * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronized "Orientation Guide Actor".
 
 ![Domain Model Diagram - Multiplanar Rendering MPR](Docs/DMD-MPR.png "Domain Model Diagram - Multiplanar Rendering MPR")<br>*Fig. 2.2.1.: Domain Model Diagram &ndash; Multiplanar Rendering MPR*
 
@@ -213,7 +213,7 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let,s assume we have a scalar volume as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
-* A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3076]
+* A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3095]
 * *ScalarVolume<sub>1</sub> `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
 
 The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of ScalarVolume<sub>2</sub> increases to 2 GB:
@@ -224,11 +224,11 @@ The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double th
 
 The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data, e.g., from ScalarVolume<sub>1</sub> `T_SV_Volume` from above:
 
-* VOI: Texture Render Target `RT_VOI_Volume`, Linear RG8 (2 channels, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from Texture `T_SV_Volume`
+* VOI: Texture Render Target `RT_VOI_Volume`, Linear RG8 (2 channels RG, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from Texture `T_SV_Volume`
 <br>*Example: 512<sup>3</sup> px x 2 x 8 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
-* DVR: Texture Render Target `RT_Lightmap_Volume`, Linear Color RGBA8 (4 channels, 8 bit); RGBA: Color [0, 255]; Dimension inherited from Texture Render Target `RT_VOI_Volume` but half Resolution
+* DVR: Texture Render Target `RT_Lightmap_Volume`, Linear Color RGBA8 (4 channels RGBA, 8 bit); RGBA: Color [0, 255]; Dimension inherited from Texture Render Target `RT_VOI_Volume` but half Resolution
 <br>*Example: 256<sup>3</sup> px x 4 x 8 bit/voxel = 16,777,216 voxel x 32 bit/voxel = 536,870,912 bit = 67,108,864 Byte = 64 MB*
-* MPR: Texture Render Targets `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (single channel, 8 bit); R: VOI [0, 255]; The MPR Texture Render Targets do not inherit, they are always the same size
+* MPR: Texture Render Targets `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (1 channel R, 8 bit); R: VOI [0, 255]; The MPR Texture Render Targets do not inherit, they are always the same size
 <br>*Example: 1024<sup>2</sup> px x 1 x 8 bit/voxel = 1,048,576 voxel x 8 bit/voxel = 8,388,608 bit = 1,048,576 Byte = 1 MB each; Sum: 3 MB*
 
 *Example, size in Memory: <br>`T_SV_Volume` + `RT_VOI_Volume` + `RT_Lightmap_Volume` + `RT_VOI_COR` + `RT_VOI_SAG` + `RT_VOI_AXE` = 256 MB + 256 MB + 64 MB + 1 MB + 1 MB + 1 MB = 579 MB*
@@ -409,6 +409,14 @@ The VOI range can also be set by clicking one of the VOI range buttons (see figu
 | Lung        |  `-600.0` |  `-400.0` |  `-500.0` |  `201.0` |
 | Mediastinum |    `50.0` |   `500.0` |   `275.0` |  `451.0` |
 | PE          |   `100.0` |   `700.0` |   `400.0` |  `601.0` |
+<!--
+| Bone        |  `-100` |   `900` |   `400` | `1000` |
+| Air         |  `-926` |    `74` |  `-426` | `1000` |
+| Brain       |     `0` |   `100` |    `50` |  `100` |
+| Abdomen     |  `-135` |   `215` |    `40` |  `350` |
+| Lung        | `-1200` |   `200` |  `-500` | `1400` |
+| PET         |  `1000` | `11000` |  `6000` |`10000` |
+-->
 
 ![Level Blueprint, SpawnActor VOI Actor](Docs/BP_VOI-SpawnActor.png "Level Blueprint, SpawnActor VOI Actor")<br>*Fig. 4.2.1.2.: Level Blueprint, SpawnActor VOI Actor*
 
@@ -1085,7 +1093,7 @@ This documentation makes use of Unreal Engine Plugin "Volume Creator":
 
 #### C.2. Data Set
 
-This documentation makes use of CT images "subset0" from LUNA2016, a "Grand Challenge" for medical image analysis at The Medical Image Computing and Computer Assisted Intervention Society MICCAI:
+This documentation makes use of CT volume No. 1.3.6.1.4.1.14519.5.2.1.6279.6001.105756658031515062000744821260 from subset0 of LUNA2016, a "Grand Challenge" for medical image analysis at The Medical Image Computing and Computer Assisted Intervention Society MICCAI:
 
 * Grand Challenge *LUng Nodule Analysis 2016 (LUNA2016)*, URL: [https://luna16.grand-challenge.org](https://luna16.grand-challenge.org)
 * van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
