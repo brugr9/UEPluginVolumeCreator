@@ -996,7 +996,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Blueprint: `BP`
   * Blueprint Interface: `BPI`
   * Curve: `Curve`
-  * Data: `DA`
+  * Data Asset: `DA`
   * Enum(eration): `E`
   * Material: `M`
   * Material Instance: `MI`
