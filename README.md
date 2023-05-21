@@ -235,10 +235,10 @@ The delivered assets make use of Render Targets. The Volume Render Targets size 
 
 ### 3.5. Data Processing
 
-For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. With rendering, e.g., 30 fps this results in an access rate of 80.52 Gigabit/s:
+For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. Rendering with, e.g., 90 fps results in an access rate of 241.56 Gigabit/s:
 
 * *2,147,483,648 bit + 536,870,912 bit = 2,684,354,560 bit = 2.684 Gigabit*
-* *ProcessedData = 2.684 Gigabit/frame x 30 frames/s = 80.52 Gigabit/s*
+* *ProcessedData = 2.684 Gigabit/frame x 90 frames/s = 241.56 Gigabit/s*
 
 ## 4. Rendering
 
@@ -450,6 +450,8 @@ Create Parameter:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, assign an VOI Actor Instance to manage
+
+![User Widget Blueprint WBP_VOI, PIE screencast](Docs/WBP_VOI.gif "User Widget Blueprint WBP_VOI, PIE screencast")<br>*Fig. 4.2.2.3: User Widget Blueprint WBP_VOI, PIE screencast*
 
 #### 4.2.3. VOI User Widget Actor
 
