@@ -328,7 +328,7 @@ Create Parameter:
 
 TODO:
 
-Plugin "Volume Creator" provides with a "Scalar Volume User Widget Actor" or SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an "SV User Widget" assigned (Blueprint Class: `WBP_SV`).
+Plugin "Volume Creator" provides with a "Scalar Volume User Widget Actor" or SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an SV User Widget assigned.
 
 ![Blueprint Actor BP_SV_UI in Viewport](Docs/BP_SV_UI.png "Blueprint Actor BP_SV_UI in Viewport")<br>*Fig. 4.1.3.1.: Blueprint Actor BP_SV_UI &ndash; Viewport &ndash; Viewport*
 
@@ -451,11 +451,11 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, assign an VOI Actor Instance to manage
 
-![User Widget Blueprint WBP_VOI, PIE screencast](Docs/WBP_VOI.gif "User Widget Blueprint WBP_VOI, PIE screencast")<br>*Fig. 4.2.2.3: User Widget Blueprint WBP_VOI, PIE screencast*
+![Animation Screenshot of User Widget Blueprint WBP_VOI PIE](Docs/WBP_VOI.gif "Animation Screenshot of User Widget Blueprint WBP_VOI PIE")<br>*Fig. 4.2.2.3: Animation Screenshot of User Widget Blueprint WBP_VOI PIE*
 
 #### 4.2.3. VOI User Widget Actor
 
-Plugin "Volume Creator" provides with a "Values Of Interest User Widget Actor" or VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned (Blueprint Class: `WBP_VOI`).
+Plugin "Volume Creator" provides with a "Values Of Interest User Widget Actor" or VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned.
 
 ![Blueprint Actor BP_VOI_UI in Viewport](Docs/BP_VOI_UI.png "Blueprint Actor BP_VOI_UI in Viewport")<br>*Fig. 4.2.3.1.: Blueprint Actor BP_VOI_UI &ndash; Viewport*
 
@@ -580,9 +580,11 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, assign an MPR Actor Instance to manage
 
+![Animation Screenshot of User Widget Blueprint WBP_MPR PIE](Docs/WBP_MPR.gif "Animation Screenshot of User Widget Blueprint WBP_MPR PIE")<br>*Fig. 4.3.2.3: Animation Screenshot of User Widget Blueprint WBP_MPR PIE*
+
 #### 4.3.3. MPR User Widget Actor
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (Blueprint Class: `WBP_MPR`).
+Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned.
 
 ![Blueprint Actor BP_MPR_UI in Viewport](Docs/BP_MPR_UI.png "Blueprint Actor BP_MPR_UI in Viewport")<br>*Fig. 4.3.3.1.: Blueprint Actor BP_MPR_UI &ndash; Viewport*
 
@@ -736,7 +738,7 @@ Create Parameter:
 
 #### 4.4.3. DVR User Widget Actor
 
-Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget Actor" or DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned (Blueprint Class: `WBP_DVR`).
+Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget Actor" or DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned.
 
 ![Blueprint Actor BP_DVR_UI in Viewport](Docs/BP_DVR_UI.png "Blueprint Actor BP_DVR_UI in Viewport")<br>*Fig. 4.4.3.1.: Blueprint Actor BP_DVR_UI &ndash; Viewport*
 
