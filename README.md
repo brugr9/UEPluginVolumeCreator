@@ -14,7 +14,10 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 ![Featured Image](Docs/FeaturedImage894x488.png "Featured Image")
 
-Adds Blueprint Support for Medical Imaging Data Rendering.
+Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical Imaging Data.
+• Values of Interest in Hounsfield Units
+• Multiplanar Coronal/Sagittal/Axial Rendering
+• Direct Volume Rendering
 
 ## Description
 
@@ -451,7 +454,16 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, assign an VOI Actor Instance to manage
 
-![Animation Screenshot of User Widget Blueprint WBP_VOI PIE](Docs/WBP_VOI.gif "Animation Screenshot of User Widget Blueprint WBP_VOI PIE")<br>*Fig. 4.2.2.3: Animation Screenshot of User Widget Blueprint WBP_VOI PIE*
+Interaction (see figure 4.2.2.3): With moving ...
+
+* Slider "Window Width": Center is static, left and right border adapt
+* Slider "Window Right Border": Left border is static, center and width adapt
+* Slider "Window Left Border": Right border is static, center and width adapt
+* Slider "Window Center":
+  * Width is static, left and right border adapt
+  * If left or right border reaches minimum or maximum: Width also adapt
+
+![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.3: Screencast of User Widget Blueprint WBP_VOI*
 
 #### 4.2.3. VOI User Widget Actor
 
@@ -580,7 +592,7 @@ Create Parameter:
   * Default Value: `none`
   * Info: Mandatory, assign an MPR Actor Instance to manage
 
-![Animation Screenshot of User Widget Blueprint WBP_MPR PIE](Docs/WBP_MPR.gif "Animation Screenshot of User Widget Blueprint WBP_MPR PIE")<br>*Fig. 4.3.2.3: Animation Screenshot of User Widget Blueprint WBP_MPR PIE*
+![Screencast of User Widget Blueprint WBP_MPR](Docs/WBP_MPR.gif "Screencast of User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.3: Screencast of User Widget Blueprint WBP_MPR*
 
 #### 4.3.3. MPR User Widget Actor
 
@@ -1011,24 +1023,23 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture Render Target: `RT`
   * Widget Blueprint: `WBP`
 * `[AssetName]` (Domain Specific):
+  * Bounding Box: `BB`
   * Data Type:
     * Scalar Volume: `SV`
     * Values Of Interest: `VOI`
-  * Rendering Type:
-    * Multiplanar Rendering: `MPR`
-      * Plane: `COR`, `SAG`, `AXE`
-      * Location: `P`, `A`, `L`, `R`, `I`, `S`
-      * Look-Up Table: `LUT`
-    * Volume Rendering:
-      * Bounding Box: `BB`
-      * Direct Volume Rendering: `DVR`
-      * Orientation Guide: `OG`
-      * Region Of Interest: `ROI`
-      * Transfer Function: `TF`
+    * Transfer Function: `TF`
+    * Look-Up Table: `LUT`
   * Acquisition Type:
     * Computer Tomography: `CT`
     * Magnetic Resonance: `MR`
     * Ultrasound: `US`
+  * Rendering Type:
+    * Multiplanar Rendering: `MPR`
+      * Plane: `COR`, `SAG`, `AXE`
+      * Location: `P`, `A`, `L`, `R`, `I`, `S`
+    * Direct Volume Rendering: `DVR`
+      * Orientation Guide: `OG`
+      * Region Of Interest: `ROI`
 * `[DescriptorSuffix]`:
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
@@ -1089,18 +1100,21 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 ### C. Acknowledgements
 
+<!--
 #### C.1. Software
-
+-->
 This documentation makes use of Unreal Engine Plugin "Volume Creator":
 
 * Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.1, Unreal&reg; Marketplace. Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved. TODO: URL <!-- URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator) -->
 
+<!--
 #### C.2. Data Set
 
 This documentation makes use of CT volume No. 1.3.6.1.4.1.14519.5.2.1.6279.6001.105756658031515062000744821260 from subset0 of LUNA2016, a "Grand Challenge" for medical image analysis at The Medical Image Computing and Computer Assisted Intervention Society MICCAI:
 
 * Grand Challenge *LUng Nodule Analysis 2016 (LUNA2016)*, URL: [https://luna16.grand-challenge.org](https://luna16.grand-challenge.org)
 * van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
+-->
 
 ### D. Attribution
 
