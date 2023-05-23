@@ -15,9 +15,10 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 ![Featured Image](Docs/FeaturedImage894x488.png "Featured Image")
 
 Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical Imaging Data.
-• Values of Interest in Hounsfield Units
-• Multiplanar Coronal/Sagittal/Axial Rendering
-• Direct Volume Rendering
+
+* Values of Interest in Hounsfield Units
+* Multiplanar Coronal/Sagittal/Axial Rendering
+* Direct Volume Rendering
 
 ## Description
 
