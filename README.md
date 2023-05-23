@@ -24,7 +24,7 @@ Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from look-up tables or color-gradient based transfer functions. With a clipping plane and a region of interest the rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating theatre light sources.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from look-up tables or color-gradient based transfer functions. With a clipping plane and a region of interest the rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating room light sources.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -457,12 +457,13 @@ Create Parameter:
 
 Interaction (see figure 4.2.2.3): With moving ...
 
-* Slider "Window Width": Center is static, left and right border adapt
-* Slider "Window Right Border": Left border is static, center and width adapt
-* Slider "Window Left Border": Right border is static, center and width adapt
 * Slider "Window Center":
   * Width is static, left and right border adapt
   * If left or right border reaches minimum or maximum: Width also adapt
+* Slider "Window Left Border": Right border is static, center and width adapt
+* Slider "Window Right Border": Left border is static, center and width adapt
+* Slider "Window Width": Center is static, left and right border adapt
+  * If left or right border reaches minimum or maximum: Width can no longer be increased (TODO: Center adapt)
 
 ![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.3: Screencast of User Widget Blueprint WBP_VOI*
 
@@ -837,7 +838,7 @@ Plugin "Volume Creator" provides with a "Light Source Actor" (Blueprint Class: `
 
 ![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
-The Light Source Actors `SpotLightComponent` is simulating an operating theatre light LED source. By default its parameters are set as follows (see figure 4.4.6.2.).
+The Light Source Actors `SpotLightComponent` is simulating an operating room light LED source. By default its parameters are set as follows (see figure 4.4.6.2.).
 
 To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
 
@@ -931,6 +932,7 @@ Spawn Parameter from Category 'Volume Creator':
 * MR &mdash; Magnetic Resonance
 * OG &mdash; Orientation Guide
 * P &mdash; Posterior
+* PE &mdash; Positron Emission
 * PIE &mdash; Play in Editor
 * PS &mdash; Pixel Shader
 * R &mdash; Right
