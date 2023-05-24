@@ -458,12 +458,12 @@ Create Parameter:
 Interaction (see figure 4.2.2.3): With moving ...
 
 * Slider "Window Center":
-  * Width is static, left and right border adapt
-  * If left or right border reaches minimum or maximum: Width also adapt
-* Slider "Window Left Border": Right border is static, center and width adapt
-* Slider "Window Right Border": Left border is static, center and width adapt
-* Slider "Window Width": Center is static, left and right border adapt
-  * If left or right border reaches minimum or maximum: Width can no longer be increased (TODO: Center adapt)
+  * "Window Width" is static, "Window Left Border" and "Window Right Border" adapt
+  * If "Window Left Border" reaches minimum or "Window Right Border" reaches maximum: "Window Width" also adapts
+* Slider "Window Left Border": "Window Right Border" is static, "Window Center" and "Window Width" adapt
+* Slider "Window Right Border": "Window Left Border" is static, "Window Center" and "Window Width" adapt
+* Slider "Window Width": "Window Center" is static, "Window Left Border" and "Window Right Border" adapt
+  * If "Window Left Border" reaches minimum or "Window Right Border" reaches maximum: "Window Width" can no longer be increased (TODO: "Window Center" adapts)
 
 ![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.3: Screencast of User Widget Blueprint WBP_VOI*
 
@@ -593,6 +593,17 @@ Create Parameter:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, assign an MPR Actor Instance to manage
+
+Interaction (see figure 4.3.2.3):
+
+* "LUT" (Dropdown): Select a Look-up Table as Transfer Function to colorize the content.
+* "Brightness" (Slider): Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
+* "Coronal" (Slider, color code red): With moving the slider the plane changes its P&ndash;A position and content resp., the orientation line positions in the "Sagittal" and "Axial" view are updated.
+* "Sagittal" (Slider, color code green): With moving the slider the plane changes its L&ndash;R position and content resp., the orientation line positions in the "Coronal" and "Axial" view are updated.
+* "Axial" (Slider, color code blue): With moving the slider the plane changes its I&ndash;S position and content resp., the orientation line positions in the "Coronal" and "Sagittal" view are updated.
+* With a check-box checked the corresponding color coded orientation line is visible.
+
+Whith changing MPR User Widget parameters, the positions and contents of the attached MPR Actor instance planes and their visibility are also updated.
 
 ![Screencast of User Widget Blueprint WBP_MPR](Docs/WBP_MPR.gif "Screencast of User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.3: Screencast of User Widget Blueprint WBP_MPR*
 
