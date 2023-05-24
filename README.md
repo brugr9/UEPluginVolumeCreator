@@ -16,9 +16,9 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical Imaging Data.
 
-* Values of Interest in Hounsfield Units
 * Multiplanar Coronal/Sagittal/Axial Rendering
 * Direct Volume Rendering
+* Values of Interest in Hounsfield Units
 
 ## Description
 
@@ -214,19 +214,19 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 
 ### 3.3. File Size
 
-CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit. Let,s assume we have a scalar volume as follows:
+CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit.
+
+Let's assume we have a "Scalar Volume" as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
 * A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3095]
-* *ScalarVolume<sub>1</sub> `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
+* *Scalar Volume `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
 
-The size of ScalarVolume<sub>1</sub> becomes 256 MB. If the images are double the size (stack of 1024 images with 1024 x 1024 pixel per image), the size of ScalarVolume<sub>2</sub> increases to 2 GB:
-
-* *ScalarVolume<sub>2</sub> `T_SV_Volume` = 1024<sup>3</sup> px x 1 x 16 bit/voxel = 1,073,741,824 voxel x 16 bit/voxel = 17,179,869,184 bit = 2,147,483,648 Byte = 2 GB*
+The Volume Texture file size in this example becomes 256 MB.
 
 ### 3.4. Size in Memory
 
-The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data, e.g., from ScalarVolume<sub>1</sub> `T_SV_Volume` from above:
+The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data, which is, e.g., Scalar Volume `T_SV_Volume` from above:
 
 * VOI: Texture Render Target `RT_VOI_Volume`, Linear RG8 (2 channels RG, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from Texture `T_SV_Volume`
 <br>*Example: 512<sup>3</sup> px x 2 x 8 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
@@ -239,7 +239,7 @@ The delivered assets make use of Render Targets. The Volume Render Targets size 
 
 ### 3.5. Data Processing
 
-For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. Rendering with, e.g., 90 fps results in an access rate of 241.56 Gigabit/s:
+For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightmap_Volume` are accessed every tick. Rendering the example from above with, e.g., 90 fps results in an access rate of 241.56 Gigabit/s:
 
 * *2,147,483,648 bit + 536,870,912 bit = 2,684,354,560 bit = 2.684 Gigabit*
 * *ProcessedData = 2.684 Gigabit/frame x 90 frames/s = 241.56 Gigabit/s*
