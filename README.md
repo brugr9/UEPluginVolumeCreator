@@ -402,8 +402,8 @@ If a parameter from above is changed in a VOI Actor instance from the Editor Det
 The VOI range can also be set by clicking one of the VOI range buttons (see figure 4.2.1.2.). The window center and width are calculated from the specified left and right border values (see table 4.2.1.1.). Here the "Texture Render Target VOI Volume" is automatically recalculated.
 
 *Table 4.2.1.1.: VOI Ranges*<br>
-| VOI Range Name | Left Border | Right Border | Center | Width |
-|-------------|----------:|----------:|----------:|---------:|
+| Name | Left | Right | Center | Width |
+|:------------|----------:|----------:|----------:|---------:|
 | Default     | `-1000.0` |  `3095.0` |  `1047.5` | `4096.0` |
 | Air         | `-1000.0` | `-1000.0` | `-1000.0` |    `1.0` |
 | Water       |     `0.0` |     `0.0` |     `0.0` |    `1.0` |
@@ -439,14 +439,28 @@ Plugin "Volume Creator" provides with a "Values Of Interest User Widget" or VOI 
 
 Widget Input:
 
-* Window Center (Slider)
-* Window Left Border (Slider)
-* Window Right Border (Slider)
-* Window Width (Slider)
+* Center (Slider)
+* Left (Slider)
+* Right (Slider)
+* Width (Slider)
+* Presets: VOI Ranges (Buttons, cp. Table 4.2.1.1.)
 * Window Mask (Check Box)
-* Presets VOI Ranges (Buttons, cp. Table 4.2.1.1.)
 
-![Level Blueprint, Create VOI User Widget](Docs/WBP_VOI-LevelBP.png "Level Blueprint, Create VOI User Widget")<br>*Fig. 4.2.2.2.: Level Blueprint, Create VOI User Widget*
+Widget Interaction (see figure 4.2.2.2): With moving ...
+
+* Slider "Center":
+  * Slider "Width" is static, slider "Left" and "Right" adapt
+  * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" also adapts
+* Slider "Left": Slider "Right" is static, slider "Center" and "Width" adapt
+* Slider "Right": Slider "Left" is static, slider "Center" and "Width" adapt
+* Slider "Width":
+  * Slider "Center" is static, slider "Left" and "Right" adapt
+  * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" can no longer be increased (TODO: Slider "Center" adapts)
+
+![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.2: Screencast of User Widget Blueprint WBP_VOI*
+
+
+![Level Blueprint, Create VOI User Widget](Docs/WBP_VOI-LevelBP.png "Level Blueprint, Create VOI User Widget")<br>*Fig. 4.2.2.3.: Level Blueprint, Create VOI User Widget*
 
 Create Parameter:
 
@@ -454,18 +468,6 @@ Create Parameter:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
   * Info: Mandatory, assign an VOI Actor Instance to manage
-
-Interaction (see figure 4.2.2.3): With moving ...
-
-* Slider "Window Center":
-  * "Window Width" is static, "Window Left Border" and "Window Right Border" adapt
-  * If "Window Left Border" reaches minimum or "Window Right Border" reaches maximum: "Window Width" also adapts
-* Slider "Window Left Border": "Window Right Border" is static, "Window Center" and "Window Width" adapt
-* Slider "Window Right Border": "Window Left Border" is static, "Window Center" and "Window Width" adapt
-* Slider "Window Width": "Window Center" is static, "Window Left Border" and "Window Right Border" adapt
-  * If "Window Left Border" reaches minimum or "Window Right Border" reaches maximum: "Window Width" can no longer be increased (TODO: "Window Center" adapts)
-
-![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.3: Screencast of User Widget Blueprint WBP_VOI*
 
 #### 4.2.3. VOI User Widget Actor
 
@@ -585,16 +587,7 @@ Widget Input:
   * Location Inferior/Superior I&ndash;S (Slider)
   * Visibility (Check Box)
 
-![Level Blueprint, Create MPR User Widget](Docs/WBP_MPR-LevelBP.png "Level Blueprint, Create MPR User Widget")<br>*Fig. 4.3.2.2.: Level Blueprint, Create MPR User Widget*
-
-Create Parameter:
-
-* Multiplanar Rendering Actor:
-  * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
-  * Default Value: `none`
-  * Info: Mandatory, assign an MPR Actor Instance to manage
-
-Interaction (see figure 4.3.2.3):
+Widget Interaction (see figure 4.3.2.2):
 
 * "LUT" (Dropdown): Select a Look-up Table as Transfer Function to colorize the content.
 * "Brightness" (Slider): Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
@@ -605,7 +598,16 @@ Interaction (see figure 4.3.2.3):
 
 Whith changing MPR User Widget parameters, the positions and contents of the attached MPR Actor instance planes and their visibility are also updated.
 
-![Screencast of User Widget Blueprint WBP_MPR](Docs/WBP_MPR.gif "Screencast of User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.3: Screencast of User Widget Blueprint WBP_MPR*
+![Screencast of User Widget Blueprint WBP_MPR](Docs/WBP_MPR.gif "Screencast of User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.2: Screencast of User Widget Blueprint WBP_MPR*
+
+![Level Blueprint, Create MPR User Widget](Docs/WBP_MPR-LevelBP.png "Level Blueprint, Create MPR User Widget")<br>*Fig. 4.3.2.3.: Level Blueprint, Create MPR User Widget*
+
+Create Parameter:
+
+* Multiplanar Rendering Actor:
+  * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
+  * Default Value: `none`
+  * Info: Mandatory, assign an MPR Actor Instance to manage
 
 #### 4.3.3. MPR User Widget Actor
 
