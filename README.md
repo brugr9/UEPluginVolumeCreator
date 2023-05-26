@@ -259,41 +259,41 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Scalar Volume Texture
   * Type: `Volume Texture`
   * Default Value: `T_SV_Volume`
-  * Info: Scalar Volume, Hounsfield Units encoded Volume Texture
+  * Description: Scalar Volume, Hounsfield Units encoded Volume Texture
 * Origin
   * Type: `Vector`
   * Default Value: `X 0.0, Y 0.0, Z 0.0`
-  * Info: Position of the first Voxel in the Anatomical Coordinate System
+  * Description: Position of the first Voxel in the Anatomical Coordinate System
 * Columns
   * Type: `Integer`
   * Default Value: `512`
   * Range: [`1`, `n`]
-  * Info: DICOM Columns Attribute: Number of pixel columns in the image; results in Width (UE: Y)
+  * Description: DICOM Columns Attribute: Number of pixel columns in the image; results in Width (UE: Y)
 * Columns Spacing
   * Type: `Float`
   * Default Value: `0.3`
   * Range: [`0`, `10`]
-  * Info: DICOM Pixel Spacing Attribute: Physical distance in the patient between the center of each pixel - adjacent column spacing (delimiter)
+  * Description: DICOM Pixel Spacing Attribute: Physical distance in the patient between the center of each pixel - adjacent column spacing (delimiter)
 * Rows
   * Type: `Integer`
   * Default Value: `512`
   * Range: [`1`, `n`]
-  * Info: DICOM Rows Attribute: Number of pixel rows in the image; results in Height (UE: Z)
+  * Description: DICOM Rows Attribute: Number of pixel rows in the image; results in Height (UE: Z)
 * Rows Spacing
   * Type: `Float`
   * Default Value: `0.3`
   * Range: [`0`, `10`]
-  * Info: DICOM Pixel Spacing Attribute: Physical distance in the patient between the center of each pixel - adjacent row spacing (delimiter)
+  * Description: DICOM Pixel Spacing Attribute: Physical distance in the patient between the center of each pixel - adjacent row spacing (delimiter)
 * Slices
   * Type: `Integer`
   * Default Value: `256`
   * Range: [`1`, `n`]
-  * Info: Number of Slices or Images respectively; results in Depth (UE: X)
+  * Description: Number of Slices or Images respectively; results in Depth (UE: X)
 * Slices Spacing
   * Type: `Float`
   * Default Value: `0.5`
   * Range: [`0`, `10`]
-  * Info: DICOM Spacing Between Slices Attribute: Spacing between slices. The spacing is measured from the center-to-center of each slice
+  * Description: DICOM Spacing Between Slices Attribute: Spacing between slices. The spacing is measured from the center-to-center of each slice
 
 ![Level Blueprint, SpawnActor SV Actor](Docs/BP_SV-SpawnActor.png "Level Blueprint, SpawnActor SV Actor")<br>*Fig. 4.1.1.2.: Level Blueprint, SpawnActor SV Actor*
 
@@ -302,7 +302,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Scalar Volume Texture
   * Type: `Volume Texture`
   * Default Value: `T_SV_Volume`
-  * Info: Scalar Volume, Hounsfield Units encoded Volume Texture
+  * Description: Scalar Volume, Hounsfield Units encoded Volume Texture
 
 #### 4.1.2. SV User Widget
 
@@ -326,7 +326,7 @@ Create Parameter:
 * Scalar Volume Actor:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign an SV Actor Instance to manage
+  * Description: Mandatory, assign an SV Actor Instance to manage
 
 #### 4.1.3. SV User Widget Actor
 
@@ -343,7 +343,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Scalar Volume Actor:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign an SV Actor Instance to manage
+  * Description: Mandatory, assign an SV Actor Instance to manage
 
 ![Level Blueprint, SpawnActor SV User Widget Actor](Docs/BP_SV_UI-SpawnActor.png "Level Blueprint, SpawnActor SV User Widget Actor")<br>*Fig. 4.1.3.3: Level Blueprint, SpawnActor SV User Widget Actor*
 
@@ -352,7 +352,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Scalar Volume Actor:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign an SV Actor Instance to manage
+  * Description: Mandatory, assign an SV Actor Instance to manage
 
 ### 4.2. Values Of Interest VOI
 
@@ -371,31 +371,31 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Scalar Volume Actor
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Hounsfield Units data source
+  * Description: Mandatory, Hounsfield Units data source
 * Window Center
   * Type: `Float`
   * Default Value: `1047.5`
   * Range: [`-1000.0`, `3095.0`]
-  * Info: Window Center in Hounsfield Units (aka level or brightness)
+  * Description: Window Center in Hounsfield Units (aka level or brightness)
 * Window Border Left
   * Type: `Float`
   * Default Value: `-1000.0`
   * Range: [`-1000.0`, `3095.0`]
-  * Info: Window Left (lower) Border in Hounsfield Units; which is calculated (not editable in the Details Panel)
+  * Description: Window Left (lower) Border in Hounsfield Units; which is calculated (not editable in the Details Panel)
 * Window Border Right
   * Type: `Float`
   * Default Value: `3095.0`
   * Range: [`-1000.0`, `3095.0`]
-  * Info: Window Right (upper) Border in Hounsfield Units; which is calculated (not editable in the Details Panel)
+  * Description: Window Right (upper) Border in Hounsfield Units; which is calculated (not editable in the Details Panel)
 * Window Width
   * Type: `Float`
   * Default Value: `4096.0`
   * Range: [`1.0`, `4096.0`]
-  * Info: Window Width in Hounsfield Units (aka range or contrast)
+  * Description: Window Width in Hounsfield Units (aka range or contrast)
 * Window Mask
   * Type: `Boolean`
   * Default Value: `true`
-  * Info: With calculating the "Texture Render Target VOI Volume", values between the window left and right border are linear interpolated (lerped) in a range of [`0`, `255`] by default. Values equal and lesser than the window left border are mapped to `0`, values equal and greater than the window right border are mapped to `255`. To render the lerped values only, a window mask is applied if parameter 'Window Mask' is set to `true`.
+  * Description: With calculating the "Texture Render Target VOI Volume", values between the window left and right border are linear interpolated (lerped) in a range of [`0`, `255`] by default. Values equal and lesser than the window left border are mapped to `0`, values equal and greater than the window right border are mapped to `255`. To render the lerped values only, a window mask is applied if parameter 'Window Mask' is set to `true`.
 
 If a parameter from above is changed in a VOI Actor instance from the Editor Details Panel, the "Texture Render Target VOI Volume" is not automatically recalculated. Clicking button `Compute RT Voi Volume` will trigger this (see figure 4.2.1.2.).
 
@@ -429,7 +429,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Scalar Volume Actor
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, Hounsfield Units data source
+  * Description: Mandatory, Hounsfield Units data source
 
 #### 4.2.2. VOI User Widget
 
@@ -437,26 +437,29 @@ Plugin "Volume Creator" provides with a "Values Of Interest User Widget" or VOI 
 
 ![User Widget Blueprint WBP_VOI](Docs/WBP_VOI.png "User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.1.: User Widget Blueprint WBP_VOI*
 
-Widget Input:
+Widget Input (see figures 4.2.2.1. and 4.2.2.2.):
 
 * Center:
   * Type: Slider
-  * Interaction (see figure 4.2.2.2): With moving slider "Center"
+  * Description:  With moving slider "Center"
     * Slider "Width" is static, slider "Left" and "Right" adapt
     * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" also adapts.
-* Left (Slider)
+* Left:
   * Type: Slider
-  * Interaction (see figure 4.2.2.2): With moving slider "Left", slider "Right" is static, slider "Center" and "Width" adapt.
-* Right (Slider)
+  * Description: With moving slider "Left", slider "Right" is static, slider "Center" and "Width" adapt.
+* Right:
   * Type: Slider
-  * Interaction (see figure 4.2.2.2): With moving slider "Right", slider "Left" is static, slider "Center" and "Width" adapt.
-* Width (Slider)
+  * Description: With moving slider "Right", slider "Left" is static, slider "Center" and "Width" adapt.
+* Width:
   * Type: Slider
-  * Interaction (see figure 4.2.2.2): With moving slider "Width"
+  * Description: With moving slider "Width"
     * Slider "Center" is static, slider "Left" and "Right" adapt
     * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" can no longer be increased (TODO: Slider "Center" adapts)
-* Presets: VOI Ranges (Buttons, cp. Table 4.2.1.1.)
-* Window Mask (Check Box)
+* Presets:
+  * Type: Button
+  * Description: Set a VOI Range, cp. Table 4.2.1.1.
+* Window Mask:
+  * Type: Check Box
 
 ![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.2: Screencast of User Widget Blueprint WBP_VOI*
 
@@ -467,7 +470,7 @@ Create Parameter:
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign an VOI Actor Instance to manage
+  * Description: Mandatory, assign an VOI Actor Instance to manage
 
 #### 4.2.3. VOI User Widget Actor
 
@@ -482,7 +485,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign a VOI Actor Instance to manage
+  * Description: Mandatory, assign a VOI Actor Instance to manage
 
 ![Level Blueprint, SpawnActor VOI User Widget Actor](Docs/BP_VOI_UI-SpawnActor.png "Level Blueprint, SpawnActor VOI User Widget Actor")<br>*Fig. 4.2.3.3: Level Blueprint, SpawnActor VOI User Widget Actor*
 
@@ -491,7 +494,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign a VOI Actor Instance to manage
+  * Description: Mandatory, assign a VOI Actor Instance to manage
 
 ### 4.3. Multiplanar Rendering MPR
 
@@ -508,34 +511,34 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Values Of Interest Actor:
   * Type: VOI Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, data to which the transfer function LUT is applied
+  * Description: Mandatory, data to which the transfer function LUT is applied
 * LUT Index:
   * Type: `Integer`
   * Default Value: `0`
   * Range: [`0`, `50`]
-  * Info: Select Look-Up Table by Index
+  * Description: Select Look-Up Table by Index
 * Brightness:
   * Type: `Float`
   * Default Value: `0.5`
   * Range: [`0.0`, `2.0`]
-  * Info: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
+  * Description: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
 * Planes Location:
   * Type: `Vector`
   * Default Value: `X 0.0, Y 0.0, Z 0.0`
   * Ranges: [`-50.0`, `50.0`]
-  * Info: Anatomical Planes Location (X: Coronal, Y: Sagittal, Z: Axial)<br>Use this Values instead of Component Location Values (Serialized for Saved Games).
+  * Description: Anatomical Planes Location (X: Coronal, Y: Sagittal, Z: Axial)<br>Use this Values instead of Component Location Values (Serialized for Saved Games).
 * Coronal Plane Visibility:
   * Type: `bool`
   * Default Value: `true`
-  * Info: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
+  * Description: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
 * Sagittal Plane Visibility:
   * Type: `bool`
   * Default Value: `true`
-  * Info: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
+  * Description: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
 * Axial Plane Visibility:
   * Type: `bool`
   * Default Value: `true`
-  * Info: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
+  * Description: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
 
 *Table 4.3.1.1.: Look-Up Tables LUT*<br>
 | Index | Name | Colors | Index | Name | Colors | Index | Name | Colors |
@@ -565,38 +568,39 @@ Spawn Parameter from Category 'Volume Creator':
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, data to which the transfer function LUT is applied
+  * Description: Mandatory, data to which the transfer function LUT is applied
 
 #### 4.3.2. MPR User Widget
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side. The intersection of the perp planes are drawn as color coded orientation lines.
+Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side. The perpendicular planes intersections are drawn as color coded orientation lines.
 
 ![User Widget Blueprint WBP_MPR](Docs/WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
-Widget Input:
+Widget Input (see figures 4.3.2.1. and 4.3.2.2):
 
-* LUT (Select)
-* Brightness (Slider)
-* Coronal Plane:
-  * Location Posterior/Anterior  P&ndash;A (Slider)
-  * Visibility (Check Box)
-* Sagittal Plane:
-  * Location Left/Right L&ndash;R (Slider)
-  * Visibility (Check Box)
-* Axial Plane:
-  * Location Inferior/Superior I&ndash;S (Slider)
-  * Visibility (Check Box)
+* LUT:
+  * Type: Select
+  * Description: Select a Look-up Table as transfer function to colorize the content, cp. Table 4.3.1.1.
+* Brightness:
+  * Type: Slider
+  * Description: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
+* Sagittal:
+  * Type: Slider
+  * Description: Sagittal Plane Left/Right L&ndash;R Location, color code green; With moving the slider the plane changes its L&ndash;R position and content resp., the orientation line positions in the "Coronal" and "Axial" view are updated.
+  * Type: Check Box
+  * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
+* Coronal:
+  * Type: Slider
+  * Description: Coronal Plane Posterior/Anterior  P&ndash;A Location, color code red; With moving the slider the plane changes its P&ndash;A position and content resp., the orientation line positions in the "Sagittal" and "Axial" view are updated.
+  * Type: Check Box
+  * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
+* Axial:
+  * Type: Slider
+  * Description: Axial Plane Inferior/Superior I&ndash;S Location, color code blue; With moving the slider the plane changes its I&ndash;S position and content resp., the orientation line positions in the "Coronal" and "Sagittal" view are updated.
+  * Type: Check Box
+  * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
 
-Widget Interaction (see figure 4.3.2.2):
-
-* "LUT" (Dropdown): Select a Look-up Table as Transfer Function to colorize the content.
-* "Brightness" (Slider): Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
-* "Coronal" (Slider, color code red): With moving the slider the plane changes its P&ndash;A position and content resp., the orientation line positions in the "Sagittal" and "Axial" view are updated.
-* "Sagittal" (Slider, color code green): With moving the slider the plane changes its L&ndash;R position and content resp., the orientation line positions in the "Coronal" and "Axial" view are updated.
-* "Axial" (Slider, color code blue): With moving the slider the plane changes its I&ndash;S position and content resp., the orientation line positions in the "Coronal" and "Sagittal" view are updated.
-* With a check box checked the corresponding color coded orientation line is visible.
-
-Whith changing MPR User Widget parameters, the attached MPR Actor instance planes position, content and visibility are also updated.
+Whith changing MPR User Widget parameters, the attached MPR Actor instance planes positions, content and visibilities are also updated.
 
 ![Screencast of User Widget Blueprint WBP_MPR](Docs/WBP_MPR.gif "Screencast of User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.2: Screencast of User Widget Blueprint WBP_MPR*
 
@@ -607,7 +611,7 @@ Create Parameter:
 * Multiplanar Rendering Actor:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign an MPR Actor Instance to manage
+  * Description: Mandatory, assign an MPR Actor Instance to manage
 
 #### 4.3.3. MPR User Widget Actor
 
@@ -622,7 +626,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Multiplanar Rendering Actor:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign an MPR Actor Instance to manage
+  * Description: Mandatory, assign an MPR Actor Instance to manage
 
 ![Level Blueprint, SpawnActor MPR User Widget Actor](Docs/BP_MPR_UI-SpawnActor.png "Level Blueprint, SpawnActor MPR User Widget Actor")<br>*Fig. 4.3.3.3: Level Blueprint, SpawnActor MPR User Widget Actor*
 
@@ -631,7 +635,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Multiplanar Rendering Actor:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign an MPR Actor Instance to manage
+  * Description: Mandatory, assign an MPR Actor Instance to manage
 
 ### 4.4. Direct Volume Rendering DVR
 
@@ -649,40 +653,40 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Values Of Interest Actor:
     * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
     * Default Value: `none`
-    * Info: Mandatory, data to which the transfer function Curve is applied
+    * Description: Mandatory, data to which the transfer function Curve is applied
 * Geometry:
   * Region Of Interest Actor:
     * Type: Region Of Interest Actor `BP_ROI` instance as Object Reference
     * Default Value: `none`
-    * Info: Optional, used for geometry subtraction if set
+    * Description: Optional, used for geometry subtraction if set
   * Clip Plane Actor:
     * Type: Clip Plane Actor `BP_ClipPlane` instance as Object Reference
     * Default Value: `none`
-    * Info: Optional, used for geometry subtraction if set
+    * Description: Optional, used for geometry subtraction if set
 * DVR:
   * Distance Power
     * Type: `Float`
     * Default Value: `1.0`
     * Range: [`0.1`, `2.0`]
-    * Info: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cp. [Luecke 2005], "Fragmented Line Ray-Casting").
+    * Description: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cp. [Luecke 2005], "Fragmented Line Ray-Casting").
       * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
       * With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
   * Resampling Steps:
     * Type: `Integer`
     * Default Value: `256`
     * Range: [`1`, `1024`]
-    * Info: Maximum Number of Resampling Steps:
+    * Description: Maximum Number of Resampling Steps:
       * A large number means more steps. The resampling ray may advance deeper into the cube. The hereby resulting rendering may increase visualisation quality by the cost of more computing time.
       * A small number may decrease rendering quality but is faster.
   * Transfer Function:
     * Type: `Curve Linear Color`
     * Default Value: `Curve_Default_TF_Color`
-    * Info: The transfer functions are based on color gradients from `Curve Linear Color` assets.
+    * Description: The transfer functions are based on color gradients from `Curve Linear Color` assets.
   * Alpha Threshold:
     * Type: `Float`
     * Default Value: `0.8`
     * Range: [`0.0`, `1.0`]
-    * Info: Maximum Opacity Threshold for Early Ray Termination from iteratively added up Alpha Channel
+    * Description: Maximum Opacity Threshold for Early Ray Termination from iteratively added up Alpha Channel
 * Lighting:
   * Light Source:
     * Type: Array of `BP_LightSource` Object References
@@ -692,22 +696,22 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Type: `Float`
     * Default Value: `0.1`
     * Range: [`0.0`, `1.0`]
-    * Info: Phong Shading Parameter
+    * Description: Phong Shading Parameter
   * Diffuse:
     * Type: `Float`
     * Default Value: `0.9`
     * Range: [`0.0`, `1.0`]
-    * Info: Phong Shading Parameter
+    * Description: Phong Shading Parameter
   * Specular:
     * Type: `Float`
     * Default Value: `0.2`
     * Range: [`0.0`, `1.0`]
-    * Info: Phong Shading Parameter
+    * Description: Phong Shading Parameter
   * Specular Power:
     * Type: `Integer`
     * Default Value: `10`
     * Range: [`1`, `50`]
-    * Info: Phong Shading Parameter
+    * Description: Phong Shading Parameter
 
 TODO: Curves Images
 <!--
@@ -733,7 +737,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, data to which the transfer function Curve is applied
+  * Description: Mandatory, data to which the transfer function Curve is applied
 
 #### 4.4.2. DVR User Widget
 
@@ -761,7 +765,7 @@ Create Parameter:
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign a DVR Actor Instance to manage
+  * Description: Mandatory, assign a DVR Actor Instance to manage
 
 #### 4.4.3. DVR User Widget Actor
 
@@ -776,7 +780,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign a DVR Actor Instance to manage
+  * Description: Mandatory, assign a DVR Actor Instance to manage
 
 ![Level Blueprint, SpawnActor DVR User Widget Actor](Docs/BP_DVR_UI-SpawnActor.png "Level Blueprint, SpawnActor DVR User Widget Actor")<br>*Fig. 4.4.3.3: Level Blueprint, SpawnActor DVR User Widget Actor*
 
@@ -785,7 +789,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, assign a DVR Actor Instance to manage
+  * Description: Mandatory, assign a DVR Actor Instance to manage
 
 #### 4.4.4. Region Of Interest ROI
 
@@ -818,7 +822,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Region Of Interest:
   * Type: Array of ROI Actor `BP_ROI` instances as Object References
   * Default Value: `none`
-  * Info: Mandatory, Region(s) of Interest to manage
+  * Description: Mandatory, Region(s) of Interest to manage
 
 ![Level Blueprint, SpawnActor ROI Handles Actor](Docs/BP_RoiHandles-SpawnActor.png "Level Blueprint, SpawnActor ROI Handles Actor")<br>*Fig. 4.4.4.2.3.: Level Blueprint, SpawnActor ROI Handles Actor*
 
@@ -827,7 +831,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Region Of Interest:
   * Type: Array of ROI Actor `BP_ROI` instances as Object References
   * Default Value: `none`
-  * Info: Mandatory, Region(s) of Interest to manage
+  * Description: Mandatory, Region(s) of Interest to manage
 
 #### 4.4.5. Clip Plane Actor
 
@@ -862,12 +866,12 @@ Parameter (see figure 'Details Panel'):
 * Category 'Light':
   * Use Temperature: `true`
   * Temperature: `5100.0`
-    * Info: To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
+    * Description: To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
   * Intensity Units: `Candelas`
   * Intensity: `100000.0 cd`
-    * Info: We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
+    * Description: We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
   * Attenuation Radius: `120.0`
-    * Info: To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cp. [UEDoc, Lighting Basics]).
+    * Description: To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cp. [UEDoc, Lighting Basics]).
 * Category 'Volume Creator':
   * none
 
@@ -899,7 +903,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, DVR Actor Instance to synchronize rotation from
+  * Description: Mandatory, DVR Actor Instance to synchronize rotation from
 
 ![Level Blueprint, SpawnActor Orientation Guide Actor](Docs/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.7.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
 
@@ -908,7 +912,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Info: Mandatory, DVR Actor Instance to synchronize rotation from
+  * Description: Mandatory, DVR Actor Instance to synchronize rotation from
 
 ## Appendix
 
