@@ -118,7 +118,7 @@ The plugin provides the rendering of image-stack based volumes, commonly known a
 * Multiplanar Rendering MPR
 * Direct Volume Rendering DVR
   * Region of Interest ROI
-    * Region of Interest ROI Handles
+    * ROI Handles
   * Clip Plane
   * Light Source
   * Orientation Guide
@@ -439,26 +439,26 @@ Plugin "Volume Creator" provides with a "Values Of Interest User Widget" or VOI 
 
 Widget Input:
 
-* Center (Slider)
+* Center:
+  * Type: Slider
+  * Interaction (see figure 4.2.2.2): With moving slider "Center"
+    * Slider "Width" is static, slider "Left" and "Right" adapt
+    * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" also adapts.
 * Left (Slider)
+  * Type: Slider
+  * Interaction (see figure 4.2.2.2): With moving slider "Left", slider "Right" is static, slider "Center" and "Width" adapt.
 * Right (Slider)
+  * Type: Slider
+  * Interaction (see figure 4.2.2.2): With moving slider "Right", slider "Left" is static, slider "Center" and "Width" adapt.
 * Width (Slider)
+  * Type: Slider
+  * Interaction (see figure 4.2.2.2): With moving slider "Width"
+    * Slider "Center" is static, slider "Left" and "Right" adapt
+    * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" can no longer be increased (TODO: Slider "Center" adapts)
 * Presets: VOI Ranges (Buttons, cp. Table 4.2.1.1.)
 * Window Mask (Check Box)
 
-Widget Interaction (see figure 4.2.2.2): With moving ...
-
-* Slider "Center":
-  * Slider "Width" is static, slider "Left" and "Right" adapt
-  * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" also adapts
-* Slider "Left": Slider "Right" is static, slider "Center" and "Width" adapt
-* Slider "Right": Slider "Left" is static, slider "Center" and "Width" adapt
-* Slider "Width":
-  * Slider "Center" is static, slider "Left" and "Right" adapt
-  * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" can no longer be increased (TODO: Slider "Center" adapts)
-
 ![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.2: Screencast of User Widget Blueprint WBP_VOI*
-
 
 ![Level Blueprint, Create VOI User Widget](Docs/WBP_VOI-LevelBP.png "Level Blueprint, Create VOI User Widget")<br>*Fig. 4.2.2.3.: Level Blueprint, Create VOI User Widget*
 
@@ -569,7 +569,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.3.2. MPR User Widget
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side.
+Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side. The intersection of the perp planes are drawn as color coded orientation lines.
 
 ![User Widget Blueprint WBP_MPR](Docs/WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
@@ -594,9 +594,9 @@ Widget Interaction (see figure 4.3.2.2):
 * "Coronal" (Slider, color code red): With moving the slider the plane changes its P&ndash;A position and content resp., the orientation line positions in the "Sagittal" and "Axial" view are updated.
 * "Sagittal" (Slider, color code green): With moving the slider the plane changes its L&ndash;R position and content resp., the orientation line positions in the "Coronal" and "Axial" view are updated.
 * "Axial" (Slider, color code blue): With moving the slider the plane changes its I&ndash;S position and content resp., the orientation line positions in the "Coronal" and "Sagittal" view are updated.
-* With a check-box checked the corresponding color coded orientation line is visible.
+* With a check box checked the corresponding color coded orientation line is visible.
 
-Whith changing MPR User Widget parameters, the positions and contents of the attached MPR Actor instance planes and their visibility are also updated.
+Whith changing MPR User Widget parameters, the attached MPR Actor instance planes position, content and visibility are also updated.
 
 ![Screencast of User Widget Blueprint WBP_MPR](Docs/WBP_MPR.gif "Screencast of User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.2: Screencast of User Widget Blueprint WBP_MPR*
 
@@ -744,9 +744,9 @@ Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget" or
 Widget Input:
 
 * DVR:
+  * Transfer Function (Select)
   * Distance Power (Slider)
   * Resampling Steps (Slider)
-  * Transfer Function (Select)
   * Alpha Threshold (Slider)
 * Lighting:
   * Ambient (Slider)
@@ -851,13 +851,7 @@ Plugin "Volume Creator" provides with a "Light Source Actor" (Blueprint Class: `
 
 ![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
-The Light Source Actors `SpotLightComponent` is simulating an operating room light LED source. By default its parameters are set as follows (see figure 4.4.6.2.).
-
-To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
-
-We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
-
-To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cp. [UEDoc, Lighting Basics]).
+The "Light Source Actor"s `SpotLightComponent` is simulating an operating room LED light source. By default its parameters are set as follows (see figure 4.4.6.2.).
 
 ![Blueprint Actor BP_LightSource Details Panel](Docs/BP_LightSource-DetailsPanel.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
 
@@ -868,22 +862,23 @@ Parameter (see figure 'Details Panel'):
 * Category 'Light':
   * Use Temperature: `true`
   * Temperature: `5100.0`
-  * [...]
+    * Info: To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
   * Intensity Units: `Candelas`
   * Intensity: `100000.0 cd`
-  * [...]
+    * Info: We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
   * Attenuation Radius: `120.0`
+    * Info: To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cp. [UEDoc, Lighting Basics]).
 * Category 'Volume Creator':
   * none
 
-Notes: By default, the spot light component is set to affect the world (Affects World: `true`) and also casts ray tracing shadows, reflections and global illumination. It is up to the game developer to manage these parameters. The same applies to source radius and length which define specular highlights on surfaces.
-
-The Light Source Actor implements interface `BPI_LightSource`. A DVR Actor consumes values of a Light Source Actor by calling these interface functions:
+The "Light Source Actor" implements Blueprint interface `BPI_LightSource`. A DVR Actor consumes values of a "Light Source Actor" by calling these interface functions:
 
 * GetWorldLocation (returns: `Vector`)
 * GetWorldRotation (returns: `Rotator`)
 * GetIntensity (returns: `Float`)
 * GetColor (returns: `Linear Color Structure`, from Temperature if used or LightColor otherwise)
+
+Notes: By default, the "Light Source Actor"s spot light component is set to affect the world (Affects World: `true`) and also casts ray tracing shadows, reflections and global illumination. It is up to the game developer to manage these parameters. The same applies to source radius and length which define specular highlights on surfaces.
 
 ![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Light Source Actor*
 
