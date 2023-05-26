@@ -111,7 +111,7 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ### 2.1. Objects
 
-The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of either vector or tensor volumes. Following the object oriented paradigm the domain specific entities are implemented as Blueprint Actors (see figure 2.1.1.):
+Following the object oriented paradigm the domain specific entities are implemented as Blueprint Actors (see figure 2.1.1.):
 
 * Scalar Volume SV
 * Values of Interest VOI
@@ -122,6 +122,8 @@ The plugin provides the rendering of image-stack based volumes, commonly known a
   * Clip Plane
   * Light Source
   * Orientation Guide
+
+The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of neither vector nor tensor volumes.
 
 ![Content Browser, VolumeCreator Content, Folder Classes - Blueprint Actors](Docs/VolumeCreator-Content-Classes-NotUI.png "Content Browser, VolumeCreator Content, Folder Classes - Blueprint Actors")<br>*Fig. 2.1.1.: Content Browser, VolumeCreator Content, Folder Classes &ndash; Blueprint Actors*
 
@@ -584,14 +586,14 @@ Widget Input (see figures 4.3.2.1. and 4.3.2.2):
 * Brightness:
   * Type: Slider
   * Description: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
-* Sagittal:
-  * Type: Slider
-  * Description: Sagittal Plane Left/Right L&ndash;R Location, color code green; With moving the slider the plane changes its L&ndash;R position and content resp., the orientation line positions in the "Coronal" and "Axial" view are updated.
-  * Type: Check Box
-  * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
 * Coronal:
   * Type: Slider
   * Description: Coronal Plane Posterior/Anterior  P&ndash;A Location, color code red; With moving the slider the plane changes its P&ndash;A position and content resp., the orientation line positions in the "Sagittal" and "Axial" view are updated.
+  * Type: Check Box
+  * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
+* Sagittal:
+  * Type: Slider
+  * Description: Sagittal Plane Left/Right L&ndash;R Location, color code green; With moving the slider the plane changes its L&ndash;R position and content resp., the orientation line positions in the "Coronal" and "Axial" view are updated.
   * Type: Check Box
   * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
 * Axial:
