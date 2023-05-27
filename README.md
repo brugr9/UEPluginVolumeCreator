@@ -31,6 +31,8 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
 * Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
 * Technology: Unreal Engine, Blueprint Visual Scripting, Code Plugin, C++, HLSL, DICOM
 
+<div style='page-break-after: always'></div>
+
 ## Table of Contents
 
 <!-- Start Document Outline -->
@@ -88,6 +90,8 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
 
 <!-- End Document Outline -->
 
+<div style='page-break-after: always'></div>
+
 ## 1. Setup
 
 ### 1.1. Plugin Installation
@@ -106,6 +110,8 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 > 1. First, make sure that the Editor is closed, and then locate your project's DefaultEngine.ini file and open it.
 > 2. Locate the Script/Engine.RendererSettings section and add the following variable, then save the file when you have added it: ```r.AllowVolumeTextureAssetCreation=1```
 > 3. Re-launch the Editor
+
+<div style='page-break-after: always'></div>
 
 ## 2. Concept
 
@@ -133,6 +139,8 @@ To access and change parameters of the Blueprint Actors in runtime, the plugin p
 
 ![Content Browser, VolumeCreator Content, Folder Classes - User Widget Actor Blueprints](Docs/VolumeCreator-Content-Classes-UI.png "Content Browser, VolumeCreator Content, Folder Classes - User Widget Actor Blueprints")<br>*Fig. 2.1.3.: Content Browser, VolumeCreator Content, Folder Classes &ndash; User Widget Actor Blueprints*
 
+<div style='page-break-after: always'></div>
+
 ### 2.2. Domain Model
 
 Domain Model Description:
@@ -159,9 +167,13 @@ Domain Model Description:
   * **Light Source Actor**: The "Direct Volume Rendering Actor" can optionally be illuminated with spot light sources from one or more "Light Source Actors".
   * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronized "Orientation Guide Actor".
 
+<div style='page-break-after: always'></div>
+
 ![Domain Model Diagram - Multiplanar Rendering MPR](Docs/DMD-MPR.png "Domain Model Diagram - Multiplanar Rendering MPR")<br>*Fig. 2.2.1.: Domain Model Diagram &ndash; Multiplanar Rendering MPR*
 
 ![Domain Model Diagram - Direct Volume Rendering DVR](Docs/DMD-DVR.png "Domain Model Diagram - Direct Volume Rendering DVR")<br>*Fig. 2.2.2.: Domain Model Diagram &ndash; Direct Volume Rendering DVR*
+
+<div style='page-break-after: always'></div>
 
 ## 3. Medical Imaging Data Import
 
@@ -197,6 +209,8 @@ TODO:
 
 TODO:
 
+<div style='page-break-after: always'></div>
+
 ### 3.2. Content File Name
 
 The created content file name derives from the file which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.2.1.):
@@ -213,6 +227,8 @@ Example: With importing imaging data from a file named `My_0123456789_ImageFile.
 When setting the `AssetName Maximum Length`, note that an assets pathname may be limited by the operating system, e.g. to 260 characters.
 
 ![Screenshot of Project Settings > Plugin > Volume Creator](Docs/ProjectSettings-Plugins-VolumeCreator.png "Screenshot of Project Settings > Plugin > Volume Creator")<br>*Fig. 3.2.1.: Screenshot of Project Settings > Plugin > Volume Creator*
+
+<div style='page-break-after: always'></div>
 
 ### 3.3. File Size
 
@@ -245,6 +261,8 @@ For a use case of DVR, the Render Texture Volumes `RT_VOI_Volume` and `RT_Lightm
 
 * *2,147,483,648 bit + 536,870,912 bit = 2,684,354,560 bit = 2.684 Gigabit*
 * *ProcessedData = 2.684 Gigabit/frame x 90 frames/s = 241.56 Gigabit/s*
+
+<div style='page-break-after: always'></div>
 
 ## 4. Rendering
 
@@ -306,6 +324,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `T_SV_Volume`
   * Description: Scalar Volume, Hounsfield Units encoded Volume Texture
 
+<div style='page-break-after: always'></div>
+
 #### 4.1.2. SV User Widget
 
 TODO:
@@ -329,6 +349,8 @@ Create Parameter:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign an SV Actor Instance to manage
+
+<div style='page-break-after: always'></div>
 
 #### 4.1.3. SV User Widget Actor
 
@@ -355,6 +377,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign an SV Actor Instance to manage
+
+<div style='page-break-after: always'></div>
 
 ### 4.2. Values Of Interest VOI
 
@@ -433,6 +457,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Description: Mandatory, Hounsfield Units data source
 
+<div style='page-break-after: always'></div>
+
 #### 4.2.2. VOI User Widget
 
 Plugin "Volume Creator" provides with a "Values Of Interest User Widget" or VOI User Widget (Blueprint Class: `WBP_VOI`).
@@ -474,6 +500,8 @@ Create Parameter:
   * Default Value: `none`
   * Description: Mandatory, assign a VOI Actor Instance to manage
 
+<div style='page-break-after: always'></div>
+
 #### 4.2.3. VOI User Widget Actor
 
 Plugin "Volume Creator" provides with a "Values Of Interest User Widget Actor" or VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned.
@@ -497,6 +525,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign a VOI Actor Instance to manage
+
+<div style='page-break-after: always'></div>
 
 ### 4.3. Multiplanar Rendering MPR
 
@@ -572,6 +602,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Description: Mandatory, data to which the transfer function LUT is applied
 
+<div style='page-break-after: always'></div>
+
 #### 4.3.2. MPR User Widget
 
 Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side. The perpendicular planes intersections are drawn as color coded orientation lines.
@@ -615,6 +647,8 @@ Create Parameter:
   * Default Value: `none`
   * Description: Mandatory, assign an MPR Actor Instance to manage
 
+<div style='page-break-after: always'></div>
+
 #### 4.3.3. MPR User Widget Actor
 
 Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned.
@@ -638,6 +672,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign an MPR Actor Instance to manage
+
+<div style='page-break-after: always'></div>
 
 ### 4.4. Direct Volume Rendering DVR
 
@@ -741,6 +777,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Description: Mandatory, data to which the transfer function Curve is applied
 
+<div style='page-break-after: always'></div>
+
 #### 4.4.2. DVR User Widget
 
 Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget" or DVR User Widget (Blueprint Class: `WBP_DVR`).
@@ -769,6 +807,8 @@ Create Parameter:
   * Default Value: `none`
   * Description: Mandatory, assign a DVR Actor Instance to manage
 
+<div style='page-break-after: always'></div>
+
 #### 4.4.3. DVR User Widget Actor
 
 Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget Actor" or DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned.
@@ -793,6 +833,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Description: Mandatory, assign a DVR Actor Instance to manage
 
+<div style='page-break-after: always'></div>
+
 #### 4.4.4. Region Of Interest ROI
 
 ##### 4.4.4.1. ROI Actor
@@ -810,6 +852,8 @@ Parameter, Category 'Volume Creator':
 Spawn Parameter from Category 'Volume Creator':
 
 * none
+
+<div style='page-break-after: always'></div>
 
 ##### 4.4.4.2. ROI Handles Actor
 
@@ -835,6 +879,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Default Value: `none`
   * Description: Mandatory, Region(s) of Interest to manage
 
+<div style='page-break-after: always'></div>
+
 #### 4.4.5. Clip Plane Actor
 
 Plugin "Volume Creator" provides with a "Clip Plane Actor" (Blueprint Class: `BP_ClipPlane`), with which a volume rendering actor geometry can be cropped in real-time.
@@ -850,6 +896,8 @@ Parameter, Category 'Volume Creator':
 Spawn Parameter from Category 'Volume Creator':
 
 * none
+
+<div style='page-break-after: always'></div>
 
 #### 4.4.6. Light Source Actor
 
@@ -892,6 +940,8 @@ Spawn Parameter from Category 'Volume Creator':
 
 * none
 
+<div style='page-break-after: always'></div>
+
 #### 4.4.7. Orientation Guide Actor
 
 Plugin "Volume Creator" provides with an "Orientation Guide Actor" (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
@@ -915,6 +965,8 @@ Spawn Parameter from Category 'Volume Creator':
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, DVR Actor Instance to synchronize rotation from
+
+<div style='page-break-after: always'></div>
 
 ## Appendix
 
@@ -978,6 +1030,8 @@ Spawn Parameter from Category 'Volume Creator':
 * WCS &mdash; World Coordinate System
 -->
 
+<div style='page-break-after: always'></div>
+
 ### Glossary
 
 #### Terms of Location and Coordinate Systems
@@ -1014,6 +1068,8 @@ Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G
 * **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
 
 ![ROI-Handles Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-ROIHandles.png "ROI-Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with UE Left handed Location-Gizmo Arrows*
+
+<div style='page-break-after: always'></div>
 
 #### Asset Naming Convention
 
@@ -1064,6 +1120,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Main Material: `Main`
   * User Widget Actor: `UI`
   * Volume Texture: `Volume`
+
+<div style='page-break-after: always'></div>
 
 ### A. References
 
