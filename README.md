@@ -439,6 +439,8 @@ Plugin "Volume Creator" provides with a "Values Of Interest User Widget" or VOI 
 
 ![User Widget Blueprint WBP_VOI](Docs/WBP_VOI.png "User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.1.: User Widget Blueprint WBP_VOI*
 
+![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.2: Screencast of User Widget Blueprint WBP_VOI*
+
 Widget Input (see figures 4.2.2.1. and 4.2.2.2.):
 
 * Center:
@@ -463,8 +465,6 @@ Widget Input (see figures 4.2.2.1. and 4.2.2.2.):
 * Window Mask:
   * Type: Check Box
 
-![Screencast of User Widget Blueprint WBP_VOI](Docs/WBP_VOI.gif "Screencast of User Widget Blueprint WBP_VOI")<br>*Fig. 4.2.2.2: Screencast of User Widget Blueprint WBP_VOI*
-
 ![Level Blueprint, Create VOI User Widget](Docs/WBP_VOI-LevelBP.png "Level Blueprint, Create VOI User Widget")<br>*Fig. 4.2.2.3.: Level Blueprint, Create VOI User Widget*
 
 Create Parameter:
@@ -472,7 +472,7 @@ Create Parameter:
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
-  * Description: Mandatory, assign an VOI Actor Instance to manage
+  * Description: Mandatory, assign a VOI Actor Instance to manage
 
 #### 4.2.3. VOI User Widget Actor
 
@@ -578,6 +578,8 @@ Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or M
 
 ![User Widget Blueprint WBP_MPR](Docs/WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
+![Screencast of User Widget Blueprint WBP_MPR](Docs/WBP_MPR.gif "Screencast of User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.2: Screencast of User Widget Blueprint WBP_MPR*
+
 Widget Input (see figures 4.3.2.1. and 4.3.2.2):
 
 * LUT:
@@ -588,23 +590,21 @@ Widget Input (see figures 4.3.2.1. and 4.3.2.2):
   * Description: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
 * Coronal:
   * Type: Slider
-  * Description: Coronal Plane Posterior/Anterior  P&ndash;A Location, color code red; With moving the slider the plane changes its P&ndash;A position and content resp., the orientation line positions in the "Sagittal" and "Axial" view are updated.
+  * Description: Coronal Plane Posterior/Anterior  P&ndash;A Location, color code red; With moving the slider the plane changes its P&ndash;A position and content resp., the orientation lines location in the "Sagittal" and "Axial" view is updated.
   * Type: Check Box
   * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
 * Sagittal:
   * Type: Slider
-  * Description: Sagittal Plane Left/Right L&ndash;R Location, color code green; With moving the slider the plane changes its L&ndash;R position and content resp., the orientation line positions in the "Coronal" and "Axial" view are updated.
+  * Description: Sagittal Plane Left/Right L&ndash;R Location, color code green; With moving the slider the plane changes its L&ndash;R position and content resp., the orientation lines location in the "Coronal" and "Axial" view is updated.
   * Type: Check Box
   * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
 * Axial:
   * Type: Slider
-  * Description: Axial Plane Inferior/Superior I&ndash;S Location, color code blue; With moving the slider the plane changes its I&ndash;S position and content resp., the orientation line positions in the "Coronal" and "Sagittal" view are updated.
+  * Description: Axial Plane Inferior/Superior I&ndash;S Location, color code blue; With moving the slider the plane changes its I&ndash;S position and content resp., the orientation lines location in the "Coronal" and "Sagittal" view is updated.
   * Type: Check Box
   * Description: Orientation line visibility; With a check box checked the corresponding color coded orientation line is visible.
 
-Whith changing MPR User Widget parameters, the attached MPR Actor instance planes positions, content and visibilities are also updated.
-
-![Screencast of User Widget Blueprint WBP_MPR](Docs/WBP_MPR.gif "Screencast of User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.2: Screencast of User Widget Blueprint WBP_MPR*
+With changing MPR User Widget parameters, the attached MPR Actor instance planes are also updated.
 
 ![Level Blueprint, Create MPR User Widget](Docs/WBP_MPR-LevelBP.png "Level Blueprint, Create MPR User Widget")<br>*Fig. 4.3.2.3.: Level Blueprint, Create MPR User Widget*
 
