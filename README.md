@@ -24,7 +24,7 @@ Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from look-up tables or color-gradient based transfer functions. With a clipping plane and a region of interest the rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating room light sources.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from transfer functions based on look-up tables or color gradients. With a clipping plane and a region of interest the rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating room light sources.
 
 <!-- UE Marketplace : End 1/2 -->
 
