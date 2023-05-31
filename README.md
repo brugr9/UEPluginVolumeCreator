@@ -24,7 +24,7 @@ Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from transfer functions based on look-up tables or color gradients. With a clipping plane and a region of interest the rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating room light sources.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from transfer functions based on look-up tables or color gradients. With a clipping plane and/or a clipping cube the rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating room light sources.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -68,12 +68,12 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
     * [4.4.1. DVR Actor](#441-dvr-actor)
     * [4.4.2. DVR User Widget](#442-dvr-user-widget)
     * [4.4.3. DVR User Widget Actor](#443-dvr-user-widget-actor)
-    * [4.4.4. Region Of Interest ROI](#444-region-of-interest-roi)
-      * [4.4.4.1. ROI Actor](#4441-roi-actor)
-      * [4.4.4.2. ROI Handles Actor](#4442-roi-handles-actor)
-    * [4.4.5. Clip Plane Actor](#445-clip-plane-actor)
-    * [4.4.6. Light Source Actor](#446-light-source-actor)
-    * [4.4.7. Orientation Guide Actor](#447-orientation-guide-actor)
+    * [4.4.4. Clipping](#444-clipping)
+      * [4.4.4.1. Clipping Cube Actor](#4441-clipping-cube-actor)
+      * [4.4.4.2. Clipping Cube Handles Actor](#4442-clipping-cube-handles-actor)
+      * [4.4.4.3. Clipping Plane Actor](#4443-clipping-plane-actor)
+    * [4.4.5. Light Source Actor](#445-light-source-actor)
+    * [4.4.6. Orientation Guide Actor](#446-orientation-guide-actor)
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
@@ -83,10 +83,9 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
     * [A.1. Medical Imaging](#a1-medical-imaging)
     * [A.2. Unreal Engine](#a2-unreal-engine)
   * [B. Readings](#b-readings)
-  * [C. Acknowledgements](#c-acknowledgements)
-  * [D. Attribution](#d-attribution)
-  * [E. Disclaimer](#e-disclaimer)
-  * [F. Citation](#f-citation)
+  * [C. Attribution](#c-attribution)
+  * [D. Disclaimer](#d-disclaimer)
+  * [E. Citation](#e-citation)
 
 <!-- End Document Outline -->
 
@@ -123,9 +122,9 @@ Following the object oriented paradigm the domain specific entities are implemen
 * Values of Interest VOI
 * Multiplanar Rendering MPR
 * Direct Volume Rendering DVR
-  * Region of Interest ROI
-    * ROI Handles
-  * Clip Plane
+  * Clipping Cube
+  * Clipping Cube Handles
+  * Clipping Plane
   * Light Source
   * Orientation Guide
 
@@ -160,10 +159,10 @@ Domain Model Description:
   * **Direct Volume Rendering DVR**
     * **Direct Volume Rendering Actor**: The Values Of Interest may be visualized by direct volume rendering in a "Direct Volume Rendering Actor". The "Direct Volume Rendering Actor" extent is visualised by a bounding box.
     * **Direct Volume Rendering User Widget and Direct Volume Rendering User Widget Actor**: To access and change parameters of a "Direct Volume Rendering Actor" in runtime, the plugin provides with a "Direct Volume Rendering User Widget" and a "Direct Volume Rendering User Widget Actor".
-  * **Region Of Interest ROI**
-    * **Region Of Interest Actor**: The "Direct Volume Rendering Actor" geometry can optionally be cropped in real-time using a "Region Of Interest Actor".
-    * **Region Of Interest Handles Actor**: A "Region Of Interest Actor" geometry can optionally be modified with a "Region Of Interest Handles Actor" interactively in real-time.
-  * **Clip Plane Actor**: The "Direct Volume Rendering Actor" geometry can optionally be cropped in real-time using a "Clip Plane Actor".
+  * **Clipping**
+    * **Clipping Cube Actor**: The "Direct Volume Rendering Actor" can optionally be cropped in real-time using a "Clipping Cube Actor".
+    * **Clipping Cube Handles Actor**: A "Clipping Cube Actor" can optionally be modified with a "Clipping Cube Handles Actor" interactively in real-time.
+    * **Clipping Plane Actor**: The "Direct Volume Rendering Actor" can optionally be cropped in real-time using a "Clipping Plane Actor".
   * **Light Source Actor**: The "Direct Volume Rendering Actor" can optionally be illuminated with spot light sources from one or more "Light Source Actors".
   * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronized "Orientation Guide Actor".
 
@@ -692,13 +691,13 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
     * Default Value: `none`
     * Description: Mandatory, data to which the transfer function Curve is applied
-* Geometry:
-  * Region Of Interest Actor:
-    * Type: Region Of Interest Actor `BP_ROI` instance as Object Reference
+* Clipping:
+  * Clipping Cube Actor:
+    * Type: Clipping Cube Actor `BP_ClippingCube` instance as Object Reference
     * Default Value: `none`
     * Description: Optional, used for geometry subtraction if set
-  * Clip Plane Actor:
-    * Type: Clip Plane Actor `BP_ClipPlane` instance as Object Reference
+  * Clipping Plane Actor:
+    * Type: Clipping Plane Actor `BP_ClippingPlane` instance as Object Reference
     * Default Value: `none`
     * Description: Optional, used for geometry subtraction if set
 * DVR:
@@ -835,19 +834,19 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.4. Region Of Interest ROI
+#### 4.4.4. Clipping
 
-##### 4.4.4.1. ROI Actor
+##### 4.4.4.1. Clipping Cube Actor
 
-Plugin "Volume Creator" provides with a "Region Of Interest Actor" or ROI Actor (Blueprint Class: `BP_ROI`), with which a volume rendering actor geometry can be cropped in real-time. An ROI Actor instance can be assigned as to a DVR Actor instance by specifying it there as a parameter. In the Unreal Editor Outline Hierarchy a ROI Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
+Plugin "Volume Creator" provides with a "Clipping Cube Actor" (Blueprint Class: `BP_ClippingCube`), with which a volume rendering actor can be cropped in real-time. A Clipping Cube Actor instance can be assigned as to a DVR Actor instance by specifying it there as a parameter. In the Unreal Editor Outline Hierarchy a Clipping Cube Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
 
-![Blueprint Actor BP_ROI in Viewport](Docs/BP_ROI.png "DetailsBlueprint Actor BP_ROI in Viewport")<br>*Fig. 4.4.4.1.1.: Blueprint Actor BP_ROI &ndash; Viewport*
+![Blueprint Actor BP_ClippingCube in Viewport](Docs/BP_ClippingCube.png "DetailsBlueprint Actor BP_ClippingCube in Viewport")<br>*Fig. 4.4.4.1.1.: Blueprint Actor BP_ClippingCube &ndash; Viewport*
 
 Parameter, Category 'Volume Creator':
 
 * none
 
-![Level Blueprint, SpawnActor ROI Actor](Docs/BP_ROI-SpawnActor.png "Level Blueprint, SpawnActor ROI Actor")<br>*Fig. 4.4.4.1.2.: Level Blueprint, SpawnActor ROI Actor*
+![Level Blueprint, SpawnActor Clipping Cube Actor](Docs/BP_ClippingCube-SpawnActor.png "Level Blueprint, SpawnActor Clipping Cube Actor")<br>*Fig. 4.4.4.1.2.: Level Blueprint, SpawnActor Clipping Cube Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
@@ -855,43 +854,43 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-##### 4.4.4.2. ROI Handles Actor
+##### 4.4.4.2. Clipping Cube Handles Actor
 
-Plugin "Volume Creator" provides with a "Region Of Interest Handles Actor" or ROI Handles Actor (Blueprint Class: `BP_RoiHandles`), with which a ROI Actor geometry can be modified interactively in real-time.
+Plugin "Volume Creator" provides with a "Clipping Cube Handles Actor" (Blueprint Class: `BP_ClippingCubeHandles`), with which a Clipping Cube Actor can be modified interactively in real-time.
 
-![Blueprint Actor BP_RoiHandles](Docs/BP_RoiHandles.png "DetailsBlueprint Actor BP_RoiHandles in Viewport")<br>*Fig. 4.4.4.2.1.: Blueprint Actor BP_RoiHandles &ndash; Viewport*
+![Blueprint Actor BP_ClippingCubeHandles](Docs/BP_ClippingCubeHandles.png "DetailsBlueprint Actor BP_ClippingCubeHandles in Viewport")<br>*Fig. 4.4.4.2.1.: Blueprint Actor BP_ClippingCubeHandles &ndash; Viewport*
 
-![Blueprint Actor BP_RoiHandles &ndash; Details Panel](Docs/BP_RoiHandles-DetailsPanel.png "Blueprint Actor BP_RoiHandles &ndash; Details Panel")<br>*Fig. 4.4.4.2.2.: Blueprint Actor BP_RoiHandles &ndash; Details Panel*
+![Blueprint Actor BP_ClippingCubeHandles &ndash; Details Panel](Docs/BP_ClippingCubeHandles-DetailsPanel.png "Blueprint Actor BP_ClippingCubeHandles &ndash; Details Panel")<br>*Fig. 4.4.4.2.2.: Blueprint Actor BP_ClippingCubeHandles &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
-* Region Of Interest:
-  * Type: Array of ROI Actor `BP_ROI` instances as Object References
+* Clipping Cube:
+  * Type: Array of Clipping Cube Actor `BP_ClippingCube` instances as Object References
   * Default Value: `none`
-  * Description: Mandatory, Region(s) of Interest to manage
+  * Description: Mandatory, Clipping Cube Actor(s) to manage
 
-![Level Blueprint, SpawnActor ROI Handles Actor](Docs/BP_RoiHandles-SpawnActor.png "Level Blueprint, SpawnActor ROI Handles Actor")<br>*Fig. 4.4.4.2.3.: Level Blueprint, SpawnActor ROI Handles Actor*
+![Level Blueprint, SpawnActor Clipping Cube Handles Actor](Docs/BP_ClippingCubeHandles-SpawnActor.png "Level Blueprint, SpawnActor Clipping Cube Handles Actor")<br>*Fig. 4.4.4.2.3.: Level Blueprint, SpawnActor Clipping Cube Handles Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
-* Region Of Interest:
-  * Type: Array of ROI Actor `BP_ROI` instances as Object References
+* Clipping Cube:
+  * Type: Array of Clipping Cube Actor `BP_ClippingCube` instances as Object References
   * Default Value: `none`
-  * Description: Mandatory, Region(s) of Interest to manage
+  * Description: Mandatory, Clipping Cube Actor(s) to manage
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.5. Clip Plane Actor
+##### 4.4.4.3. Clipping Plane Actor
 
-Plugin "Volume Creator" provides with a "Clip Plane Actor" (Blueprint Class: `BP_ClipPlane`), with which a volume rendering actor geometry can be cropped in real-time.
+Plugin "Volume Creator" provides with a "Clipping Plane Actor" (Blueprint Class: `BP_ClippingPlane`), with which a volume rendering actor can be cropped in real-time.
 
-![Blueprint Actor BP_ClipPlane in Viewport](Docs/BP_ClipPlane.png "DetailsBlueprint Actor BP_ClipPlane in Viewport")<br>*Fig. 4.4.5.2.: Blueprint Actor BP_ClipPlane &ndash; Viewport*
+![Blueprint Actor BP_ClippingPlane in Viewport](Docs/BP_ClippingPlane.png "DetailsBlueprint Actor BP_ClippingPlane in Viewport")<br>*Fig. 4.4.4.3.1.: Blueprint Actor BP_ClippingPlane &ndash; Viewport*
 
 Parameter, Category 'Volume Creator':
 
 * none
 
-![Level Blueprint, SpawnActor Clip Plane Actor](Docs/BP_ClipPlane-SpawnActor.png "Level Blueprint, SpawnActor Clip Plane Actor")<br>*Fig. 4.4.5.2.: Level Blueprint, SpawnActor Clip Plane Actor*
+![Level Blueprint, SpawnActor Clipping Plane Actor](Docs/BP_ClippingPlane-SpawnActor.png "Level Blueprint, SpawnActor Clipping Plane Actor")<br>*Fig. 4.4.4.3.2.: Level Blueprint, SpawnActor Clipping Plane Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
@@ -899,15 +898,15 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.6. Light Source Actor
+#### 4.4.5. Light Source Actor
 
 Plugin "Volume Creator" provides with a "Light Source Actor" (Blueprint Class: `BP_LightSource`), which can optionally be attached to a DVR Actor and act as a lighting source to illuminate the volume rendering.
 
-![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
+![Blueprint Actor BP_LightSource in Viewport](Docs/BP_LightSource.png "Blueprint Actor BP_LightSource in Viewport")<br>*Fig. 4.4.5.1.: Blueprint Actor BP_LightSource &ndash; Viewport*
 
-The "Light Source Actor"s `SpotLightComponent` is simulating an operating room LED light source. By default its parameters are set as follows (see figure 4.4.6.2.).
+The "Light Source Actor"s `SpotLightComponent` is simulating an operating room LED light source. By default its parameters are set as follows (see figure 4.4.5.2.).
 
-![Blueprint Actor BP_LightSource Details Panel](Docs/BP_LightSource-DetailsPanel.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
+![Blueprint Actor BP_LightSource Details Panel](Docs/BP_LightSource-DetailsPanel.png "Blueprint Actor BP_LightSource Details Panel")<br>*Fig. 4.4.5.2.: Blueprint Actor BP_LightSource &ndash; Details Panel*
 
 Parameter (see figure 'Details Panel'):
 
@@ -934,7 +933,7 @@ The "Light Source Actor" implements Blueprint interface `BPI_LightSource`. A DVR
 
 Notes: By default, the "Light Source Actor"s spot light component is set to affect the world (Affects World: `true`) and also casts ray tracing shadows, reflections and global illumination. It is up to the game developer to manage these parameters. The same applies to source radius and length which define specular highlights on surfaces.
 
-![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Light Source Actor*
+![Level Blueprint, SpawnActor Light Source Actor](Docs/BP_LightSource-SpawnActor.png "Level Blueprint, SpawnActor Light Source Actor")<br>*Fig. 4.4.5.3.: Level Blueprint, SpawnActor Light Source Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
@@ -942,13 +941,13 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.7. Orientation Guide Actor
+#### 4.4.6. Orientation Guide Actor
 
 Plugin "Volume Creator" provides with an "Orientation Guide Actor" (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
 
-![Blueprint Actor BP_OrientationGuide in Viewport](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.7.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
+![Blueprint Actor BP_OrientationGuide in Viewport](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
 
-![Blueprint Actor BP_OrientationGuide Details Panel](Docs/BP_OrientationGuide-DetailsPanel.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.7.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
+![Blueprint Actor BP_OrientationGuide Details Panel](Docs/BP_OrientationGuide-DetailsPanel.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
@@ -957,7 +956,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Default Value: `none`
   * Description: Mandatory, DVR Actor Instance to synchronize rotation from
 
-![Level Blueprint, SpawnActor Orientation Guide Actor](Docs/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.7.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
+![Level Blueprint, SpawnActor Orientation Guide Actor](Docs/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
@@ -996,7 +995,6 @@ Spawn Parameter from Category 'Volume Creator':
 * MIP &mdash; Maximum Intensity Projection
 * MPR &mdash; Multiplanar Rendering or Reconstruction resp.
 * MR &mdash; Magnetic Resonance
-* OG &mdash; Orientation Guide
 * P &mdash; Posterior
 * PE &mdash; Positron Emission
 * PIE &mdash; Play in Editor
@@ -1004,7 +1002,6 @@ Spawn Parameter from Category 'Volume Creator':
 * R &mdash; Right
 * R&ndash;A&ndash;S &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
-* ROI &mdash; Region of Interest
 * RT &mdash; Render Target Texture
 * S &mdash; Superior
 * SAG &mdash; Sagittal
@@ -1026,6 +1023,7 @@ Spawn Parameter from Category 'Volume Creator':
 * MRT &mdash; Magnetic Resonance Tomography
 * MRT &mdash; Multiple Render Targets (rendering technique)
 * PET &mdash; Positron Emission Tomography
+* ROI &mdash; Region Of Interest
 * SV &mdash; Scalar Volume (not to be confused with the HLSL abbreviation for System Value; cp. Online: *[HLSL Semantics](https://learn.microsoft.com/en-gb/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)*).
 * WCS &mdash; World Coordinate System
 -->
@@ -1055,19 +1053,19 @@ DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S
 
 Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in an **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (see figure G.1.):
 
+![Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-OrientationGuide.png "Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
+
 * X: Increases from Back to Front, color code **Red**; anatomical from Posterior P to **Anterior A**
 * Y: Increases from Left to Right, color code **Green**; anatomical from Left L to **Right R**
 * Z: Increases upwards from Bottom to Top, color code **Blue**; anatomical from Inferior I to **Superior S**
 
-![Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-OrientationGuide.png "Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
-
 Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G.2.):
+
+![Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-ClippingCubeHandles.png "Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.2.: Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows*
 
 * **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
 * **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
 * **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
-
-![ROI-Handles Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-ROIHandles.png "ROI-Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.2.: ROI-Handles Actor with UE Left handed Location-Gizmo Arrows*
 
 <div style='page-break-after: always'></div>
 
@@ -1111,8 +1109,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
       * Plane: `COR`, `SAG`, `AXE`
       * Location: `P`, `A`, `L`, `R`, `I`, `S`
     * Direct Volume Rendering: `DVR`
-      * Orientation Guide: `OG`
-      * Region Of Interest: `ROI`
 * `[DescriptorSuffix]`:
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
@@ -1137,7 +1133,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Sharma 2022] Shivam Sharma: **DICOM Coordinate Systems &ndash; 3D DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 22, 2022. Online: [https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f](https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f)
   * [Adaloglouon 2020] Nikolas Adaloglouon: **Understanding Coordinate Systems and DICOM for Deep Learning Medical Image Analysis**. In: *The AI Summer*. July 16, 2020. Online: [https://theaisummer.com/medical-image-coordinates/](https://theaisummer.com/medical-image-coordinates/)
   * [Zaharia 2013] Roni Zaharia: **Chapter 14 - Image Orientation: Getting Oriented using the Image Plane Module**. In: *DICOM Tutorial, DICOM is Easy &ndash; Software Programming for Medical Applications*. June 6, 2013. Online: [http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html](http://dicomiseasy.blogspot.com/2013/06/getting-oriented-using-image-plane.html)
-  * [Radiopaedia, Phantom] Hacking C, Baba Y, Bell D, et al.: **Phantom**. Reference article, [https://radiopaedia.org/](https://radiopaedia.org/) (Accessed on 27 May 2023) [doi.org/10.53347/rID-73526](https://doi.org/10.53347/rID-73526)
+  <!--* [Radiopaedia, Phantom] Hacking C, Baba Y, Bell D, et al.: **Phantom**. Reference article, [https://radiopaedia.org/](https://radiopaedia.org/) (Accessed on 27 May 2023) [doi.org/10.53347/rID-73526](https://doi.org/10.53347/rID-73526)-->
 * Volume Rendering:
   * [Luecke 2005] Peter Luecke: **Volume Rendering Techniques for Medical Imaging**. Diplomarbeit. Technische Universität München, Fakultät für Informatik. April 15, 2005. In collaboration with Siemens Corporate Research Inc., Princeton, USA. Online: [https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf](https://campar.in.tum.de/twiki/pub/Students/DaLuecke/Diplomarbeit.pdf)
   <!--* [Piper et al.] Piper S., Finet J., Yarmarkovich A., Aucoin N.: **3D Slicer Module "Volumes"**. License: slicer4. The work is part of the National Alliance for Medical Image Computing (NAMIC), funded by the National Institutes of Health through the NIH Roadmap for Medical Research, Grant U54 EB005149. Online Documentation: [https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html](https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html)-->
@@ -1173,41 +1169,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 <!-- * [Hadwiger et al. 18] Hadwiger M., Al-Awami A.K., Beyer J., Agos M., Pfister H.P. (2018): **SparseLeap: Efficient Empty Space Skipping for Large-Scale Volume Rendering**. In: *IEEE Transactions on Visualization and Computer Graphics*. Online: [https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering](https://vcg.seas.harvard.edu/publications/sparseleap-efficient-empty-space-skipping-for-large-scale-volume-rendering) -->
 <!-- * Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397. -->
 
-### C. Acknowledgements
-<!--
-#### C.1. Software
--->
-This documentation makes use of Unreal Engine Plugin "Volume Creator":
-
-* Bruggmann, Roland (2023): **Volume Creator**, Version v1.0.0, UE 4.26&ndash;5.2, Unreal&reg; Marketplace. Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved. TODO: URL <!-- URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator) -->
-
-<!--
-#### C.2. Data Set
--->
-
-<!--
-This documentation makes use of CT standard test images of an anthropomorphic phantom (cp. [Radiopaedia, Phantom]):
-
-* Kalendralis P, Traverso A, Shi Z, Zhovannik I, Monshouwer R, Starmans MPA, Klein S, Pfaehler E, Boellaard R, Dekker A, Wee L.: **Multicenter CT phantoms public dataset for radiomics reproducibility tests**. Med Phys. 2019 Mar;46(3):1512-1518. [doi: 10.1002/mp.13385](https://doi.org/10.1002%2Fmp.13385). Epub 2019 Jan 29. Erratum in: Med Phys. 2023 Mar;50(3):1942. PMID: 30629299; PMCID: PMC6849778.
-
-> *"Data format and usage notes: We made the dataset publically available on the Dutch instance of “Extensible Neuroimaging Archive Toolkit-XNAT” (https://xnat.bmia.nl). The dataset is freely available and reusable with attribution (Creative Commons 3.0 license)."*
-
-* URL: [https://xnat.bmia.nl/app/template/XDATScreen_report_xnat_projectData.vm/search_element/xnat:projectData/search_field/xnat:projectData.ID/search_value/stwstrategyps4](https://xnat.bmia.nl/app/template/XDATScreen_report_xnat_projectData.vm/search_element/xnat:projectData/search_field/xnat:projectData.ID/search_value/stwstrategyps4)
-
-> * ***STW-STRATEGY-Phantom_Series4***; *Details:*
->   * *ID: stwstrategyps4*
->   * *"Description: This collection contains phantom scans of a Gammex 467 CT phantom (Middletone, WI, USA) for radiomics intra-scanner testing due to X-ray tube exposure. The phantom was scanned with a Philips Brilliance Big Bore CT. Data Usage Policy : This collection may not be used for commercial purposes. This collection is freely available to browse, download, and use for scientific and educational purposes as outlined in the Creative Commons Attribution 3.0 Unported License (https://creativecommons.org/licenses/by/3.0/). Citation: Learning from scanners: bias reduction and feature correction in Radiomics Zhovannik, Ivan et al. Clinical and Translational Radiation Oncology, 2019"*
->   * *PI: Monshouwer, Rene*
--->
-
-<!--
-This documentation makes use of CT volume No. 1.3.6.1.4.1.14519.5.2.1.6279.6001.105756658031515062000744821260 from subset0 of LUNA2016, a "Grand Challenge" for medical image analysis at The Medical Image Computing and Computer Assisted Intervention Society MICCAI:
-
-* Grand Challenge *LUng Nodule Analysis 2016 (LUNA2016)*, URL: [https://luna16.grand-challenge.org](https://luna16.grand-challenge.org)
-* van Ginneken, Bram, & Jacobs, Colin. (2019): **LUNA16 Part 1/2 subset0**. Zenodo. [https://doi.org/10.5281/zenodo.3723295](https://doi.org/10.5281/zenodo.3723295), licensed under Creative Commons Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
--->
-
-### D. Attribution
+### C. Attribution
 
 * The word mark *Unreal* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, Online: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
 * The word mark *DICOM&mdash;Digital Imaging and Communication in Medicine* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
@@ -1215,16 +1177,11 @@ This documentation makes use of CT volume No. 1.3.6.1.4.1.14519.5.2.1.6279.6001.
 <!-- * The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc. -->
 <!-- * The word mark *3D Slicer* and its logo are trademarks of Brigham and Women’s Hospital (BWH), used with permission -->
 
-### E. Disclaimer
+### D. Disclaimer
 
 This documentation has **not been reviewed or approved** by the Food and Drug Administration FDA or by any other agency. It is the users responsibility to ensure compliance with applicable rules and regulations&mdash;be it in the US or elsewhere.
 
-Read also:
-
-* *"Documentation Disclaimer"* (file DISCLAIMER.md), Online: [https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DISCLAIMER.md](https://github.com/brugr9/UEPluginVolumeCreator/blob/main/DISCLAIMER.md)
-* *"Software Disclaimer"* from Plugin folder Docs/DISCLAIMER.pdf
-
-### F. Citation
+### E. Citation
 
 **Software**: To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator"* software, please cite
 
