@@ -153,18 +153,18 @@ Domain Model Description:
   * **Values Of Interest Actor**: A "Values Of Interest Actor" consumes the volume texture from a "Scalar Volume Actor", manages and applies DICOM Window Attributes 'Center' and 'Width'.
   * **Values Of Interest User Widget and Values Of Interest User Widget Actor**: To access and change parameters of a "Values Of Interest Actor" in runtime, the plugin provides with a "Values Of Interest User Widget" and a "Values Of Interest User Widget Actor".
 * **Multiplanar Rendering MPR**
-  * **Multiplanar Rendering Actor**: The Values Of Interest may be visualized by multiplanar rendering in a "Multiplanar Rendering Actor", which holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane as a 3D representation.
+  * **Multiplanar Rendering Actor**: The Values Of Interest may be visualised by multiplanar rendering in a "Multiplanar Rendering Actor", which holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane as a 3D representation.
   * **Multiplanar Rendering User Widget and Multiplanar Rendering User Widget Actor**: The "Multiplanar Rendering Actor" produces planar rendering, which is also consumed by a "Multiplanar Rendering User Widget" and a "Multiplanar Rendering User Widget Actor", which are 2D representations of MPR. The anatomical planes can be moved in the direction of their corresponding axes interactively in real-time.
 * **Volume Rendering**
   * **Direct Volume Rendering DVR**
-    * **Direct Volume Rendering Actor**: The Values Of Interest may be visualized by direct volume rendering in a "Direct Volume Rendering Actor". The "Direct Volume Rendering Actor" extent is visualised by a bounding box.
+    * **Direct Volume Rendering Actor**: The Values Of Interest may be visualised by direct volume rendering in a "Direct Volume Rendering Actor". The "Direct Volume Rendering Actor" extent is visualised by a bounding box.
     * **Direct Volume Rendering User Widget and Direct Volume Rendering User Widget Actor**: To access and change parameters of a "Direct Volume Rendering Actor" in runtime, the plugin provides with a "Direct Volume Rendering User Widget" and a "Direct Volume Rendering User Widget Actor".
   * **Clipping**
     * **Clipping Cube Actor**: The "Direct Volume Rendering Actor" can optionally be cropped in real-time using a "Clipping Cube Actor".
     * **Clipping Cube Handles Actor**: A "Clipping Cube Actor" can optionally be modified with a "Clipping Cube Handles Actor" interactively in real-time.
     * **Clipping Plane Actor**: The "Direct Volume Rendering Actor" can optionally be cropped in real-time using a "Clipping Plane Actor".
   * **Light Source Actor**: The "Direct Volume Rendering Actor" can optionally be illuminated with spot light sources from one or more "Light Source Actors".
-  * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronized "Orientation Guide Actor".
+  * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronised "Orientation Guide Actor".
 
 <div style='page-break-after: always'></div>
 
@@ -178,14 +178,14 @@ Domain Model Description:
 
 ### 3.1. Import in Editor
 
-Workflow: Read from DICOM&reg; or MetaImage&trade; files and
+Workflow: From DICOM&reg; or MetaImage&trade; files
 
-* Read / Write
+* Read
   * Read the scalar volume image data and write it to a Houndsfield Units encoded Texture Render Target Volume `RT_SV_Volume`
   * Read the scalar volume image meta data and write it to a JSON encoded Data asset `DA_SV`
-* Save
-  * Save the Texture Render Target Volume persistently as "Scalar Volume Texture" asset `T_SV_MyDataName_Volume`
-  * Save the JSON persistently as "Scalar Volume Context" asset `DA_SV_MyDataName`
+* Write
+  * Write the Texture Render Target Volume persistently as "Scalar Volume Texture" asset `T_SV_MyDataName_Volume`
+  * Write the JSON persistently as "Scalar Volume Context" asset `DA_SV_MyDataName`
 * Create a Blueprint asset `BP_MyDataName` (deriving from Scalar Volume Actor `BP_SV`) and
   * Assign the just created "Scalar Volume Texture" asset `T_SV_MyDataName_Volume`
   * Assign the just created "Scalar Volume Context" asset `DA_SV_MyDataName`
@@ -212,7 +212,7 @@ TODO:
 
 ### 3.2. Content File Name
 
-The created content file name derives from the file which is imported (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.2.1.):
+The created content file name derives from the imported file name (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.2.1.):
 
 * `AssetTypePrefix`: `T_`
 * `AssetName`:
@@ -236,7 +236,7 @@ CT image data is expected to come in Hounsfield Units HU, where the use of a ran
 Let's assume we have a "Scalar Volume" as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
-* A single grayscale 16 bit channel: Grayscale G16 (1 channel, 16 bit); G: Hounsfield Units [-1000, 3095]
+* A single grayscale 16 bit channel: Grayscale G16 or "Half Float (R16F)" (1 channel, 16 bit); G: Hounsfield Units [-1000, 3095]
 * *Scalar Volume `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
 
 The Volume Texture file size in this example becomes 256 MB.
@@ -355,22 +355,26 @@ Create Parameter:
 
 TODO:
 
-Plugin "Volume Creator" provides with a "Scalar Volume User Widget Actor" or SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an SV User Widget assigned.
+Plugin "Volume Creator" provides with a "Scalar Volume User Widget Actor" or SV User Widget Actor (Blueprint Class: `BP_SV_UI`). The Actor holds a User Widget Component with an SV User Widget assigned (see figure 4.1.3.1.).
 
-![Blueprint Actor BP_SV_UI in Viewport](Docs/BP_SV_UI.png "Blueprint Actor BP_SV_UI in Viewport")<br>*Fig. 4.1.3.1.: Blueprint Actor BP_SV_UI &ndash; Viewport &ndash; Viewport*
+![Blueprint Actor BP_SV_UI in Viewport](Docs/BP_SV_UI.png "Blueprint Actor BP_SV_UI in Viewport")<br>*Fig. 4.1.3.1.: Blueprint Actor BP_SV_UI &ndash; Viewport*
 
-![Blueprint Actor BP_SV_UI Details Panel](Docs/BP_SV_UI-DetailsPanel.png "Blueprint Actor BP_SV_UI Details Panel")<br>*Fig. 4.1.3.2.: Blueprint Actor BP_SV_UI &ndash; Details Panel*
+The Actor may be added to the world by spawning an instance in a Blueprint, e.g., Level Blueprint (see figure 4.1.3.2) or by picking from the "Place Actors" Tab (see figure 4.1.3.3.).
 
-Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
+![Level Blueprint, SpawnActor SV User Widget Actor](Docs/BP_SV_UI-SpawnActor.png "Level Blueprint, SpawnActor SV User Widget Actor")<br>*Fig. 4.1.3.2: Level Blueprint, SpawnActor SV User Widget Actor*
+
+Spawn Parameter from Category 'Volume Creator':
 
 * Scalar Volume Actor:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign an SV Actor Instance to manage
 
-![Level Blueprint, SpawnActor SV User Widget Actor](Docs/BP_SV_UI-SpawnActor.png "Level Blueprint, SpawnActor SV User Widget Actor")<br>*Fig. 4.1.3.3: Level Blueprint, SpawnActor SV User Widget Actor*
+![Blueprint Actor BP_SV_UI in Place Actors Tab](Docs/BP_SV_UI-PlaceActors.png "Blueprint Actor BP_SV_UI in Place Actors Tab")<br>*Fig. 4.1.3.3.: Blueprint Actor BP_SV_UI &ndash; Place Actors Tab*
 
-Spawn Parameter from Category 'Volume Creator':
+![Blueprint Actor BP_SV_UI Details Panel](Docs/BP_SV_UI-DetailsPanel.png "Blueprint Actor BP_SV_UI Details Panel")<br>*Fig. 4.1.3.4.: Blueprint Actor BP_SV_UI &ndash; Details Panel*
+
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Scalar Volume Actor:
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
@@ -503,22 +507,26 @@ Create Parameter:
 
 #### 4.2.3. VOI User Widget Actor
 
-Plugin "Volume Creator" provides with a "Values Of Interest User Widget Actor" or VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned.
+Plugin "Volume Creator" provides with a "Values Of Interest User Widget Actor" or VOI User Widget Actor (Blueprint Class: `BP_VOI_UI`). The Actor holds a User Widget Component with a VOI User Widget assigned (see figure 4.2.3.1.).
 
 ![Blueprint Actor BP_VOI_UI in Viewport](Docs/BP_VOI_UI.png "Blueprint Actor BP_VOI_UI in Viewport")<br>*Fig. 4.2.3.1.: Blueprint Actor BP_VOI_UI &ndash; Viewport*
 
-![Blueprint Actor BP_VOI_UI Details Panel](Docs/BP_VOI_UI-DetailsPanel.png "Blueprint Actor BP_VOI_UI Details Panel")<br>*Fig. 4.2.3.2.: Blueprint Actor BP_VOI_UI &ndash; Details Panel*
+The Actor may be added to the world by spawning an instance in a Blueprint, e.g., Level Blueprint (see figure 4.2.3.2) or by picking from the "Place Actors" Tab (see figure 4.2.3.3.).
 
-Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
+![Level Blueprint, SpawnActor VOI User Widget Actor](Docs/BP_VOI_UI-SpawnActor.png "Level Blueprint, SpawnActor VOI User Widget Actor")<br>*Fig. 4.2.3.2: Level Blueprint, SpawnActor VOI User Widget Actor*
+
+Spawn Parameter from Category 'Volume Creator':
 
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign a VOI Actor Instance to manage
 
-![Level Blueprint, SpawnActor VOI User Widget Actor](Docs/BP_VOI_UI-SpawnActor.png "Level Blueprint, SpawnActor VOI User Widget Actor")<br>*Fig. 4.2.3.3: Level Blueprint, SpawnActor VOI User Widget Actor*
+![Blueprint Actor BP_VOI_UI in Place Actors Tab](Docs/BP_VOI_UI-PlaceActors.png "Blueprint Actor BP_VOI_UI in Place Actors Tab")<br>*Fig. 4.2.3.3.: Blueprint Actor BP_VOI_UI &ndash; Place Actors Tab*
 
-Spawn Parameter from Category 'Volume Creator':
+![Blueprint Actor BP_VOI_UI Details Panel](Docs/BP_VOI_UI-DetailsPanel.png "Blueprint Actor BP_VOI_UI Details Panel")<br>*Fig. 4.2.3.4.: Blueprint Actor BP_VOI_UI &ndash; Details Panel*
+
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Values Of Interest Actor:
   * Type: Values Of Interest Actor `BP_VOI` instance as Object Reference
@@ -531,7 +539,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.3.1. MPR Actor
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering Actor" or MPR Actor (Blueprint Class: `BP_MPR`) to visualize a 3D representation of a scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
+Plugin "Volume Creator" provides with a "Multiplanar Rendering Actor" or MPR Actor (Blueprint Class: `BP_MPR`) to visualise a 3D representation of a scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
 
 ![Blueprint Actor BP_MPR in Viewport](Docs/BP_MPR.png "Blueprint Actor BP_MPR in Viewport")<br>*Fig. 4.3.1.1.: Blueprint Actor BP_MPR &ndash; Viewport*
 
@@ -557,19 +565,19 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Type: `Vector`
   * Default Value: `X 0.0, Y 0.0, Z 0.0`
   * Ranges: [`-50.0`, `50.0`]
-  * Description: Anatomical Planes Location (X: Coronal, Y: Sagittal, Z: Axial)<br>Use this Values instead of Component Location Values (Serialized for Saved Games).
+  * Description: Anatomical Planes Location (X: Coronal, Y: Sagittal, Z: Axial)<br>Use this Values instead of Component Location Values (Accessed by User Widget, Serialised for Saved Games).
 * Coronal Plane Visibility:
   * Type: `bool`
   * Default Value: `true`
-  * Description: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
+  * Description: Use this Value instead of Component Visibility Value (Accessed by User Widget, Serialised for Saved Games).
 * Sagittal Plane Visibility:
   * Type: `bool`
   * Default Value: `true`
-  * Description: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
+  * Description: Use this Value instead of Component Visibility Value (Accessed by User Widget, Serialised for Saved Games).
 * Axial Plane Visibility:
   * Type: `bool`
   * Default Value: `true`
-  * Description: Use this Value instead of Component Visibility Value (Serialized for Saved Games).
+  * Description: Use this Value instead of Component Visibility Value (Accessed by User Widget, Serialised for Saved Games).
 
 *Table 4.3.1.1.: Look-Up Tables LUT*<br>
 | Index | Name | Colors | Index | Name | Colors | Index | Name | Colors |
@@ -605,7 +613,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.3.2. MPR User Widget
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualize a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side. The perpendicular planes intersections are drawn as color coded orientation lines.
+Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualise a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side. The perpendicular planes intersections are drawn as color coded orientation lines.
 
 ![User Widget Blueprint WBP_MPR](Docs/WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
@@ -615,7 +623,7 @@ Widget Input (see figures 4.3.2.1. and 4.3.2.2):
 
 * LUT:
   * Type: Select
-  * Description: Select a Look-up Table as transfer function to colorize the content, cp. Table 4.3.1.1.
+  * Description: Select a Look-up Table to colorise the content, cp. Table 4.3.1.1.
 * Brightness:
   * Type: Slider
   * Description: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
@@ -650,22 +658,26 @@ Create Parameter:
 
 #### 4.3.3. MPR User Widget Actor
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned.
+Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (see figure 4.3.3.1.).
 
 ![Blueprint Actor BP_MPR_UI in Viewport](Docs/BP_MPR_UI.png "Blueprint Actor BP_MPR_UI in Viewport")<br>*Fig. 4.3.3.1.: Blueprint Actor BP_MPR_UI &ndash; Viewport*
 
-![Blueprint Actor BP_MPR_UI Details Panel](Docs/BP_MPR_UI-DetailsPanel.png "Blueprint Actor BP_MPR_UI Details Panel")<br>*Fig. 4.3.3.2.: Blueprint Actor BP_MPR_UI &ndash; Details Panel*
+The Actor may be added to the world by spawning an instance in a Blueprint, e.g., Level Blueprint (see figure 4.3.3.2) or by picking from the "Place Actors" Tab (see figure 4.3.3.3.).
 
-Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
+![Level Blueprint, SpawnActor MPR User Widget Actor](Docs/BP_MPR_UI-SpawnActor.png "Level Blueprint, SpawnActor MPR User Widget Actor")<br>*Fig. 4.3.3.2: Level Blueprint, SpawnActor MPR User Widget Actor*
+
+Spawn Parameter from Category 'Volume Creator':
 
 * Multiplanar Rendering Actor:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign an MPR Actor Instance to manage
 
-![Level Blueprint, SpawnActor MPR User Widget Actor](Docs/BP_MPR_UI-SpawnActor.png "Level Blueprint, SpawnActor MPR User Widget Actor")<br>*Fig. 4.3.3.3: Level Blueprint, SpawnActor MPR User Widget Actor*
+![Blueprint Actor BP_MPR_UI in Place Actors Tab](Docs/BP_MPR_UI-PlaceActors.png "Blueprint Actor BP_MPR_UI in Place Actors Tab")<br>*Fig. 4.3.3.3.: Blueprint Actor BP_MPR_UI &ndash; Place Actors Tab*
 
-Spawn Parameter from Category 'Volume Creator':
+![Blueprint Actor BP_MPR_UI Details Panel](Docs/BP_MPR_UI-DetailsPanel.png "Blueprint Actor BP_MPR_UI Details Panel")<br>*Fig. 4.3.3.4.: Blueprint Actor BP_MPR_UI &ndash; Details Panel*
+
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Multiplanar Rendering Actor:
   * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
@@ -678,7 +690,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.1. DVR Actor
 
-Plugin "Volume Creator" provides with a "Direct Volume Rendering Actor" or DVR Actor (Blueprint Class: `BP_DVR`) to visualize a 3D representation of a scalar volume. The DVR Actor extent is shown with a bounding box.
+Plugin "Volume Creator" provides with a "Direct Volume Rendering Actor" or DVR Actor (Blueprint Class: `BP_DVR`) to visualise a 3D representation of a scalar volume. The DVR Actor extent is shown with a bounding box.
 
 ![Blueprint Actor BP_DVR in Viewport](Docs/BP_DVR.png "Blueprint Actor BP_DVR in Viewport")<br>*Fig. 4.4.1.1.: Blueprint Actor BP_DVR  &ndash; Viewport*
 
@@ -717,7 +729,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
       * A small number may decrease rendering quality but is faster.
   * Transfer Function:
     * Type: `Curve Linear Color`
-    * Default Value: `Curve_Default_TF_Color`
+    * Default Value: `Curve_Default_Color`
     * Description: The transfer functions are based on color gradients from `Curve Linear Color` assets.
   * Alpha Threshold:
     * Type: `Float`
@@ -750,22 +762,21 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Range: [`1`, `50`]
     * Description: Phong Shading Parameter
 
-TODO: Curves Images
-<!--
-*Table 4.4.1.1.: Transfer Functions TF*<br>
+TODO: Color Curves Images
+
+*Table 4.4.1.1.: Color Curves*<br>
 | Index | Name | Colors | Index | Name | Colors | Index | Name | Colors |
 |------:|:-----|:-------|------:|:-----|:-------|------:|:-----|:-------|
-| 0 | Default | ![Curve_Default_TF_Color](Docs/Curve/Curve_Default_TF_Color.png "Curve_Default_TF_Color") | 9 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_TF_Color](Docs/Curve/Curve_CT-Chest-Vessels_TF_Color.png "Curve_CT-Chest-Vessels_TF_Color") | 19 | CT-Pulmonary-Arteries | ![Curve_CT-Pulmonary-Arteries_TF_Color](Docs/Curve/Curve_CT-Pulmonary-Arteries_TF_Color.png "Curve_CT-Pulmonary-Arteries_TF_Color") |
-| 1 | CT-AAA | ![Curve_CT-AAA_TF_Color](Docs/Curve/Curve_CT-AAA_TF_Color.png "Curve_CT-AAA_TF_Color") | 10 | CT-Coronary-Arteries | ![Curve_CT-Coronary-Arteries_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries_TF_Color.png "Curve_CT-Coronary-Arteries_TF_Color") | 20 | CT-Soft-Tissue | ![Curve_CT-Soft-Tissue_TF_Color](Docs/Curve/Curve_CT-Soft-Tissue_TF_Color.png "Curve_CT-Soft-Tissue_TF_Color") |
-| 2 | CT-AAA2 | ![Curve_CT-AAA2_TF_Color](Docs/Curve/Curve_CT-AAA2_TF_Color.png "Curve_CT-AAA2_TF_Color") | 11 | CT-Coronary-Arteries2 | ![Curve_CT-Coronary-Arteries2_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries2_TF_Color.png "Curve_CT-Coronary-Arteries2_TF_Color") | 21 | CT-Air | ![Curve_CT-Air_TF_Color](Docs/Curve/Curve_CT-Air_TF_Color.png "Curve_CT-Air_TF_Color") |
-| 3 | CT-Bone | ![Curve_CT-Bone_TF_Color](Docs/Curve/Curve_CT-Bone_TF_Color.png "Curve_CT-Bone_TF_Color") | 12 | CT-Coronary-Arteries3 | ![Curve_CT-Coronary-Arteries3_TF_Color](Docs/Curve/Curve_CT-Coronary-Arteries3_TF_Color.png "Curve_CT-Coronary-Arteries3_TF_Color") | 22 | CT-XRay | ![Curve_CT-XRay_TF_Color](Docs/Curve/Curve_CT-XRay_TF_Color.png "Curve_CT-XRay_TF_Color") |
-| 4 | CT-Bones | ![Curve_CT-Bones_TF_Color](Docs/Curve/Curve_CT-Bones_TF_Color.png "Curve_CT-Bones_TF_Color") | 13 | CT-Cropped-Volume-Bone | ![Curve_CT-Cropped-Volume-Bone_TF_Color](Docs/Curve/Curve_CT-Cropped-Volume-Bone_TF_Color.png "Curve_CT-Cropped-Volume-Bone_TF_Color") | 23 | MR-Default | ![Curve_MR-Default_TF_Color](Docs/Curve/Curve_MR-Default_TF_Color.png "Curve_MR-Default_TF_Color") |
-| 5 | CT-Cardiac | ![Curve_CT-Cardiac_TF_Color](Docs/Curve/Curve_CT-Cardiac_TF_Color.png "Curve_CT-Cardiac_TF_Color") | 14 | CT-Fat | ![Curve_CT-Fat_TF_Color](Docs/Curve/Curve_CT-Fat_TF_Color.png "Curve_CT-Fat_TF_Color") | 24 | MR-Angio | ![Curve_MR-Angio_TF_Color](Docs/Curve/Curve_MR-Angio_TF_Color.png "Curve_MR-Angio_TF_Color") |
-| 6 | CT-Cardiac2 | ![Curve_CT-Cardiac2_TF_Color](Docs/Curve/Curve_CT-Cardiac2_TF_Color.png "Curve_CT-Cardiac2_TF_Color") | 15 | CT-Liver-Vasculature | ![Curve_CT-Liver-Vasculature_TF_Color](Docs/Curve/Curve_CT-Liver-Vasculature_TF_Color.png "Curve_CT-Liver-Vasculature_TF_Color") | 25 | MR-T2-Brain | ![Curve_MR-T2-Brain_TF_Color](Docs/Curve/Curve_MR-T2-Brain_TF_Color.png "Curve_MR-T2-Brain_TF_Color") |
-| 7 | CT-Cardiac3 | ![Curve_CT-Cardiac3_TF_Color](Docs/Curve/Curve_CT-Cardiac3_TF_Color.png "Curve_CT-Cardiac3_TF_Color") | 16 | CT-Lung | ![Curve_CT-Lung_TF_Color](Docs/Curve/Curve_CT-Lung_TF_Color.png "Curve_CT-Lung_TF_Color") | 26 | MR-MIP | ![Curve_MR-MIP_TF_Color](Docs/Curve/Curve_MR-MIP_TF_Color.png "Curve_MR-MIP_TF_Color") |
-| 8 | CT-Chest-Contrast-Enhanced | ![Curve_CT-Chest-Contrast-Enhanced_TF_Color](Docs/Curve/Curve_CT-Chest-Contrast-Enhanced_TF_Color.png "Curve_CT-Chest-Contrast-Enhanced_TF_Color") | 17 | CT-MIP | ![Curve_CT-MIP_TF_Color](Docs/Curve/Curve_CT-MIP_TF_Color.png "Curve_CT-MIP_TF_Color") | 27 | US-Fetal | ![Curve_US-Fetal_TF_Color](Docs/Curve/Curve_US-Fetal_TF_Color.png "Curve_US-Fetal_TF_Color") |
-| 9 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_TF_Color](Docs/Curve/Curve_CT-Chest-Vessels_TF_Color.png "Curve_CT-Chest-Vessels_TF_Color") | 18 | CT-Muscle | ![Curve_CT-Muscle_TF_Color](Docs/Curve/Curve_CT-Muscle_TF_Color.png "Curve_CT-Muscle_TF_Color") |
--->
+| 0 | Default | ![Curve_Default_Color](Docs/Curve/Curve_Default_Color.png "Curve_Default_Color") | 9 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_Color](Docs/Curve/Curve_CT-Chest-Vessels_Color.png "Curve_CT-Chest-Vessels_Color") | 19 | CT-Pulmonary-Arteries | ![Curve_CT-Pulmonary-Arteries_Color](Docs/Curve/Curve_CT-Pulmonary-Arteries_Color.png "Curve_CT-Pulmonary-Arteries_Color") |
+| 1 | CT-AAA | ![Curve_CT-AAA_Color](Docs/Curve/Curve_CT-AAA_Color.png "Curve_CT-AAA_Color") | 10 | CT-Coronary-Arteries | ![Curve_CT-Coronary-Arteries_Color](Docs/Curve/Curve_CT-Coronary-Arteries_Color.png "Curve_CT-Coronary-Arteries_Color") | 20 | CT-Soft-Tissue | ![Curve_CT-Soft-Tissue_Color](Docs/Curve/Curve_CT-Soft-Tissue_Color.png "Curve_CT-Soft-Tissue_Color") |
+| 2 | CT-AAA2 | ![Curve_CT-AAA2_Color](Docs/Curve/Curve_CT-AAA2_Color.png "Curve_CT-AAA2_Color") | 11 | CT-Coronary-Arteries2 | ![Curve_CT-Coronary-Arteries2_Color](Docs/Curve/Curve_CT-Coronary-Arteries2_Color.png "Curve_CT-Coronary-Arteries2_Color") | 21 | CT-Air | ![Curve_CT-Air_Color](Docs/Curve/Curve_CT-Air_Color.png "Curve_CT-Air_Color") |
+| 3 | CT-Bone | ![Curve_CT-Bone_Color](Docs/Curve/Curve_CT-Bone_Color.png "Curve_CT-Bone_Color") | 12 | CT-Coronary-Arteries3 | ![Curve_CT-Coronary-Arteries3_Color](Docs/Curve/Curve_CT-Coronary-Arteries3_Color.png "Curve_CT-Coronary-Arteries3_Color") | 22 | CT-XRay | ![Curve_CT-XRay_Color](Docs/Curve/Curve_CT-XRay_Color.png "Curve_CT-XRay_Color") |
+| 4 | CT-Bones | ![Curve_CT-Bones_Color](Docs/Curve/Curve_CT-Bones_Color.png "Curve_CT-Bones_Color") | 13 | CT-Cropped-Volume-Bone | ![Curve_CT-Cropped-Volume-Bone_Color](Docs/Curve/Curve_CT-Cropped-Volume-Bone_Color.png "Curve_CT-Cropped-Volume-Bone_Color") | 23 | MR-Default | ![Curve_MR-Default_Color](Docs/Curve/Curve_MR-Default_Color.png "Curve_MR-Default_Color") |
+| 5 | CT-Cardiac | ![Curve_CT-Cardiac_Color](Docs/Curve/Curve_CT-Cardiac_Color.png "Curve_CT-Cardiac_Color") | 14 | CT-Fat | ![Curve_CT-Fat_Color](Docs/Curve/Curve_CT-Fat_Color.png "Curve_CT-Fat_Color") | 24 | MR-Angio | ![Curve_MR-Angio_Color](Docs/Curve/Curve_MR-Angio_Color.png "Curve_MR-Angio_Color") |
+| 6 | CT-Cardiac2 | ![Curve_CT-Cardiac2_Color](Docs/Curve/Curve_CT-Cardiac2_Color.png "Curve_CT-Cardiac2_Color") | 15 | CT-Liver-Vasculature | ![Curve_CT-Liver-Vasculature_Color](Docs/Curve/Curve_CT-Liver-Vasculature_Color.png "Curve_CT-Liver-Vasculature_Color") | 25 | MR-T2-Brain | ![Curve_MR-T2-Brain_Color](Docs/Curve/Curve_MR-T2-Brain_Color.png "Curve_MR-T2-Brain_Color") |
+| 7 | CT-Cardiac3 | ![Curve_CT-Cardiac3_Color](Docs/Curve/Curve_CT-Cardiac3_Color.png "Curve_CT-Cardiac3_Color") | 16 | CT-Lung | ![Curve_CT-Lung_Color](Docs/Curve/Curve_CT-Lung_Color.png "Curve_CT-Lung_Color") | 26 | MR-MIP | ![Curve_MR-MIP_Color](Docs/Curve/Curve_MR-MIP_Color.png "Curve_MR-MIP_Color") |
+| 8 | CT-Chest-Contrast-Enhanced | ![Curve_CT-Chest-Contrast-Enhanced_Color](Docs/Curve/Curve_CT-Chest-Contrast-Enhanced_Color.png "Curve_CT-Chest-Contrast-Enhanced_Color") | 17 | CT-MIP | ![Curve_CT-MIP_Color](Docs/Curve/Curve_CT-MIP_Color.png "Curve_CT-MIP_Color") | 27 | US-Fetal | ![Curve_US-Fetal_Color](Docs/Curve/Curve_US-Fetal_Color.png "Curve_US-Fetal_Color") |
+| 9 | CT-Chest-Vessels | ![Curve_CT-Chest-Vessels_Color](Docs/Curve/Curve_CT-Chest-Vessels_Color.png "Curve_CT-Chest-Vessels_Color") | 18 | CT-Muscle | ![Curve_CT-Muscle_Color](Docs/Curve/Curve_CT-Muscle_Color.png "Curve_CT-Muscle_Color") |
 
 ![Level Blueprint, SpawnActor DVR Actor](Docs/BP_DVR-SpawnActor.png "Level Blueprint, SpawnActor DVR Actor")<br>*Fig. 4.4.1.3.: Level Blueprint, SpawnActor DVR Actor*
 
@@ -810,22 +821,26 @@ Create Parameter:
 
 #### 4.4.3. DVR User Widget Actor
 
-Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget Actor" or DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned.
+Plugin "Volume Creator" provides with a "Direct Volume Rendering User Widget Actor" or DVR User Widget Actor (Blueprint Class: `BP_DVR_UI`). The Actor holds a User Widget Component with a DVR User Widget assigned (see figure 4.4.3.1.).
 
 ![Blueprint Actor BP_DVR_UI in Viewport](Docs/BP_DVR_UI.png "Blueprint Actor BP_DVR_UI in Viewport")<br>*Fig. 4.4.3.1.: Blueprint Actor BP_DVR_UI &ndash; Viewport*
 
-![Blueprint Actor BP_DVR_UI Details Panel](Docs/BP_DVR_UI-DetailsPanel.png "Blueprint Actor BP_VOIBP_DVR_UIUI Details Panel")<br>*Fig. 4.4.3.2.: Blueprint Actor BP_DVR_UI &ndash; Details Panel*
+The Actor may be added to the world by spawning an instance in a Blueprint, e.g., Level Blueprint (see figure 4.4.3.2) or by picking from the "Place Actors" Tab (see figure 4.4.3.3.).
 
-Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
+![Level Blueprint, SpawnActor DVR User Widget Actor](Docs/BP_DVR_UI-SpawnActor.png "Level Blueprint, SpawnActor DVR User Widget Actor")<br>*Fig. 4.4.3.2: Level Blueprint, SpawnActor DVR User Widget Actor*
+
+Spawn Parameter from Category 'Volume Creator':
 
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign a DVR Actor Instance to manage
 
-![Level Blueprint, SpawnActor DVR User Widget Actor](Docs/BP_DVR_UI-SpawnActor.png "Level Blueprint, SpawnActor DVR User Widget Actor")<br>*Fig. 4.4.3.3: Level Blueprint, SpawnActor DVR User Widget Actor*
+![Blueprint Actor BP_DVR_UI in Place Actors Tab](Docs/BP_DVR_UI-PlaceActors.png "Blueprint Actor BP_DVR_UI in Place Actors Tab")<br>*Fig. 4.4.3.3.: Blueprint Actor BP_DVR_UI &ndash; Place Actors Tab*
 
-Spawn Parameter from Category 'Volume Creator':
+![Blueprint Actor BP_DVR_UI Details Panel](Docs/BP_DVR_UI-DetailsPanel.png "Blueprint Actor BP_VOIBP_DVR_UIUI Details Panel")<br>*Fig. 4.4.3.4.: Blueprint Actor BP_DVR_UI &ndash; Details Panel*
+
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 * Direct Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
@@ -943,7 +958,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.4.6. Orientation Guide Actor
 
-Plugin "Volume Creator" provides with an "Orientation Guide Actor" (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronized orientation guide.
+Plugin "Volume Creator" provides with an "Orientation Guide Actor" (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronised orientation guide.
 
 ![Blueprint Actor BP_OrientationGuide in Viewport](Docs/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
 
@@ -954,7 +969,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 * Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Description: Mandatory, DVR Actor Instance to synchronize rotation from
+  * Description: Mandatory, DVR Actor Instance to synchronise rotation from
 
 ![Level Blueprint, SpawnActor Orientation Guide Actor](Docs/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
 
@@ -963,7 +978,7 @@ Spawn Parameter from Category 'Volume Creator':
 * Volume Rendering Actor:
   * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Description: Mandatory, DVR Actor Instance to synchronize rotation from
+  * Description: Mandatory, DVR Actor Instance to synchronise rotation from
 
 <div style='page-break-after: always'></div>
 
@@ -1196,4 +1211,4 @@ This documentation has **not been reviewed or approved** by the Food and Drug Ad
 
 [![Creative Commons Attribution-ShareAlike 4.0 International License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-*"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by Roland Bruggmann, licensed under Creative Commons Attribution-ShareAlike 4.0 International
+*"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by Roland Bruggmann, Documentation licensed under Creative Commons Attribution-ShareAlike 4.0 International.
