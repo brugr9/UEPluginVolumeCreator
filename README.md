@@ -116,17 +116,17 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ### 2.1. Objects
 
-Following the object oriented paradigm the domain specific entities are implemented as Blueprint Actors (see figure 2.1.1.):
+The domain specific entities are implemented as Blueprint Actors (see figure 2.1.1.), following the object oriented paradigm:
 
-* Scalar Volume SV
-* Values of Interest VOI
-* Multiplanar Rendering MPR
-* Direct Volume Rendering DVR
-  * Clipping Cube
-  * Clipping Cube Handles
-  * Clipping Plane
-  * Light Source
-  * Orientation Guide
+* Scalar Volume SV Actor
+* Values of Interest VOI Actor
+* Multiplanar Rendering MPR Actor
+* Direct Volume Rendering DVR Actor
+  * Clipping Cube Actor
+  * Clipping Cube Handles Actor
+  * Clipping Plane Actor
+  * Light Source Actor
+  * Orientation Guide Actor
 
 The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of neither vector nor tensor volumes.
 
