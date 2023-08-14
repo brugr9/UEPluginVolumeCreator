@@ -122,11 +122,11 @@ The domain specific entities are implemented as Blueprint Actors (see figure 2.1
 * Values of Interest VOI Actor
 * Multiplanar Rendering MPR Actor
 * Direct Volume Rendering DVR Actor
-  * Orientation Guide Actor
-  * Clipping Plane Actor
   * Clipping Cube Actor
     * Clipping Cube Handles Actor
+  * Clipping Plane Actor
   * Light Source Actor
+  * Orientation Guide Actor
 
 The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of neither vector nor tensor volumes.
 
