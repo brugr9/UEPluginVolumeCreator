@@ -1,4 +1,4 @@
-# Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &ndash; Readme
+# Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &ndash; Readme
 
 This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*
 
@@ -24,7 +24,7 @@ Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window, multiplanar or volume rendering, colored from transfer functions based on look-up tables or color gradients. With a clipping plane and/or a clipping cube the rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating room light sources.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window and multiplanar or volume rendering colored from transfer functions based on look-up tables or color gradients. With a clipping plane and/or a clipping cube a rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating room light sources.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -116,17 +116,17 @@ To allow Volume Texture asset creation follow these steps as from Unreal Engine 
 
 ### 2.1. Objects
 
-Following the object oriented paradigm the domain specific entities are implemented as Blueprint Actors (see figure 2.1.1.):
+The domain specific entities are implemented as Blueprint Actors (see figure 2.1.1.), following the object oriented paradigm:
 
-* Scalar Volume SV
-* Values of Interest VOI
-* Multiplanar Rendering MPR
-* Direct Volume Rendering DVR
-  * Clipping Cube
-  * Clipping Cube Handles
-  * Clipping Plane
-  * Light Source
-  * Orientation Guide
+* Scalar Volume SV Actor
+* Values of Interest VOI Actor
+* Multiplanar Rendering MPR Actor
+* Direct Volume Rendering DVR Actor
+  * Clipping Cube Actor
+    * Clipping Cube Handles Actor
+  * Clipping Plane Actor
+  * Light Source Actor
+  * Orientation Guide Actor
 
 The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of neither vector nor tensor volumes.
 
