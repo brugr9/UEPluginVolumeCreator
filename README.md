@@ -1,6 +1,6 @@
 # Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &ndash; Readme
 
-This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*
+This document is part of *"Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*
 
 * Author: Copyright 2023 Roland Bruggmann aka brugr9
 * Profile on UE Marketplace: [https://www.unrealengine.com/marketplace/profile/brugr9](https://www.unrealengine.com/marketplace/profile/brugr9)
@@ -16,15 +16,15 @@ This document is part of *"Volume Creator: An Unreal&reg; Engine Plugin for Medi
 
 Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical Imaging Data.
 
-* Multiplanar Coronal/Sagittal/Axial Rendering
-* Direct Volume Rendering
+* Multiplanar Coronal &ndash; Sagittal &ndash; Axial Rendering
+* 3D Direct Volume Rendering
 * Values of Interest in Hounsfield Units
 
 ## Description
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window and multiplanar or volume rendering colored from transfer functions based on look-up tables or color gradients. With a clipping plane and/or a clipping cube a rendered volume may be cropped. The volume can also be illuminated using CRI-R9 compliant operating room light sources.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window and multiplanar or volume rendering colored from transfer functions based on look-up tables or color gradients. A rendered volume may be cropped with a clipping plane and/or a clipping cube. The volume can also be illuminated using Color Rendering Index CRI-R9 compliant operating room light sources.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -231,12 +231,14 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 
 ### 3.3. File Size
 
-CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1000, 3095] is documented (cp. [DICOM, FAQ]). These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data. Sometimes one also meet 16 bit data, that's why we also use 16 bit.
+CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1024, 3071] is documented. These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data (cp. [Radiopaedia, HU] and [DICOM, FAQ]).
+
+TODO: Sometimes one also meet 16 bit data, that's why we also use 16 bit.
 
 Let's assume we have a "Scalar Volume" as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
-* A single grayscale 16 bit channel: Grayscale G16 or "Half Float (R16F)" (1 channel, 16 bit); G: Hounsfield Units [-1000, 3095]
+* A single grayscale 16 bit channel: Grayscale G16 or "Half Float (R16F)" (1 channel, 16 bit); G: Hounsfield Units [-1024, 3071]
 * *Scalar Volume `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
 
 The Volume Texture file size in this example becomes 256 MB.
@@ -387,7 +389,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 #### 4.2.1. VOI Actor
 
-CT image data is expected to come in Hounsfield Units HU in a range of [-1000, 3095] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens can only display 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to 256 screen gray scale levels. In plugin "Volume Creator" the mapping is done by linear interpolation (Lerp).
+CT image data is expected to come in Hounsfield Units HU in a range of [-1024, 3071] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens can only display 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to 256 screen gray scale levels. In plugin "Volume Creator" the mapping is done by linear interpolation (Lerp).
 
 If the whole range of 4096 Hounsfield Units is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield Units to map. The window is defined by its center and width.
 
@@ -401,21 +403,21 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
   * Type: Scalar Volume Actor `BP_SV` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, Hounsfield Units data source
-* Window Center
-  * Type: `Float`
-  * Default Value: `1047.5`
-  * Range: [`-1000.0`, `3095.0`]
-  * Description: Window Center in Hounsfield Units (aka level or brightness)
 * Window Border Left
   * Type: `Float`
-  * Default Value: `-1000.0`
-  * Range: [`-1000.0`, `3095.0`]
+  * Default Value: `-1024.0`
+  * Range: [`-1024.0`, `3071.0`]
   * Description: Window Left (lower) Border in Hounsfield Units; which is calculated (not editable in the Details Panel)
 * Window Border Right
   * Type: `Float`
-  * Default Value: `3095.0`
-  * Range: [`-1000.0`, `3095.0`]
+  * Default Value: `3071.0`
+  * Range: [`-1024.0`, `3071.0`]
   * Description: Window Right (upper) Border in Hounsfield Units; which is calculated (not editable in the Details Panel)
+* Window Center
+  * Type: `Float`
+  * Default Value: `1023.5`
+  * Range: [`-1024.0`, `3071.0`]
+  * Description: Window Center in Hounsfield Units (aka level or brightness)
 * Window Width
   * Type: `Float`
   * Default Value: `4096.0`
@@ -431,25 +433,20 @@ If a parameter from above is changed in a VOI Actor instance from the Editor Det
 The VOI range can also be set by clicking one of the VOI range buttons (see figure 4.2.1.2.). The window center and width are calculated from the specified left and right border values (see table 4.2.1.1.). Here the "Texture Render Target VOI Volume" is automatically recalculated.
 
 *Table 4.2.1.1.: VOI Ranges*<br>
-| Name | Left | Right | Center | Width |
-|:------------|----------:|----------:|----------:|---------:|
-| Default     | `-1000.0` |  `3095.0` |  `1047.5` | `4096.0` |
-| Air         | `-1000.0` | `-1000.0` | `-1000.0` |    `1.0` |
-| Water       |     `0.0` |     `0.0` |     `0.0` |    `1.0` |
-| Bone        |   `400.0` |  `1000.0` |   `700.0` |  `601.0` |
-| Soft Tissue |    `40.0` |    `80.0` |    `60.0` |   `41.0` |
-| Fat         |  `-100.0` |   `-60.0` |   `-80.0` |   `41.0` |
-| Lung        |  `-600.0` |  `-400.0` |  `-500.0` |  `201.0` |
-| Mediastinum |    `50.0` |   `500.0` |   `275.0` |  `451.0` |
-| PE          |   `100.0` |   `700.0` |   `400.0` |  `601.0` |
-<!--
-| Bone        |  `-100` |   `900` |   `400` | `1000` |
-| Air         |  `-926` |    `74` |  `-426` | `1000` |
-| Brain       |     `0` |   `100` |    `50` |  `100` |
-| Abdomen     |  `-135` |   `215` |    `40` |  `350` |
-| Lung        | `-1200` |   `200` |  `-500` | `1400` |
-| PET         |  `1000` | `11000` |  `6000` |`10000` |
--->
+| Name                | Left      | Right     | Center    | Width    |
+|:--------------------|----------:|----------:|----------:|---------:|
+| Default             | `-1024.0` |  `3071.0` |  `1023.5` | `4096.0` |
+| Air                 | `-1000.0` | `-1000.0` | `-1000.0` |    `1.0` |
+| Lung                |  `-600.0` |  `-400.0` |  `-500.0` |  `201.0` |
+| Fat                 |  `-100.0` |   `-60.0` |   `-80.0` |   `41.0` |
+| Simple Fluid        |   `-10.0` |    `20.0` |     `5.0` |   `31.0` |
+| Water               |     `0.0` |     `0.0` |     `0.0` |    `1.0` |
+| Soft Tissue         |    `30.0` |    `45.0` |    `37.5` |   `16.0` |
+| Mediastinum         |    `50.0` |   `500.0` |   `275.0` |  `451.0` |
+| Acute Blood         |    `60.0` |    `90.0` |    `75.0` |   `31.0` |
+| Iodinated Contrast  |   `100.0` |   `500.0` |   `300.0` |  `401.0` |
+| Trabecular Bone     |   `300.0` |   `800.0` |   `550.0` |  `501.0` |
+| Cortical Bone       |  `1000.0` |  `3000.0` |  `2000.0` | `2001.0` |
 
 ![Level Blueprint, SpawnActor VOI Actor](Docs/BP_VOI-SpawnActor.png "Level Blueprint, SpawnActor VOI Actor")<br>*Fig. 4.2.1.2.: Level Blueprint, SpawnActor VOI Actor*
 
@@ -472,17 +469,17 @@ Plugin "Volume Creator" provides with a "Values Of Interest User Widget" or VOI 
 
 Widget Input (see figures 4.2.2.1. and 4.2.2.2.):
 
-* Center:
-  * Type: Slider
-  * Description:  With moving slider "Center"
-    * Slider "Width" is static, slider "Left" and "Right" adapt
-    * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" also adapts.
 * Left:
   * Type: Slider
   * Description: With moving slider "Left", slider "Right" is static, slider "Center" and "Width" adapt.
 * Right:
   * Type: Slider
   * Description: With moving slider "Right", slider "Left" is static, slider "Center" and "Width" adapt.
+* Center:
+  * Type: Slider
+  * Description:  With moving slider "Center"
+    * Slider "Width" is static, slider "Left" and "Right" adapt
+    * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" also adapts.
 * Width:
   * Type: Slider
   * Description: With moving slider "Width"
@@ -1144,6 +1141,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [DICOM] **The DICOM Standard**. Online: [https://www.dicomstandard.org/current](https://www.dicomstandard.org/current)
   * [DICOM, FAQ] **DICOM Standard FAQ**. Online: [https://www.dicomstandard.org/faq](https://www.dicomstandard.org/faq)
   * [DICOM-Browser] Innolitics: **DICOM Standard Browser**. Online: [https://dicom.innolitics.com/ciods/ct-image](https://dicom.innolitics.com/ciods/ct-image)
+  * [Radiopaedia, HU] Greenway K, Murphy A, Gaillard F, et al.: **Hounsfield unit**. Reference article, Radiopaedia.org (Accessed on 25 Sep 2023) [https://doi.org/10.53347/rID-38181](https://doi.org/10.53347/rID-38181)
   * [Sharma 2021] Shivam Sharma: **Introduction to DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 15, 2021. Online: [https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd](https://medium.com/redbrick-ai/introduction-to-dicom-for-computer-vision-engineers-78f346bbc1fd)
   * [Sharma 2022] Shivam Sharma: **DICOM Coordinate Systems &ndash; 3D DICOM for Computer Vision Engineers**. In: *RedBrick AI*. Dec 22, 2022. Online: [https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f](https://medium.com/redbrick-ai/dicom-coordinate-systems-3d-dicom-for-computer-vision-engineers-pt-1-61341d87485f)
   * [Adaloglouon 2020] Nikolas Adaloglouon: **Understanding Coordinate Systems and DICOM for Deep Learning Medical Image Analysis**. In: *The AI Summer*. July 16, 2020. Online: [https://theaisummer.com/medical-image-coordinates/](https://theaisummer.com/medical-image-coordinates/)
@@ -1204,11 +1202,11 @@ This documentation has **not been reviewed or approved** by the Food and Drug Ad
 
 **Documentation**: To acknowledge this documentation&mdash;be it, e.g., the Readme or the Changelog&mdash;please cite
 
-> Bruggmann, Roland (2023). *Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+> Bruggmann, Roland (2023). *Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
 
 ---
 <!-- Footer -->
 
 [![Creative Commons Attribution-ShareAlike 4.0 International License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-*"Volume Creator: An Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by Roland Bruggmann, Documentation licensed under Creative Commons Attribution-ShareAlike 4.0 International.
+*"Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by Roland Bruggmann, Documentation licensed under Creative Commons Attribution-ShareAlike 4.0 International.
