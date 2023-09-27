@@ -212,7 +212,7 @@ TODO:
 
 ### 3.2. Content File Name
 
-The created content file name derives from the imported file name (cp. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.2.1.):
+The created content file name derives from the imported file name (cf. appendix section [Asset Naming Convention](#asset-naming-convention)) but with rules from the Project Settings (see figure 3.2.1.):
 
 * `AssetTypePrefix`: `T_`
 * `AssetName`:
@@ -231,15 +231,13 @@ When setting the `AssetName Maximum Length`, note that an assets pathname may be
 
 ### 3.3. File Size
 
-CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1024, 3071] is documented. These 4096 values can be represented by a twelve-digit binary number (12 bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12 bit data (cp. [Radiopaedia, HU] and [DICOM, FAQ]).
-
-TODO: Sometimes one also meet 16 bit data, that's why we also use 16 bit.
+CT image data is expected to come in Hounsfield Units HU, where the use of a range of [-1024, 3071] is documented. These 4096 values can be represented by a twelve-digit binary number (12-bit, 2<sup>12</sup> = 4096). DICOM images therefore are stored as 12-bit data (cf. [Radiopaedia, HU] and [DICOM, FAQ]). Since UE pixel format is of 8-, 16-, or 32-bit, and the UE does not support 12-bit single channels (1 x 4096) nor 10-bit four channels (4 x 1024 = 4096), we use a 16-bit single channel (cf. [UEDoc, EPixelFormat] and [Ivanov 2021]).
 
 Let's assume we have a "Scalar Volume" as follows:
 
 * A Stack of 512 images of size 512 x 512 pixel per image = 512<sup>3</sup> pixel or voxel resp.
-* A single grayscale 16 bit channel: Grayscale G16 or "Half Float (R16F)" (1 channel, 16 bit); G: Hounsfield Units [-1024, 3071]
-* *Scalar Volume `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
+* A 16-bit single channel `G16` (Grayscale); 4096 Hounsfield Units [-1024, 3071] shifted to [0, 4096] (unsigned integer)
+* *Scalar Volume Texture `T_SV_Volume` = 512<sup>3</sup> px x 1 x 16 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
 
 The Volume Texture file size in this example becomes 256 MB.
 
@@ -247,12 +245,12 @@ The Volume Texture file size in this example becomes 256 MB.
 
 The delivered assets make use of Render Targets. The Volume Render Targets size is inherited from the imported data, which is, e.g., Scalar Volume `T_SV_Volume` from above:
 
-* VOI: Texture Render Target `RT_VOI_Volume`, Linear RG8 (2 channels RG, 8 bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from Texture `T_SV_Volume`
-<br>*Example: 512<sup>3</sup> px x 2 x 8 bit/voxel = 134,217,728 voxel x 16 bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
-* DVR: Texture Render Target `RT_Lightmap_Volume`, Linear Color RGBA8 (4 channels RGBA, 8 bit); RGBA: Color [0, 255]; Dimension inherited from Texture Render Target `RT_VOI_Volume` but half Resolution
-<br>*Example: 256<sup>3</sup> px x 4 x 8 bit/voxel = 16,777,216 voxel x 32 bit/voxel = 536,870,912 bit = 67,108,864 Byte = 64 MB*
-* MPR: Texture Render Targets `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (1 channel R, 8 bit); R: VOI [0, 255]; The MPR Texture Render Targets do not inherit, they are always the same size
-<br>*Example: 1024<sup>2</sup> px x 1 x 8 bit/voxel = 1,048,576 voxel x 8 bit/voxel = 8,388,608 bit = 1,048,576 Byte = 1 MB each; Sum: 3 MB*
+* VOI: Texture Render Target `RT_VOI_Volume`, Linear RG8 (2 channels RG, 8-bit); R: VOI [0, 255], G: Window-Mask [0, 1]; Dimension inherited from Texture `T_SV_Volume`
+<br>*Example: 512<sup>3</sup> px x 2 x 8-bit/voxel = 134,217,728 voxel x 16-bit/voxel = 2,147,483,648 bit = 268,435,456 Byte = 256 MB*
+* DVR: Texture Render Target `RT_Lightmap_Volume`, Linear Color RGBA8 (4 channels RGBA, 8-bit); RGBA: Color [0, 255]; Dimension inherited from Texture Render Target `RT_VOI_Volume` but half Resolution
+<br>*Example: 256<sup>3</sup> px x 4 x 8-bit/voxel = 16,777,216 voxel x 32 bit/voxel = 536,870,912 bit = 67,108,864 Byte = 64 MB*
+* MPR: Texture Render Targets `RT_VOI_COR` / `RT_VOI_SAG` / `RT_VOI_AXE`: Linear R8 (1 channel R, 8-bit); R: VOI [0, 255]; The MPR Texture Render Targets do not inherit, they are always the same size
+<br>*Example: 1024<sup>2</sup> px x 1 x 8-bit/voxel = 1,048,576 voxel x 8-bit/voxel = 8,388,608 bit = 1,048,576 Byte = 1 MB each; Sum: 3 MB*
 
 *Example, size in Memory: <br>`T_SV_Volume` + `RT_VOI_Volume` + `RT_Lightmap_Volume` + `RT_VOI_COR` + `RT_VOI_SAG` + `RT_VOI_AXE` = 256 MB + 256 MB + 64 MB + 1 MB + 1 MB + 1 MB = 579 MB*
 
@@ -389,7 +387,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 #### 4.2.1. VOI Actor
 
-CT image data is expected to come in Hounsfield Units HU in a range of [-1024, 3071] (cp. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens can only display 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to 256 screen gray scale levels. In plugin "Volume Creator" the mapping is done by linear interpolation (Lerp).
+CT image data is expected to come in Hounsfield Units HU in a range of [-1024, 3071] (cf. section Import) representing 4096 gray levels for different materials where air is defined as -1000 HU and water as 0 HU. Consumer computer screens can only display 256 gray levels, represented by a value range of [0, 255]. Therefore the 4096 Hounsfield Units are mapped to 256 screen gray scale levels. In plugin "Volume Creator" the mapping is done by linear interpolation (Lerp).
 
 If the whole range of 4096 Hounsfield Units is mapped to 256 gray levels, the contrast becomes quite bad. Therefore, the so called Values Of Interest VOI aka 'DICOM Window' was introduced to downsize the range of Hounsfield Units to map. The window is defined by its center and width.
 
@@ -487,7 +485,7 @@ Widget Input (see figures 4.2.2.1. and 4.2.2.2.):
     * If slider "Left" reaches minimum or slider "Right" reaches maximum: Slider "Width" can no longer be increased (TODO: Slider "Center" adapts)
 * Presets:
   * Type: Button
-  * Description: Set a VOI Range, cp. Table 4.2.1.1.
+  * Description: Set a VOI Range, cf. Table 4.2.1.1.
 * Window Mask:
   * Type: Check Box
 
@@ -620,7 +618,7 @@ Widget Input (see figures 4.3.2.1. and 4.3.2.2):
 
 * LUT:
   * Type: Select
-  * Description: Select a Look-up Table to colorise the content, cp. Table 4.3.1.1.
+  * Description: Select a Look-up Table to colorise the content, cf. Table 4.3.1.1.
 * Brightness:
   * Type: Slider
   * Description: Emissive Brightness; Values greater than 1 are allowed as HDR lighting is supported.
@@ -714,7 +712,7 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Type: `Float`
     * Default Value: `1.0`
     * Range: [`0.1`, `2.0`]
-    * Description: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cp. [Luecke 2005], "Fragmented Line Ray-Casting").
+    * Description: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cf. [Luecke 2005], "Fragmented Line Ray-Casting").
       * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
       * With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
   * Resampling Steps:
@@ -927,12 +925,12 @@ Parameter (see figure 'Details Panel'):
 * Category 'Light':
   * Use Temperature: `true`
   * Temperature: `5100.0`
-    * Description: To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cp. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cp. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
+    * Description: To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cf. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cf. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
   * Intensity Units: `Candelas`
   * Intensity: `100000.0 cd`
-    * Description: We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1m (cp. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
+    * Description: We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1m (cf. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
   * Attenuation Radius: `120.0`
-    * Description: To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cp. [UEDoc, Lighting Basics]).
+    * Description: To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cf. [UEDoc, Lighting Basics]).
 * Category 'Volume Creator':
   * none
 
@@ -1036,7 +1034,7 @@ Spawn Parameter from Category 'Volume Creator':
 * MRT &mdash; Multiple Render Targets (rendering technique)
 * PET &mdash; Positron Emission Tomography
 * ROI &mdash; Region Of Interest
-* SV &mdash; Scalar Volume (not to be confused with the HLSL abbreviation for System Value; cp. Online: *[HLSL Semantics](https://learn.microsoft.com/en-gb/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)*).
+* SV &mdash; Scalar Volume (not to be confused with the HLSL abbreviation for System Value; cf. Online: *[HLSL Semantics](https://learn.microsoft.com/en-gb/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)*).
 * WCS &mdash; World Coordinate System
 -->
 
@@ -1046,7 +1044,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### Terms of Location and Coordinate Systems
 
-Patient Coordinate System: Anatomical planes and terms of location on a person standing upright (cp. [mbbs]):
+Patient Coordinate System: Anatomical planes and terms of location on a person standing upright (cf. [mbbs]):
 
 * **Coronal Plane**: Frontal plane, separates in **Posterior (P)** towards back and **Anterior (A)** towards front.
 * **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Left (L)** and **Right (R)** halves. A sagittal plane is any plane perpendicular to the median plane.
@@ -1054,7 +1052,7 @@ Patient Coordinate System: Anatomical planes and terms of location on a person s
 
 ##### *DICOM Images*
 
-DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S** system (cp. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*). DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cp. [Adaloglouon 2020, Medical Image coordinate system (Voxel space)]):
+DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S** system (cf. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*). DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cf. [Adaloglouon 2020, Medical Image coordinate system (Voxel space)]):
 
 * The image stack Origin is located in the first slice, first column, first row
 * i: Image width in columns, increases to anatomical **Left L**
@@ -1063,7 +1061,7 @@ DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S
 
 ##### *Unreal Engine*
 
-Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cp. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in an **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (see figure G.1.):
+Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cf. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in an **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (see figure G.1.):
 
 ![Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](Docs/Glossary-OrientationGuide.png "Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
 
@@ -1169,9 +1167,10 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Allar 2022] Michael Allar: **Gamemakin UE Style Guide**. March 7, 2022. Online: [https://github.com/Allar/ue5-style-guide](https://github.com/Allar/ue5-style-guide)
   * [Amos 2021] Dylan "Tezenari" Amos: **Asset Naming Conventions**. In: Unreal Directive. October 12, 2021. Online: [https://www.unrealdirective.com/resource/asset-naming-conventions](https://www.unrealdirective.com/resource/asset-naming-conventions)
 * Textures:
+  * [UEDoc, EPixelFormat] Epic Games: Unreal Engine API Reference > Runtime > Core > **EPixelFormat**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/4.26/en-US/API/Runtime/Core/EPixelFormat/](https://docs.unrealengine.com/4.26/en-US/API/Runtime/Core/EPixelFormat/)
+  * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. June 19, 2021. Online: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
   * [UEDoc, Guidelines for Optimizing Rendering for Real-Time] Epic Games: **Guidelines for Optimizing Rendering for Real-Time**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/5.2/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/](https://docs.unrealengine.com/5.2/en-US/guidelines-for-optimizing-rendering-for-real-time-in-unreal-engine/)
   * [Mower, Compression] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. In: TechArt-Hub. Online: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
-  * [Ivanov 2021] Michael Ivanov: **Unreal Engine and Custom Data Textures**. June 19, 2021. Online: [https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81](https://sasmaster.medium.com/unreal-engine-and-custom-data-textures-40857f8b6b81)
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
 
@@ -1184,7 +1183,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 
 ### C. Attribution
 
-* The word mark *Unreal* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cp. Branding Guidelines and Trademark Usage, Online: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
+* The word mark *Unreal* and its logo are Epic Games, Inc. trademarks or registered trademarks in the US and elsewhere (cf. Branding Guidelines and Trademark Usage, Online: [https://www.unrealengine.com/en-US/branding](https://www.unrealengine.com/en-US/branding))
 * The word mark *DICOM&mdash;Digital Imaging and Communication in Medicine* and its logo are trademarks or registered trademarks of the National Electrical Manufacturers Association (NEMA), managed by the Medical Imaging Technology Association (MITA), a division of NEMA
 * The word mark *MetaImage* is a trademark or registered trademark of Kitware, Inc.
 <!-- * The word mark *ITK&mdash;Insight Toolkit* is a trademark or registered trademark of Kitware, Inc. -->
