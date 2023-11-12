@@ -712,8 +712,8 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Type: `Float`
     * Default Value: `1.0`
     * Range: [`0.1`, `2.0`]
-    * Description: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method, cf. [Luecke 2005], "Fragmented Line Ray-Casting").
-      * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling occurs, which may increase visualisation quality.
+    * Description: Resampling Distance Power &ndash; The shader algorithm calculates the current distance of the image slices with respect to the angle of entry of the resampling ray. With a value of `1.0` (default) the calculated resampling distance is used. This parameter may be seen as an optimisation method (cf. [Luecke 2005], "Fragmented Line Ray-Casting").
+      * With values smaller than `1.0` the resampling distance lowers, a so-called oversampling aka supersampling occurs, which may increase visualisation quality (cf. [Meissner et al.], p. 19).
       * With values larger than `1.0` the resampling distance grows, a so-called undersampling occurs, which may accelerate rendering.
   * Resampling Steps:
     * Type: `Integer`
@@ -1179,8 +1179,12 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * Meissner M., Pfister H., Westermann R., and Wittenbrink C. (2000): **Volume Visualization and Volume Rendering Techniques**. Eurographics tutorial. Online: [https://vcg.seas.harvard.edu/publications/volume-visualization-and-volume-rendering-techniques](https://vcg.seas.harvard.edu/publications/volume-visualization-and-volume-rendering-techniques)
 * Engel K., Hadwiger M., Kniss J., Rezk Salama C., Weiskopf D. (2006): **Real-Time Volume Graphics**. doi: [10.1145/1103900.1103929](http://dx.doi.org/10.1145/1103900.1103929). Online: [http://www.real-time-volume-graphics.org/](http://www.real-time-volume-graphics.org/)
 * Ikits M., Kniss J., Lefohn A., Hansen C. (2007): **Volume Rendering Techniques**. In: GPU Gems: Programming Techniques, Tips, and Tricks for Real-Time Graphics &ndash; Part VI: Beyond Triangles, Chapter 39. 5th Printing September 2007, Pearson Education, Inc. Online: [https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-39-volume-rendering-techniques)
+* Beyer J, Hadwiger M, and Pfister H.: **State-of-the-Art in GPU-Based Large-Scale Volume Visualization**. Wiley Online Library: Computer Graphics Forum, 2015. DOI: [10.1111/cgf.12605](https://doi.org/10.1111/cgf.12605) Online: [https://vcg.seas.harvard.edu/publications/stateof-the-art-in-gpu-based-large-scale-volume-visualization](https://vcg.seas.harvard.edu/publications/stateof-the-art-in-gpu-based-large-scale-volume-visualization)
+
+<!--
 * Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.
 * Microsoft Learn: **Volume Rendering Overview**. In: Learn > Windows > Mixed Reality > App quality and testing. 06/01/2022. Online: [https://learn.microsoft.com/en-us/windows/mixed-reality/develop/advanced-concepts/volume-rendering-overview](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/advanced-concepts/volume-rendering-overview)
+-->
 
 ### C. Attribution
 
