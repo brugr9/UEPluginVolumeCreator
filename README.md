@@ -924,7 +924,7 @@ Parameter (see figure 'Details Panel'):
   * Mobility: `Movable`
 * Category 'Light':
   * Use Temperature: `true`
-  * Temperature: `5100.0`
+  * Temperature: `5000.0`
     * Description: To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cf. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cf. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
   * Intensity Units: `Candelas`
   * Intensity: `100000.0 cd`
