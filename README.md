@@ -996,6 +996,7 @@ Spawn Parameter from Category 'Volume Creator':
 * FPV &mdash; First Person View
 * HU &mdash; Hounsfield Units
 * I &mdash; Inferior
+* IES &mdash; Illuminating Engineering Society, Lighting Profile File Extension
 * L &mdash; Left
 * LED &mdash; Light-emitting Diode
 * LhS &mdash; Left-handed System
