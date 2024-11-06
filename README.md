@@ -928,7 +928,7 @@ Parameter (see figure 'Details Panel'):
     * Description: To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cf. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cf. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
   * Intensity Units: `Candelas`
   * Intensity: `100000.0 cd`
-    * Description: We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1m (cf. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of one steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at one meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
+    * Description: We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1 meter (cf. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of 1 steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at 1 meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
   * Attenuation Radius: `120.0`
     * Description: To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cf. [UEDoc, Lighting Basics]).
 * Category 'Volume Creator':
@@ -985,6 +985,7 @@ Spawn Parameter from Category 'Volume Creator':
 * A&ndash;R&ndash;S &mdash; Anterior&ndash;Right&ndash;Superior
 * AXE &mdash; Axial
 * BB &mdash; Bounding Box
+* cd &mdash; Candela; luminous intensity emitted by a source
 * COR &mdash; Coronal
 * CRI &mdash; Color Rendering Index
 * CS &mdash; Compute Shader
@@ -1000,7 +1001,9 @@ Spawn Parameter from Category 'Volume Creator':
 * LhS &mdash; Left-handed System
 * L&ndash;A&ndash;S &mdash; Left&ndash;Anterior&ndash;Superior
 * L&ndash;P&ndash;S &mdash; Left&ndash;Posterior&ndash;Superior
+* lm &mdash; Lumen; luminous intensity emitted by a source
 * LUT &mdash; Look-Up Table
+* lux &mdash; lux; illumination on a surface
 * MinIP &mdash; Minimum Intensity Projection
 * MIP &mdash; Maximum Intensity Projection
 * MPR &mdash; Multiplanar Rendering or Reconstruction resp.
@@ -1076,6 +1079,14 @@ Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G
 * **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
 * **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
 * **Axial AXE**: Horizontal **XY-Plane** (red/green arrows) with **Up-Vector Z+** (blue arrow) from **Inferior I** to **Superior S**
+
+<div style='page-break-after: always'></div>
+
+#### Luminous Intensity and Illumination
+
+The lumen (lm) is used to measure the luminous intensity emitted by a source. Another unit of measurement, the lux, takes account of the illumination on a given surface. This varies according to the distance from the light source and the width of the beam. The further away you are from the light source, the less effective the lighting will be. 1 Lux is equivalent to the uniform illumination of a flux of 1 lumen over a surface area of 1 m². ([Illuminance])
+
+![Illustration of the Distinction between Lux and Lumen](img/glossary-illuminance.jpg "Illustration of the Distinction between Lux and Lumen")<br>*Fig. G.3.: Illustration of the Distinction between Lux and Lumen*
 
 <div style='page-break-after: always'></div>
 
@@ -1173,6 +1184,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Mower, Compression] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. In: TechArt-Hub. Online: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
+  * [Illuminance ] **Lux et Lumens, comment s’y retrouver? - Différence entre les deux unités de mesure**. Online: [https://www.lecyclo.com/fr-ch/blogs/conseils/difference-lux-lumens-luminosite-feu-velo](https://www.lecyclo.com/fr-ch/blogs/conseils/difference-lux-lumens-luminosite-feu-velo)
 
 ### B. Readings
 
@@ -1185,6 +1197,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
 * Fedorov A., Beichel R., Kalpathy-Cramer J., Finet J., Fillion-Robin J-C., Pujol S., Bauer C., Jennings D., Fennessy F.M., Sonka M., Buatti J., Aylward S.R., Miller J.V., Pieper S., Kikinis R: **3D Slicer as an Image Computing Platform for the Quantitative Imaging Network**. Online: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3466397/pdf/nihms383480.pdf). Magnetic Resonance Imaging. 2012 Nov;30(9):1323-41. PMID: 22770690. PMCID: PMC3466397.
 * Microsoft Learn: **Volume Rendering Overview**. In: Learn > Windows > Mixed Reality > App quality and testing. 06/01/2022. Online: [https://learn.microsoft.com/en-us/windows/mixed-reality/develop/advanced-concepts/volume-rendering-overview](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/advanced-concepts/volume-rendering-overview)
 -->
+
+<div style='page-break-after: always'></div>
 
 ### C. Attribution
 
