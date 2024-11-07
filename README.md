@@ -79,7 +79,7 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
   * [Glossary](#glossary)
     * [Terms of Location and Coordinate Systems](#terms-of-location-and-coordinate-systems)
     * [Asset Naming Convention](#asset-naming-convention)
-    * [Luminous Intensity and Illumination](#luminous-intensity-and-illumination)
+    * [Luminous Flux, Intensity and Illuminance](#luminous-flux-intensity-and-illuminance)
   * [A. References](#a-references)
     * [A.1. Medical Imaging](#a1-medical-imaging)
     * [A.2. Unreal Engine](#a2-unreal-engine)
@@ -926,12 +926,12 @@ Parameter (see figure 'Details Panel'):
 * Category 'Light':
   * Use Temperature: `true`
   * Temperature: `5000.0`
-    * Description: To provide a good color rendering index  CRI-R9 for red tones in surgical procedures (cf. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cf. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
+    * Description: To provide a good color rendering index CRI-R9 for red tones in surgical procedures (cf. [WaveformLighting]), parameter "Temperature" in Kelvin [K] is used (Use Temperature: `true`) to achieve an adjustable warm or cold white. "*Warmer colors (yellows and reds) appear at lower temperatures, while cooler colors (white and blue) appear at temperatures above 5,000 Kelvin.*" (cf. [USAMedicalSurgical]). Therefore initially a temperature of `5,000.0` K is set (see also [VivoSurgical]). It is up to the game developer to adjust the value accordingly.
   * Intensity Units: `Candelas`
-  * Intensity: `100000.0 cd`
+  * Intensity: `100,000.0 cd`
     * Description: We like to achieve a depth of illumination with a full spot of 100,000 lux at a distance of 1 meter (cf. [USAMedicalSurgical]). [UEDoc, Physical Lighting Units] mentiones that *"Candela (cd) is a measure of luminous intensity emitted uniformly across a solid angle of 1 steradian (sr). For example, a light set to 1000 cd would measure 1000 lux at 1 meter."* Therefore parameter "Intensity" is set to `100,000.0 cd` (Intensity Units: `Candelas`). Also *"Note that when the intensity of a light is defined in Candelas, it is unaffected by its cone angle"* (ibid.).
   * Attenuation Radius: `120.0`
-    * Description: To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1m or 100.0 UE resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cf. [UEDoc, Lighting Basics]).
+    * Description: To bound the visible influence of the light and save rendering resources, we set parameter "Attenuation Radius" to a value slightly above 1.0 meter or 100.0 UU resp., i.e. `120.0` (*"Light Attenuation Radius can have a serious impact on performance, so use larger radius values sparingly"*, cf. [UEDoc, Lighting Basics]).
 * Category 'Volume Creator':
   * none
 
@@ -986,7 +986,7 @@ Spawn Parameter from Category 'Volume Creator':
 * A&ndash;R&ndash;S &mdash; Anterior&ndash;Right&ndash;Superior
 * AXE &mdash; Axial
 * BB &mdash; Bounding Box
-* cd &mdash; Candela; luminous intensity emitted by a source
+* cd &mdash; Candela; luminous intensity
 * COR &mdash; Coronal
 * CRI &mdash; Color Rendering Index
 * CS &mdash; Compute Shader
@@ -1003,9 +1003,9 @@ Spawn Parameter from Category 'Volume Creator':
 * LhS &mdash; Left-handed System
 * L&ndash;A&ndash;S &mdash; Left&ndash;Anterior&ndash;Superior
 * L&ndash;P&ndash;S &mdash; Left&ndash;Posterior&ndash;Superior
-* lm &mdash; Lumen; luminous intensity emitted by a source
+* lm &mdash; Lumen; luminous flux
 * LUT &mdash; Look-Up Table
-* lux &mdash; lux; illumination on a surface
+* lux &mdash; Lux; illuminance
 * MinIP &mdash; Minimum Intensity Projection
 * MIP &mdash; Maximum Intensity Projection
 * MPR &mdash; Multiplanar Rendering or Reconstruction resp.
@@ -1026,6 +1026,7 @@ Spawn Parameter from Category 'Volume Creator':
 * UE &mdash; Unreal Engine
 * UI &mdash; User Interface
 * US &mdash; Ultrasound Imaging (sonography)
+* UU &mdash; Unreal Engine Units
 * VOI &mdash; Values of Interest
 
 <!--
@@ -1084,11 +1085,29 @@ Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G
 
 <div style='page-break-after: always'></div>
 
-#### Luminous Intensity and Illumination
+#### Luminous Flux, Intensity and Illuminance
 
-The lumen (lm) is used to measure the luminous intensity emitted by a source. Another unit of measurement, the lux, takes account of the illumination on a given surface. This varies according to the distance from the light source and the width of the beam. The further away you are from the light source, the less effective the lighting will be. 1 Lux is equivalent to the uniform illumination of a flux of 1 lumen over a surface area of 1 m² (cp. figure G.3.; Source: [Illuminance]).
+[Illuminance, SolarBuy]
 
-![Illustration of the Distinction between Luminous Intensity (Flux in lumens) and Illumination (Illuminance in lux)](img/glossary-illuminance.jpg "Illustration of the Distinction between Luminous Intensity (Flux in lumens) and Illumination (Illuminance in lux)")<br>*Fig. G.3.: Illustration of the Distinction between Luminous Intensity (Flux in lumens) and Illumination (Illuminance in lux)*
+##### *Luminous Flux*
+
+Luminous Flux represents the total power of visible light emitted in all directions per unit of time. This power&mdash;indicated as light output&mdash;might vary depending on the light source's energy efficiency.
+
+>**Lumen**<br>Lumen (lm) is a measurement unit of a luminous flux or luminous power. One lumen equals the amount of light emitted by a light source (radiating equal amount of light in all directions) through a solid angle of one steradian with an intensity of 1 candela.
+
+##### *Luminous Intensity*
+
+Luminous Intensity is defined as the amount of visible light emitted at a specific angle. It directly affects the visibility of light and is mostly used on devices that produce focused light.
+
+>**Candela**<br>Candela (cd) is a measurement unit in SI of luminous intensity. Candela replaced the older unit that was used to express luminous intensity&mdash;candlepower. One regular candle emits approximately 1 candela of luminous intensity, this is why candela was also called candle in older times.
+
+##### *Illuminance*
+
+Illuminance is the luminous flux per unit area. The common measurement term is Lux (lm/m2) for a standardized unit or footcandle (lm/ft2). This parameter is independent of surface geometry where the light falls on but is strongly related to how much area was illuminated.
+
+>**Lux**<br>Lux is the unit of illuminance, equal to one lumen per square meter.
+
+![Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux)](img/Glossary-Illuminance.png "Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux)")<br>*Fig. G.3.: Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux); Image Source: [Illuminance, UNitop]*
 
 <div style='page-break-after: always'></div>
 
@@ -1186,7 +1205,9 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * [Mower, Compression] Nick Mower: **Your Guide to Texture Compression in Unreal Engine**. In: TechArt-Hub. Online: [https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/](https://www.techarthub.com/your-guide-to-texture-compression-in-unreal-engine/)
 * Lighting:
   * [UEDoc, Physical Lighting Units] **Physical Lighting Units**. In: Unreal Engine Documentation. Online: [https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/](https://docs.unrealengine.com/4.27/en-US/BuildingWorlds/LightingAndShadows/PhysicalLightUnits/)
-  * [Illuminance ] **Lux et Lumens, comment s’y retrouver? - Différence entre les deux unités de mesure**. Online: [https://www.lecyclo.com/fr-ch/blogs/conseils/difference-lux-lumens-luminosite-feu-velo](https://www.lecyclo.com/fr-ch/blogs/conseils/difference-lux-lumens-luminosite-feu-velo)
+  * [Illuminance, SolarBuy] Steven Kwok: **What's the Difference Between Lumen, Candela and Lux?** In: solarbuy.com. Dec 8, 2023. Online: [https://solarbuy.com/solar-101/difference-between-lumen-candela-and-lux/](https://solarbuy.com/solar-101/difference-between-lumen-candela-and-lux/)
+  * [Illuminance, UNitop] Tom Woo: **Candela vs Lux vs Lumens: The Ultimate Guide**. In: UNitop Industry Blog. August 31, 2023. Online: [https://www.unitopledstrip.com/candela-vs-lux-vs-lumens-the-ultimate-guide/](https://www.unitopledstrip.com/candela-vs-lux-vs-lumens-the-ultimate-guide/)
+  * [Illuminance, silicann] **Nits, Lux, Lumen, Candela - calculating with light and lighting**. In: silicann.com. Nov 13, 2023. Online: [https://www.en.silicann.com/blog/post/nits-lux-lumen-candela-calculating-with-light-and-lighting/](https://www.en.silicann.com/blog/post/nits-lux-lumen-candela-calculating-with-light-and-lighting/)
 
 ### B. Readings
 
