@@ -79,6 +79,7 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
   * [Glossary](#glossary)
     * [Terms of Location and Coordinate Systems](#terms-of-location-and-coordinate-systems)
     * [Asset Naming Convention](#asset-naming-convention)
+    * [Luminous Intensity and Illumination](#luminous-intensity-and-illumination)
   * [A. References](#a-references)
     * [A.1. Medical Imaging](#a1-medical-imaging)
     * [A.2. Unreal Engine](#a2-unreal-engine)
@@ -1085,9 +1086,9 @@ Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G
 
 #### Luminous Intensity and Illumination
 
-The lumen (lm) is used to measure the luminous intensity emitted by a source. Another unit of measurement, the lux, takes account of the illumination on a given surface. This varies according to the distance from the light source and the width of the beam. The further away you are from the light source, the less effective the lighting will be. 1 Lux is equivalent to the uniform illumination of a flux of 1 lumen over a surface area of 1 m². ([Illuminance])
+The lumen (lm) is used to measure the luminous intensity emitted by a source. Another unit of measurement, the lux, takes account of the illumination on a given surface. This varies according to the distance from the light source and the width of the beam. The further away you are from the light source, the less effective the lighting will be. 1 Lux is equivalent to the uniform illumination of a flux of 1 lumen over a surface area of 1 m² (cp. figure G.3.; Source: [Illuminance]).
 
-![Illustration of the Distinction between Lux and Lumen](img/glossary-illuminance.jpg "Illustration of the Distinction between Lux and Lumen")<br>*Fig. G.3.: Illustration of the Distinction between Lux and Lumen*
+![Illustration of the Distinction between Luminous Intensity (Flux in lumens) and Illumination (Illuminance in lux)](img/glossary-illuminance.jpg "Illustration of the Distinction between Luminous Intensity (Flux in lumens) and Illumination (Illuminance in lux)")<br>*Fig. G.3.: Illustration of the Distinction between Luminous Intensity (Flux in lumens) and Illumination (Illuminance in lux)*
 
 <div style='page-break-after: always'></div>
 
