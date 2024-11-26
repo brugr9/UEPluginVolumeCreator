@@ -2,7 +2,7 @@
 
 This document is part of *"Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*
 
-* Author: Copyright 2023 Roland Bruggmann aka brugr9
+* Author: Copyright 2024 Roland Bruggmann aka brugr9
 * Profile on UE Marketplace: [https://www.unrealengine.com/marketplace/profile/brugr9](https://www.unrealengine.com/marketplace/profile/brugr9)
 * Profile on Epic Developer Community: [https://dev.epicgames.com/community/profile/PQBq/brugr9](https://dev.epicgames.com/community/profile/PQBq/brugr9)
 
@@ -46,7 +46,7 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
 * [3. Medical Imaging Data Import](#3-medical-imaging-data-import)
   * [3.1. Import in Editor](#31-import-in-editor)
     * [3.1.1. Import DICOM](#311-import-dicom)
-    * [3.2.2. Import MetaImage](#312-import-metaimage)
+    * [3.1.2. Import MetaImage](#312-import-metaimage)
   * [3.2. Content File Name](#32-content-file-name)
   * [3.3. File Size](#33-file-size)
   * [3.4. Size in Memory](#34-size-in-memory)
@@ -77,9 +77,14 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
-    * [Terms of Location and Coordinate Systems](#terms-of-location-and-coordinate-systems)
-    * [Asset Naming Convention](#asset-naming-convention)
-    * [Luminous Flux, Intensity and Illuminance](#luminous-flux-intensity-and-illuminance)
+    * [G.1. Terms of Location and Coordinate Systems](#g1-terms-of-location-and-coordinate-systems)
+      * [G.1.1. DICOM Images](#g11-dicom-images)
+      * [G.1.2. Unreal Engine](#g12-unreal-engine)
+    * [G.2. Luminous Flux, Intensity and Illuminance](#g2-luminous-flux-intensity-and-illuminance)
+      * [G.2.1. Luminous Flux](#g21-luminous-flux)
+      * [G.2.2. Luminous Intensity](#g22-luminous-intensity)
+      * [G.2.3. Illuminance](#g23-illuminance)
+    * [G.3. Asset Naming Convention](#g3-asset-naming-convention)
   * [A. References](#a-references)
     * [A.1. Medical Imaging](#a1-medical-imaging)
     * [A.2. Unreal Engine](#a2-unreal-engine)
@@ -1048,7 +1053,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 ### Glossary
 
-#### Terms of Location and Coordinate Systems
+#### G.1. Terms of Location and Coordinate Systems
 
 Patient Coordinate System: Anatomical planes and terms of location on a person standing upright (cf. [mbbs]):
 
@@ -1056,7 +1061,7 @@ Patient Coordinate System: Anatomical planes and terms of location on a person s
 * **Sagittal Plane**: The median plane is a longitudinal plane, which separates the body into its **Left (L)** and **Right (R)** halves. A sagittal plane is any plane perpendicular to the median plane.
 * **Axial Plane**: Horizontal plane, separates in **Inferior (I)** towards feet and **Superior (S)** towards head.
 
-##### *DICOM Images*
+##### G.1.1. DICOM Images
 
 DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S** system (cf. [Sharma 2022] and [Adaloglouon 2020], *Anatomical coordinate system*). DICOM images are stored as a matrix of pixels with index coordinates in rows `i`, columns `j`, and slices `k` using a **Right-handed System RhS** (cf. [Adaloglouon 2020, Medical Image coordinate system (Voxel space)]):
 
@@ -1065,11 +1070,11 @@ DICOM images are using a **Left&ndash;Posterior&ndash;Superior L&ndash;P&ndash;S
 * j: Image height in rows, increases to anatomical **Posterior P**
 * k: Image stack depth in slices, increases anatomical **Superior S**
 
-##### *Unreal Engine*
+##### G.1.2. Unreal Engine
 
 Unreal Engine is using a **Left-handed System LhS** based First Person View FPV (cf. [Mower, Coordinate System]) with terms of location 'Back', 'Front', 'Left', 'Right', 'Bottom' and 'Top'. In plugin "Volume Creator"&mdash;with the use of UE's LhS and terms of location&mdash; the anatomical coordinate system results in an **Anterior&ndash;Right&ndash;Superior A&ndash;R&ndash;S** system (see figure G.1.):
 
-![Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](img/Glossary-OrientationGuide.png "Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.: Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
+![Orientation Guide Actor with UE Left handed Location-Gizmo Arrows](img/Glossary-OrientationGuide.png "Orientation Guide Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.2.1.: Orientation Guide Actor with UE Left handed Location-Gizmo Arrows*
 
 * X: Increases from Back to Front, color code **Red**; anatomical from Posterior P to **Anterior A**
 * Y: Increases from Left to Right, color code **Green**; anatomical from Left L to **Right R**
@@ -1077,7 +1082,7 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 
 Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G.2.):
 
-![Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows](img/Glossary-ClippingCubeHandles.png "Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.2.: Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows*
+![Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows](img/Glossary-ClippingCubeHandles.png "Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.2.2.: Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows*
 
 * **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
 * **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
@@ -1085,33 +1090,33 @@ Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G
 
 <div style='page-break-after: always'></div>
 
-#### Luminous Flux, Intensity and Illuminance
+#### G.2. Luminous Flux, Intensity and Illuminance
 
-[Illuminance, SolarBuy]
+Citation from [Illuminance, SolarBuy]:
 
-##### *Luminous Flux*
+##### G.2.1. Luminous Flux
 
 Luminous Flux represents the total power of visible light emitted in all directions per unit of time. This power&mdash;indicated as light output&mdash;might vary depending on the light source's energy efficiency.
 
 >**Lumen**<br>Lumen (lm) is a measurement unit of a luminous flux or luminous power. One lumen equals the amount of light emitted by a light source (radiating equal amount of light in all directions) through a solid angle of one steradian with an intensity of 1 candela.
 
-##### *Luminous Intensity*
+##### G.2.2. Luminous Intensity
 
 Luminous Intensity is defined as the amount of visible light emitted at a specific angle. It directly affects the visibility of light and is mostly used on devices that produce focused light.
 
 >**Candela**<br>Candela (cd) is a measurement unit in SI of luminous intensity. Candela replaced the older unit that was used to express luminous intensity&mdash;candlepower. One regular candle emits approximately 1 candela of luminous intensity, this is why candela was also called candle in older times.
 
-##### *Illuminance*
+##### G.2.3. Illuminance
 
 Illuminance is the luminous flux per unit area. The common measurement term is Lux (lm/m2) for a standardized unit or footcandle (lm/ft2). This parameter is independent of surface geometry where the light falls on but is strongly related to how much area was illuminated.
 
 >**Lux**<br>Lux is the unit of illuminance, equal to one lumen per square meter.
 
-![Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux)](img/Glossary-Illuminance.png "Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux)")<br>*Fig. G.3.: Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux); Image Source: [Illuminance, UNitop]*
+![Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux)](img/Glossary-Illuminance.png "Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux)")<br>*Fig. G.2.3.1.: Illustration of the Distinction between Luminous Flux (Lumen), Luminous Intensity (Candela) and Illuminance (Lux); Image Source: [Illuminance, UNitop]*
 
 <div style='page-break-after: always'></div>
 
-#### Asset Naming Convention
+#### G.3. Asset Naming Convention
 
 The plugins assets naming convention is based on a scheme from [UEDoc, Recommended Asset Naming Conventions] (see also [Allar 2022] and [Amos 2021]):
 > *`[AssetTypePrefix]_[AssetName]_[DescriptorSuffix]_[OptionalVariantLetterOrNumber]`*
@@ -1239,15 +1244,15 @@ This documentation has **not been reviewed or approved** by the Food and Drug Ad
 
 **Software**: To acknowledge *"Unreal&reg; Engine Plugin: Volume Creator"* software, please cite
 
-> Bruggmann, Roland (2023). *Unreal&reg; Engine Plugin: Volume Creator*, Version [v#.#.#], UE [4.## or 5.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2023 Roland Bruggmann aka brugr9. All Rights Reserved.
+> Bruggmann, Roland (2024). *Unreal&reg; Engine Plugin: Volume Creator*, Version [v#.#.#]. Unreal&reg; Marketplace. URL: [https://www.unrealengine.com/marketplace/en-US/product/volume-creator](https://www.unrealengine.com/marketplace/en-US/product/volume-creator). Copyright 2024 Roland Bruggmann aka brugr9. All Rights Reserved.
 
 **Documentation**: To acknowledge this documentation&mdash;be it, e.g., the Readme or the Changelog&mdash;please cite
 
-> Bruggmann, Roland (2023). *Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
+> Bruggmann, Roland (2024). *Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation*, \[Readme, Changelog\]. GitHub; accessed [Year Month Day]. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). Licensed under [Creative Commons Attribution-ShareAlike 4.0 International](http://creativecommons.org/licenses/by-sa/4.0/)
 
 ---
 <!-- Footer -->
 
 [![Creative Commons Attribution-ShareAlike 4.0 International License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-*"Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2023 by Roland Bruggmann, Documentation licensed under Creative Commons Attribution-ShareAlike 4.0 International.
+*"Volume Creator: Unreal&reg; Engine Plugin for Medical Data Rendering &mdash; Documentation"*. URL: [https://github.com/brugr9/UEPluginVolumeCreator](https://github.com/brugr9/UEPluginVolumeCreator). &copy; 2024 by Roland Bruggmann, Documentation licensed under Creative Commons Attribution-ShareAlike 4.0 International.
