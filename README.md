@@ -24,7 +24,7 @@ Adds Blueprint Support for Real-time 3D Rendering of Scalar Volumes from Medical
 
 Unreal&reg; Engine plugin "Volume Creator" enables real-time multiplanar and direct volume rendering from the Blueprint visual scripting system. The plugin acts as a framework which allows game developers to create VR/AR serious games, e.g., for teaching and training in medical education.
 
-The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window and multiplanar or volume rendering colored from transfer functions based on look-up tables or color gradients. A rendered volume may be cropped with a clipping plane and/or a clipping cube. The volume can also be illuminated using Color Rendering Index CRI-R9 compliant operating room light sources.
+The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medical imaging data, applying values of interest aka DICOM Window and multiplanar or volume rendering colored from transfer functions based on look-up tables or color gradients. A rendered volume may be cropped with a region of interest and/or a clipping plane. The volume can also be illuminated using Color Rendering Index CRI-R9 compliant operating room light sources.
 
 <!-- UE Marketplace : End 1/2 -->
 
@@ -68,12 +68,15 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
     * [4.4.1. DVR Actor](#441-dvr-actor)
     * [4.4.2. DVR User Widget](#442-dvr-user-widget)
     * [4.4.3. DVR User Widget Actor](#443-dvr-user-widget-actor)
-    * [4.4.4. Clipping](#444-clipping)
-      * [4.4.4.1. Clipping Cube Actor](#4441-clipping-cube-actor)
-      * [4.4.4.2. Clipping Cube Handles Actor](#4442-clipping-cube-handles-actor)
-      * [4.4.4.3. Clipping Plane Actor](#4443-clipping-plane-actor)
+    * [4.4.4. Orientation Guide Actor](#444-orientation-guide-actor)
     * [4.4.5. Light Source Actor](#445-light-source-actor)
-    * [4.4.6. Orientation Guide Actor](#446-orientation-guide-actor)
+    * [4.4.6. Region Of Interest ROI](#446-region-of-interest-roi)
+      * [4.4.6.1. ROI Actor](#4461-roi-actor)
+      * [4.4.6.2. ROI Handles Actor](#4462-roi-handles-actor)
+    * [4.4.7. Clipping Plane Actor](#447-clipping-plane-actor)
+
+<div style='page-break-after: always'></div>
+
 * [Appendix](#appendix)
   * [Abbreviations and Acronyms](#abbreviations-and-acronyms)
   * [Glossary](#glossary)
@@ -128,11 +131,11 @@ The domain specific entities are implemented as Blueprint Actors (see figure 2.1
 * Values of Interest VOI Actor
 * Multiplanar Reconstruction MPR Actor
 * Direct Volume Rendering DVR Actor
-  * Clipping Cube Actor
-    * Clipping Cube Handles Actor
-  * Clipping Plane Actor
-  * Light Source Actor
   * Orientation Guide Actor
+  * Light Source Actor
+  * Region Of Interest ROI Actor
+    * Region Of Interest ROI Handles Actor
+  * Clipping Plane Actor
 
 The plugin provides the rendering of image-stack based volumes, commonly known as scalar volumes. However, the plugin does not support rendering of neither vector nor tensor volumes.
 
@@ -165,12 +168,12 @@ Domain Model Description:
   * **Direct Volume Rendering DVR**
     * **Direct Volume Rendering Actor**: The Values Of Interest may be visualised by direct volume rendering in a "Direct Volume Rendering Actor". The "Direct Volume Rendering Actor" extent is visualised by a bounding box.
     * **Direct Volume Rendering User Widget and Direct Volume Rendering User Widget Actor**: To access and change parameters of a "Direct Volume Rendering Actor" in runtime, the plugin provides with a "Direct Volume Rendering User Widget" and a "Direct Volume Rendering User Widget Actor".
-  * **Clipping**
-    * **Clipping Cube Actor**: The "Direct Volume Rendering Actor" can optionally be cropped in real-time using a "Clipping Cube Actor".
-    * **Clipping Cube Handles Actor**: A "Clipping Cube Actor" can optionally be modified with a "Clipping Cube Handles Actor" interactively in real-time.
-    * **Clipping Plane Actor**: The "Direct Volume Rendering Actor" can optionally be cropped in real-time using a "Clipping Plane Actor".
-  * **Light Source Actor**: The "Direct Volume Rendering Actor" can optionally be illuminated with spot light sources from one or more "Light Source Actors".
   * **Orientation Guide Actor**: The "Direct Volume Rendering Actor" can optionally be attached a rotation synchronised "Orientation Guide Actor".
+  * **Light Source Actor**: The "Direct Volume Rendering Actor" can optionally be illuminated with spot light sources from one or more "Light Source Actors".
+  * **Region Of Interest ROI**
+    * **Region Of Interest Actor**: The "Direct Volume Rendering Actor" can optionally be cropped in real-time using a "Region Of Interest Actor".
+    * **Region Of Interest Handles Actor**: A "Region Of Interest Actor" can optionally be modified with a "Region Of Interest Handles Actor" interactively in real-time.
+  * **Clipping Plane Actor**: The "Direct Volume Rendering Actor" can optionally be cropped in real-time using a "Clipping Plane Actor".
 
 <div style='page-break-after: always'></div>
 
@@ -705,8 +708,8 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
     * Default Value: `none`
     * Description: Mandatory, data to which the transfer function Curve is applied
 * Clipping:
-  * Clipping Cube Actor:
-    * Type: Clipping Cube Actor `BP_ClippingCube` instance as Object Reference
+  * Region Of Interest Actor:
+    * Type: Region Of Interest Actor `BP_ROI` instance as Object Reference
     * Default Value: `none`
     * Description: Optional, used for geometry subtraction if set
   * Clipping Plane Actor:
@@ -850,67 +853,29 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.4. Clipping
+#### 4.4.4. Orientation Guide Actor
 
-##### 4.4.4.1. Clipping Cube Actor
+Plugin "Volume Creator" provides with an "Orientation Guide Actor" (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronised orientation guide.
 
-Plugin "Volume Creator" provides with a "Clipping Cube Actor" (Blueprint Class: `BP_ClippingCube`), with which a volume rendering actor can be cropped in real-time. A Clipping Cube Actor instance can be assigned as to a DVR Actor instance by specifying it there as a parameter. In the Unreal Editor Outline Hierarchy a Clipping Cube Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
+![Blueprint Actor BP_OrientationGuide in Viewport](img/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.4.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
 
-![Blueprint Actor BP_ClippingCube in Viewport](img/BP_ClippingCube.png "DetailsBlueprint Actor BP_ClippingCube in Viewport")<br>*Fig. 4.4.4.1.1.: Blueprint Actor BP_ClippingCube &ndash; Viewport*
-
-Parameter, Category 'Volume Creator':
-
-* none
-
-![Level Blueprint, SpawnActor Clipping Cube Actor](img/BP_ClippingCube-SpawnActor.png "Level Blueprint, SpawnActor Clipping Cube Actor")<br>*Fig. 4.4.4.1.2.: Level Blueprint, SpawnActor Clipping Cube Actor*
-
-Spawn Parameter from Category 'Volume Creator':
-
-* none
-
-<div style='page-break-after: always'></div>
-
-##### 4.4.4.2. Clipping Cube Handles Actor
-
-Plugin "Volume Creator" provides with a "Clipping Cube Handles Actor" (Blueprint Class: `BP_ClippingCubeHandles`), with which a Clipping Cube Actor can be modified interactively in real-time.
-
-![Blueprint Actor BP_ClippingCubeHandles](img/BP_ClippingCubeHandles.png "DetailsBlueprint Actor BP_ClippingCubeHandles in Viewport")<br>*Fig. 4.4.4.2.1.: Blueprint Actor BP_ClippingCubeHandles &ndash; Viewport*
-
-![Blueprint Actor BP_ClippingCubeHandles &ndash; Details Panel](img/BP_ClippingCubeHandles-DetailsPanel.png "Blueprint Actor BP_ClippingCubeHandles &ndash; Details Panel")<br>*Fig. 4.4.4.2.2.: Blueprint Actor BP_ClippingCubeHandles &ndash; Details Panel*
+![Blueprint Actor BP_OrientationGuide Details Panel](img/BP_OrientationGuide-DetailsPanel.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.4.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
-* Clipping Cube:
-  * Type: Array of Clipping Cube Actor `BP_ClippingCube` instances as Object References
+* Volume Rendering Actor:
+  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Description: Mandatory, Clipping Cube Actor(s) to manage
+  * Description: Mandatory, DVR Actor Instance to synchronise rotation from
 
-![Level Blueprint, SpawnActor Clipping Cube Handles Actor](img/BP_ClippingCubeHandles-SpawnActor.png "Level Blueprint, SpawnActor Clipping Cube Handles Actor")<br>*Fig. 4.4.4.2.3.: Level Blueprint, SpawnActor Clipping Cube Handles Actor*
+![Level Blueprint, SpawnActor Orientation Guide Actor](img/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.4.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
-* Clipping Cube:
-  * Type: Array of Clipping Cube Actor `BP_ClippingCube` instances as Object References
+* Volume Rendering Actor:
+  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
   * Default Value: `none`
-  * Description: Mandatory, Clipping Cube Actor(s) to manage
-
-<div style='page-break-after: always'></div>
-
-##### 4.4.4.3. Clipping Plane Actor
-
-Plugin "Volume Creator" provides with a "Clipping Plane Actor" (Blueprint Class: `BP_ClippingPlane`), with which a volume rendering actor can be cropped in real-time.
-
-![Blueprint Actor BP_ClippingPlane in Viewport](img/BP_ClippingPlane.png "DetailsBlueprint Actor BP_ClippingPlane in Viewport")<br>*Fig. 4.4.4.3.1.: Blueprint Actor BP_ClippingPlane &ndash; Viewport*
-
-Parameter, Category 'Volume Creator':
-
-* none
-
-![Level Blueprint, SpawnActor Clipping Plane Actor](img/BP_ClippingPlane-SpawnActor.png "Level Blueprint, SpawnActor Clipping Plane Actor")<br>*Fig. 4.4.4.3.2.: Level Blueprint, SpawnActor Clipping Plane Actor*
-
-Spawn Parameter from Category 'Volume Creator':
-
-* none
+  * Description: Mandatory, DVR Actor Instance to synchronise rotation from
 
 <div style='page-break-after: always'></div>
 
@@ -957,29 +922,67 @@ Spawn Parameter from Category 'Volume Creator':
 
 <div style='page-break-after: always'></div>
 
-#### 4.4.6. Orientation Guide Actor
+#### 4.4.6. Region Of Interest ROI
 
-Plugin "Volume Creator" provides with an "Orientation Guide Actor" (Blueprint Class: `BP_OrientationGuide`), which can be attached to a volume rendering actor and serves as rotation synchronised orientation guide.
+##### 4.4.6.1. ROI Actor
 
-![Blueprint Actor BP_OrientationGuide in Viewport](img/BP_OrientationGuide.png "Blueprint Actor BP_OrientationGuide in Viewport")<br>*Fig. 4.4.6.1.: Blueprint Actor BP_OrientationGuide &ndash; Viewport*
+Plugin "Volume Creator" provides with a "Region Of Interest Actor" or "ROI Actor" (Blueprint Class: `BP_ROI`), with which a volume rendering actor can be cropped in real-time. A ROI Actor instance can be assigned as to a DVR Actor instance by specifying it there as a parameter. In the Unreal Editor Outline Hierarchy a ROI Actor is ideally subordinated directly to the corresponding DVR Actor for adaptive scaling.
 
-![Blueprint Actor BP_OrientationGuide Details Panel](img/BP_OrientationGuide-DetailsPanel.png "Blueprint Actor BP_OrientationGuide Details Panel")<br>*Fig. 4.4.6.2.: Blueprint Actor BP_OrientationGuide &ndash; Details Panel*
+![Blueprint Actor BP_ROI in Viewport](img/BP_ROI.png "DetailsBlueprint Actor BP_ROI in Viewport")<br>*Fig. 4.4.6.1.1.: Blueprint Actor BP_ROI &ndash; Viewport*
 
-Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
+Parameter, Category 'Volume Creator':
 
-* Volume Rendering Actor:
-  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
-  * Default Value: `none`
-  * Description: Mandatory, DVR Actor Instance to synchronise rotation from
+* none
 
-![Level Blueprint, SpawnActor Orientation Guide Actor](img/BP_OrientationGuide-SpawnActor.png "Level Blueprint, SpawnActor Orientation Guide Actor")<br>*Fig. 4.4.6.3.: Level Blueprint, SpawnActor Orientation Guide Actor*
+![Level Blueprint, SpawnActor ROI Actor](img/BP_ROI-SpawnActor.png "Level Blueprint, SpawnActor ROI Actor")<br>*Fig. 4.4.6.1.2.: Level Blueprint, SpawnActor ROI Actor*
 
 Spawn Parameter from Category 'Volume Creator':
 
-* Volume Rendering Actor:
-  * Type: Direct Volume Rendering Actor `BP_DVR` instance as Object Reference
+* none
+
+<div style='page-break-after: always'></div>
+
+##### 4.4.6.2. ROI Handles Actor
+
+Plugin "Volume Creator" provides with a "Region Of Interest Handles Actor" or "ROI Handles Actor" (Blueprint Class: `BP_ROIHandles`), with which a ROI Actor can be modified interactively in real-time.
+
+![Blueprint Actor BP_ROIHandles](img/BP_ROIHandles.png "DetailsBlueprint Actor BP_ROIHandles in Viewport")<br>*Fig. 4.4.6.2.1.: Blueprint Actor BP_ROIHandles &ndash; Viewport*
+
+![Blueprint Actor BP_ROIHandles &ndash; Details Panel](img/BP_ROIHandles-DetailsPanel.png "Blueprint Actor BP_ROIHandles &ndash; Details Panel")<br>*Fig. 4.4.6.2.2.: Blueprint Actor BP_ROIHandles &ndash; Details Panel*
+
+Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
+
+* Region Of Interest:
+  * Type: Array of Region Of Interest Actor `BP_ROI` instances as Object References
   * Default Value: `none`
-  * Description: Mandatory, DVR Actor Instance to synchronise rotation from
+  * Description: Mandatory, Region Of Interest Actor(s) to manage
+
+![Level Blueprint, SpawnActor ROI Handles Actor](img/BP_ROIHandles-SpawnActor.png "Level Blueprint, SpawnActor ROI Handles Actor")<br>*Fig. 4.4.6.2.3.: Level Blueprint, SpawnActor ROI Handles Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* Region Of Interest:
+  * Type: Array of Region Of Interest Actor `BP_ROI` instances as Object References
+  * Default Value: `none`
+  * Description: Mandatory, Region Of Interest Actor(s) to manage
+
+<div style='page-break-after: always'></div>
+
+#### 4.4.7. Clipping Plane Actor
+
+Plugin "Volume Creator" provides with a "Clipping Plane Actor" (Blueprint Class: `BP_ClippingPlane`), with which a volume rendering actor can be cropped in real-time.
+
+![Blueprint Actor BP_ClippingPlane in Viewport](img/BP_ClippingPlane.png "DetailsBlueprint Actor BP_ClippingPlane in Viewport")<br>*Fig. 4.4.7.1.: Blueprint Actor BP_ClippingPlane &ndash; Viewport*
+
+Parameter, Category 'Volume Creator':
+
+* none
+
+![Level Blueprint, SpawnActor Clipping Plane Actor](img/BP_ClippingPlane-SpawnActor.png "Level Blueprint, SpawnActor Clipping Plane Actor")<br>*Fig. 4.4.7.2.: Level Blueprint, SpawnActor Clipping Plane Actor*
+
+Spawn Parameter from Category 'Volume Creator':
+
+* none
 
 <div style='page-break-after: always'></div>
 
@@ -1022,6 +1025,7 @@ Spawn Parameter from Category 'Volume Creator':
 * R &mdash; Right
 * R&ndash;A&ndash;S &mdash; Right&ndash;Anterior&ndash;Superior
 * RhS &mdash; Right-handed System
+* ROI &mdash; Region Of Interest
 * RT &mdash; Render Target Texture
 * S &mdash; Superior
 * SAG &mdash; Sagittal
@@ -1044,7 +1048,6 @@ Spawn Parameter from Category 'Volume Creator':
 * MRT &mdash; Magnetic Resonance Tomography
 * MRT &mdash; Multiple Render Targets (rendering technique)
 * PET &mdash; Positron Emission Tomography
-* ROI &mdash; Region Of Interest
 * SV &mdash; Scalar Volume (not to be confused with the HLSL abbreviation for System Value; cf. Online: *[HLSL Semantics](https://learn.microsoft.com/en-gb/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)*).
 * WCS &mdash; World Coordinate System
 -->
@@ -1082,7 +1085,7 @@ Unreal Engine is using a **Left-handed System LhS** based First Person View FPV 
 
 Anatomical Planes and Terms of Location in plugin "Volume Creator" (see figure G.2.):
 
-![Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows](img/Glossary-ClippingCubeHandles.png "Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.2.2.: Clipping Cube Handles Actor with UE Left handed Location-Gizmo Arrows*
+![Region Of Interest Handles Actor with UE Left handed Location-Gizmo Arrows](img/Glossary-ROIHandles.png "Region Of Interest Handles Actor with UE Left handed Location-Gizmo Arrows")<br>*Fig. G.1.2.2.: Region Of Interest Handles Actor with UE Left handed Location-Gizmo Arrows*
 
 * **Coronal COR**: Frontal **YZ-Plane** (green/blue arrows) with **Up-Vector X+** (red arrow) from **Posterior P** to **Anterior A**
 * **Sagittal SAG**: Longitudinal **XZ-Plane** (red/blue arrows) with **Up-Vector Y+** (green arrow) from **Left L** to **Right R**
@@ -1141,7 +1144,6 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
   * Texture Render Target: `RT`
   * Widget Blueprint: `WBP`
 * `[AssetName]` (Domain Specific):
-  * Bounding Box: `BB`
   * Data Type:
     * Scalar Volume: `SV`
     * Values Of Interest: `VOI`
@@ -1156,6 +1158,8 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
       * Plane: `COR`, `SAG`, `AXE`
       * Location: `P`, `A`, `L`, `R`, `I`, `S`
     * Direct Volume Rendering: `DVR`
+    * Bounding Box: `BB`
+    * Region Of Interest: `ROI`
 * `[DescriptorSuffix]`:
   * Texture Array: `Array`
   * Curve Linear Color: `Color`
