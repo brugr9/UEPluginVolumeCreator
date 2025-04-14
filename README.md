@@ -28,7 +28,7 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
 
 <!-- UE Marketplace : End 1/2 -->
 
-* Index Terms: Medical Imaging, Multiplanar Rendering, Direct Volume Rendering
+* Index Terms: Medical Imaging, Multiplanar Reconstruction, Direct Volume Rendering
 * Technology: Unreal Engine, Blueprint Visual Scripting, Code Plugin, C++, HLSL, DICOM
 
 <div style='page-break-after: always'></div>
@@ -60,7 +60,7 @@ The delivered assets provide importing DICOM&reg; or MetaImage&trade; based medi
     * [4.2.1. VOI Actor](#421-voi-actor)
     * [4.2.2. VOI User Widget](#422-voi-user-widget)
     * [4.2.3. VOI User Widget Actor](#423-voi-user-widget-actor)
-  * [4.3. Multiplanar Rendering MPR](#43-multiplanar-rendering-mpr)
+  * [4.3. Multiplanar Reconstruction MPR](#43-multiplanar-reconstruction-mpr)
     * [4.3.1. MPR Actor](#431-mpr-actor)
     * [4.3.2. MPR User Widget](#432-mpr-user-widget)
     * [4.3.3. MPR User Widget Actor](#433-mpr-user-widget-actor)
@@ -126,7 +126,7 @@ The domain specific entities are implemented as Blueprint Actors (see figure 2.1
 
 * Scalar Volume SV Actor
 * Values of Interest VOI Actor
-* Multiplanar Rendering MPR Actor
+* Multiplanar Reconstruction MPR Actor
 * Direct Volume Rendering DVR Actor
   * Clipping Cube Actor
     * Clipping Cube Handles Actor
@@ -158,9 +158,9 @@ Domain Model Description:
 * **Values Of Interest VOI**
   * **Values Of Interest Actor**: A "Values Of Interest Actor" consumes the volume texture from a "Scalar Volume Actor", manages and applies DICOM Window Attributes 'Center' and 'Width'.
   * **Values Of Interest User Widget and Values Of Interest User Widget Actor**: To access and change parameters of a "Values Of Interest Actor" in runtime, the plugin provides with a "Values Of Interest User Widget" and a "Values Of Interest User Widget Actor".
-* **Multiplanar Rendering MPR**
-  * **Multiplanar Rendering Actor**: The Values Of Interest may be visualised by multiplanar rendering in a "Multiplanar Rendering Actor", which holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane as a 3D representation.
-  * **Multiplanar Rendering User Widget and Multiplanar Rendering User Widget Actor**: The "Multiplanar Rendering Actor" produces planar rendering, which is also consumed by a "Multiplanar Rendering User Widget" and a "Multiplanar Rendering User Widget Actor", which are 2D representations of MPR. The anatomical planes can be moved in the direction of their corresponding axes interactively in real-time.
+* **Multiplanar Reconstruction MPR**
+  * **Multiplanar Reconstruction Actor**: The Values Of Interest may be visualised by multiplanar reconstruction in a "Multiplanar Reconstruction Actor", which holds three mutually perpendicular planes, i.e. coronal, sagittal and axial plane as a 3D representation.
+  * **Multiplanar Reconstruction User Widget and Multiplanar Reconstruction User Widget Actor**: The "Multiplanar Reconstruction Actor" produces planar rendering, which is also consumed by a "Multiplanar Reconstruction User Widget" and a "Multiplanar Reconstruction User Widget Actor", which are 2D representations of MPR. The anatomical planes can be moved in the direction of their corresponding axes interactively in real-time.
 * **Volume Rendering**
   * **Direct Volume Rendering DVR**
     * **Direct Volume Rendering Actor**: The Values Of Interest may be visualised by direct volume rendering in a "Direct Volume Rendering Actor". The "Direct Volume Rendering Actor" extent is visualised by a bounding box.
@@ -174,7 +174,7 @@ Domain Model Description:
 
 <div style='page-break-after: always'></div>
 
-![Domain Model Diagram - Multiplanar Rendering MPR](img/DMD-MPR.png "Domain Model Diagram - Multiplanar Rendering MPR")<br>*Fig. 2.2.1.: Domain Model Diagram &ndash; Multiplanar Rendering MPR*
+![Domain Model Diagram - Multiplanar Reconstruction MPR](img/DMD-MPR.png "Domain Model Diagram - Multiplanar Reconstruction MPR")<br>*Fig. 2.2.1.: Domain Model Diagram &ndash; Multiplanar Reconstruction MPR*
 
 ![Domain Model Diagram - Direct Volume Rendering DVR](img/DMD-DVR.png "Domain Model Diagram - Direct Volume Rendering DVR")<br>*Fig. 2.2.2.: Domain Model Diagram &ndash; Direct Volume Rendering DVR*
 
@@ -536,11 +536,11 @@ Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
 <div style='page-break-after: always'></div>
 
-### 4.3. Multiplanar Rendering MPR
+### 4.3. Multiplanar Reconstruction MPR
 
 #### 4.3.1. MPR Actor
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering Actor" or MPR Actor (Blueprint Class: `BP_MPR`) to visualise a 3D representation of a scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
+Plugin "Volume Creator" provides with a "Multiplanar Reconstruction Actor" or MPR Actor (Blueprint Class: `BP_MPR`) to visualise a 3D representation of a scalar volume by Coronal, Sagittal and Axial planes arranged perpendicular to one another.
 
 ![Blueprint Actor BP_MPR in Viewport](img/BP_MPR.png "Blueprint Actor BP_MPR in Viewport")<br>*Fig. 4.3.1.1.: Blueprint Actor BP_MPR &ndash; Viewport*
 
@@ -614,7 +614,7 @@ Spawn Parameter from Category 'Volume Creator':
 
 #### 4.3.2. MPR User Widget
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualise a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side. The perpendicular planes intersections are drawn as color coded orientation lines.
+Plugin "Volume Creator" provides with a "Multiplanar Reconstruction User Widget" or MPR User Widget (Blueprint Class: `WBP_MPR`) to visualise a 2D representation of the anatomical coronal, sagittal and axial planes which are consumed from an MPR Actor instance and arranged side by side. The perpendicular planes intersections are drawn as color coded orientation lines.
 
 ![User Widget Blueprint WBP_MPR](img/WBP_MPR.png "User Widget Blueprint WBP_MPR")<br>*Fig. 4.3.2.1.: User Widget Blueprint WBP_MPR*
 
@@ -650,8 +650,8 @@ With changing MPR User Widget parameters, the attached MPR Actor instance planes
 
 Create Parameter:
 
-* Multiplanar Rendering Actor:
-  * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
+* Multiplanar Reconstruction Actor:
+  * Type: Multiplanar Reconstruction Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign an MPR Actor Instance to manage
 
@@ -659,7 +659,7 @@ Create Parameter:
 
 #### 4.3.3. MPR User Widget Actor
 
-Plugin "Volume Creator" provides with a "Multiplanar Rendering User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (see figure 4.3.3.1.).
+Plugin "Volume Creator" provides with a "Multiplanar Reconstruction User Widget Actor" or MPR User Widget Actor (Blueprint Class: `BP_MPR_UI`). The Actor holds a User Widget Component with an MPR User Widget assigned (see figure 4.3.3.1.).
 
 ![Blueprint Actor BP_MPR_UI in Viewport](img/BP_MPR_UI.png "Blueprint Actor BP_MPR_UI in Viewport")<br>*Fig. 4.3.3.1.: Blueprint Actor BP_MPR_UI &ndash; Viewport*
 
@@ -669,8 +669,8 @@ The Actor may be added to the world by spawning an instance in a Blueprint, e.g.
 
 Spawn Parameter from Category 'Volume Creator':
 
-* Multiplanar Rendering Actor:
-  * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
+* Multiplanar Reconstruction Actor:
+  * Type: Multiplanar Reconstruction Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign an MPR Actor Instance to manage
 
@@ -680,8 +680,8 @@ Spawn Parameter from Category 'Volume Creator':
 
 Parameter, Category 'Volume Creator' (see figure 'Details Panel'):
 
-* Multiplanar Rendering Actor:
-  * Type: Multiplanar Rendering Actor `BP_MPR` instance as Object Reference
+* Multiplanar Reconstruction Actor:
+  * Type: Multiplanar Reconstruction Actor `BP_MPR` instance as Object Reference
   * Default Value: `none`
   * Description: Mandatory, assign an MPR Actor Instance to manage
 
@@ -1013,7 +1013,7 @@ Spawn Parameter from Category 'Volume Creator':
 * lux &mdash; Lux; illuminance
 * MinIP &mdash; Minimum Intensity Projection
 * MIP &mdash; Maximum Intensity Projection
-* MPR &mdash; Multiplanar Rendering or Reconstruction resp.
+* MPR &mdash; Multiplanar Reconstruction
 * MR &mdash; Magnetic Resonance
 * P &mdash; Posterior
 * PE &mdash; Positron Emission
@@ -1152,7 +1152,7 @@ The plugins assets naming convention is based on a scheme from [UEDoc, Recommend
     * Magnetic Resonance: `MR`
     * Ultrasound: `US`
   * Rendering Type:
-    * Multiplanar Rendering: `MPR`
+    * Multiplanar Reconstruction: `MPR`
       * Plane: `COR`, `SAG`, `AXE`
       * Location: `P`, `A`, `L`, `R`, `I`, `S`
     * Direct Volume Rendering: `DVR`
